@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>caidan_moren</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="基础信息" transform="translate(-87.000000, -60.000000)" fill-rule="nonzero">
+            <g id="编组-10" transform="translate(42.000000, 56.000000)">
+                <g id="caidan_moren" transform="translate(51.000000, 10.000000) scale(1, -1) translate(-51.000000, -10.000000) translate(45.000000, 4.000000)">
+                    <rect id="矩形" fill="#000000" opacity="0" x="0" y="0" width="12" height="12"></rect>
+                    <path d="M9.8484375,2.515625 L2.1515625,2.515625 C1.92070313,2.515625 1.79179688,2.759375 1.93476563,2.92578125 L5.78320313,7.38828125 C5.89335938,7.51601562 6.10546875,7.51601562 6.21679688,7.38828125 L10.0652344,2.92578125 C10.2082031,2.759375 10.0792969,2.515625 9.8484375,2.515625 Z" id="路径" fill="#97A7E2" transform="translate(6.000000, 4.999854) scale(1, -1) translate(-6.000000, -4.999854) "></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

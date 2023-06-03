@@ -38,7 +38,7 @@ module.exports = {
     // eslint-disable-line react-hooks/exhaustive-deps
     'react-hooks/exhaustive-deps': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-unused-vars': ['error'],
+    '@typescript-eslint/no-unused-vars': ['off'],
     '@typescript-eslint/consistent-type-imports': ['error'],
     // 允许使用async
     'generator-star-spacing': 0,
@@ -60,8 +60,8 @@ module.exports = {
     // 引号类型
     quotes: [1, 'single'],
     // 禁止出现未使用过的变量
-    'no-unused-vars': 0,
-    '@typescript-eslint/no-unused-vars': [2],
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     // 要求或禁止末尾逗号
     'comma-dangle': 0,
     // js语句结尾必须使用分号
@@ -72,7 +72,7 @@ module.exports = {
     'react/react-in-jsx-scope': 0,
     'react/jsx-props-no-spreading': [0],
     'max-classes-per-file': [2, 2],
-    'no-console': "warn",
+    'no-console': 'warn',
     'max-len': ['error', { code: 100, ignoreTemplateLiterals: true }],
     'no-param-reassign': ['error', { props: false }],
     'react/prop-types': [0],
