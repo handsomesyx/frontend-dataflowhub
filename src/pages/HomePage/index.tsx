@@ -16,7 +16,7 @@ function HomePage() {
           <img src={TopIcon} className={styles.TopIcon} />
           <div className={styles.TopBox}>
             <div>
-              <span>欢迎你！超级管理员</span>
+              <span>欢迎你 ! 超级管理员</span>
               <Time></Time>
             </div>
             <div style={{ color: '#fff' }}>通知</div>
