@@ -1,14 +1,16 @@
-import { Spin } from 'antd';
-import { Suspense, useCallback } from 'react';
-import type { RouteObject } from 'react-router-dom';
-import { Navigate, useRoutes } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+/* eslint-disable */
+import { Spin } from "antd";
+import { Suspense, useCallback } from "react";
+import type { RouteObject } from "react-router-dom";
+import { Navigate, useRoutes } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 
-import HomePage from '@/pages/HomePage';
-import Aside from '@/pages/HomePage/Aside';
-import { userType } from '@/store';
+import HomePage from "@/pages/HomePage";
+import ReviewPage from "@/pages/ReviewPage";
+import Aside from "@/pages/HomePage/Aside";
+import { userType } from "@/store";
 
-import type { routerConfigType } from './routerConfigType';
+import type { routerConfigType } from "./routerConfigType";
 
 // ———————— 说明 （1、2级路由正常）————————————
 // 需要全部白色背景的页面在suspend里面加上div即可
@@ -21,18 +23,18 @@ import type { routerConfigType } from './routerConfigType';
 
 const routeConfig: routerConfigType[] = [
   {
-    path: '/*',
+    path: "/*",
     element: <HomePage />,
-    auth: [1, 9, 8, 7, 'user1'],
+    auth: [1, 9, 8, 7, "user1"],
     children: [
       {
-        path: '',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "",
+        auth: [1, 9, 8, 7, "user1"],
         element: <Navigate to="home" replace></Navigate>,
       },
       {
-        path: 'home',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "home",
+        auth: [1, 9, 8, 7, "user1"],
         element: (
           <Suspense fallback={<Spin size="large" />}>
             <div>首页内容</div>
@@ -40,8 +42,8 @@ const routeConfig: routerConfigType[] = [
         ),
       },
       {
-        path: 'user-manager',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "user-manager",
+        auth: [1, 9, 8, 7, "user1"],
         element: (
           <Suspense fallback={<Spin size="large" />}>
             <div>用户管理</div>
@@ -50,17 +52,17 @@ const routeConfig: routerConfigType[] = [
       },
       // 人口管理
       {
-        path: 'population-manager/*',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "population-manager/*",
+        auth: [1, 9, 8, 7, "user1"],
         children: [
           {
-            path: '',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "",
+            auth: [1, 9, 8, 7, "user1"],
             element: <Navigate to="person-management" replace></Navigate>,
           },
           {
-            path: 'person-management',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "person-management",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>人员管理</div>
@@ -68,8 +70,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'history-lookOver',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "history-lookOver",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>历史数据查看</div>
@@ -77,17 +79,17 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'pending',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "pending",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
-                <div>审核待处理</div>
+                <div><ReviewPage></ReviewPage></div>
               </Suspense>
             ),
           },
           {
-            path: 'designate',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "designate",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>群众指派</div>
@@ -95,8 +97,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'information-push',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "information-push",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>人员信息推送</div>
@@ -107,18 +109,18 @@ const routeConfig: routerConfigType[] = [
       },
       // 基础信息 有侧边栏的例子
       {
-        path: 'basic-information',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "basic-information",
+        auth: [1, 9, 8, 7, "user1"],
         element: <Aside></Aside>,
         children: [
           {
-            path: '',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "",
+            auth: [1, 9, 8, 7, "user1"],
             element: <Navigate to="basic" replace></Navigate>,
           },
           {
-            path: 'basic',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "basic",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>基础信息</div>
@@ -126,8 +128,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'combine-masses',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "combine-masses",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>专群结合</div>
@@ -135,8 +137,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'livelihood',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "livelihood",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>民生</div>
@@ -144,8 +146,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'civil',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "civil",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>民政卫健</div>
@@ -153,8 +155,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'political-education',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "political-education",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>政治教育</div>
@@ -162,8 +164,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'production-operation',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "production-operation",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>生产经营情况</div>
@@ -171,8 +173,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'other-information',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "other-information",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>其他情况</div>
@@ -180,8 +182,8 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
-            path: 'insure-person-information',
-            auth: [1, 9, 8, 7, 'user1'],
+            path: "insure-person-information",
+            auth: [1, 9, 8, 7, "user1"],
             element: (
               <Suspense fallback={<Spin size="large" />}>
                 <div>包保人员信息</div>
@@ -191,8 +193,8 @@ const routeConfig: routerConfigType[] = [
         ],
       },
       {
-        path: 'event-management',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "event-management",
+        auth: [1, 9, 8, 7, "user1"],
         element: (
           <Suspense fallback={<Spin size="large" />}>
             <div>事件管理</div>
@@ -200,8 +202,8 @@ const routeConfig: routerConfigType[] = [
         ),
       },
       {
-        path: 'log-record',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "log-record",
+        auth: [1, 9, 8, 7, "user1"],
         element: (
           <Suspense fallback={<Spin size="large" />}>
             <div>日志记录</div>
@@ -209,8 +211,8 @@ const routeConfig: routerConfigType[] = [
         ),
       },
       {
-        path: 'check-performance',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "check-performance",
+        auth: [1, 9, 8, 7, "user1"],
         element: (
           <Suspense fallback={<Spin size="large" />}>
             <div>绩效查看</div>
@@ -218,8 +220,8 @@ const routeConfig: routerConfigType[] = [
         ),
       },
       {
-        path: 'system-setting',
-        auth: [1, 9, 8, 7, 'user1'],
+        path: "system-setting",
+        auth: [1, 9, 8, 7, "user1"],
         element: (
           <Suspense fallback={<Spin size="large" />}>
             <div>系统设置</div>
@@ -229,11 +231,11 @@ const routeConfig: routerConfigType[] = [
     ],
   },
   {
-    path: '404',
+    path: "404",
     element: <div>路径错误,用户未登录或用户权限不够</div>,
   },
   {
-    path: 'login',
+    path: "login",
     element: <>LOGIN</>,
   },
 ];
@@ -252,7 +254,7 @@ function MyRoutes() {
           return null;
         }
         if (
-          route.path !== '404' &&
+          route.path !== "404" &&
           route.auth !== undefined &&
           route.auth.find((item) => item === currentUserType) === undefined
         ) {
@@ -266,7 +268,7 @@ function MyRoutes() {
       });
       return list;
     },
-    [currentUserType],
+    [currentUserType]
   );
 
   const getRoutes = useRoutes(transformRoutes(routeConfig));
