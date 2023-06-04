@@ -1,11 +1,14 @@
+import './index.css';
+
 import { Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
+import React from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
+const HomePage = React.lazy(() => import('@/pages/HomePage'));
+const Aside = React.lazy(() => import('@/pages/HomePage/Aside'));
 
-import HomePage from '@/pages/HomePage';
-import Aside from '@/pages/HomePage/Aside';
 import { userType } from '@/store';
 
 import type { routerConfigType } from './routerConfigType';
@@ -22,7 +25,11 @@ import type { routerConfigType } from './routerConfigType';
 const routeConfig: routerConfigType[] = [
   {
     path: '/*',
-    element: <HomePage />,
+    element: (
+      <Suspense fallback={<Spin size="large" />}>
+        <HomePage />
+      </Suspense>
+    ),
     auth: [1, 9, 8, 7, 'user1'],
     children: [
       {
@@ -34,7 +41,7 @@ const routeConfig: routerConfigType[] = [
         path: 'home',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin size="large" />}>
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>首页内容</div>
           </Suspense>
         ),
@@ -43,7 +50,7 @@ const routeConfig: routerConfigType[] = [
         path: 'user-manager',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin size="large" />}>
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>用户管理</div>
           </Suspense>
         ),
@@ -62,7 +69,7 @@ const routeConfig: routerConfigType[] = [
             path: 'person-management',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>人员管理</div>
               </Suspense>
             ),
@@ -71,7 +78,7 @@ const routeConfig: routerConfigType[] = [
             path: 'history-lookOver',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>历史数据查看</div>
               </Suspense>
             ),
@@ -80,7 +87,7 @@ const routeConfig: routerConfigType[] = [
             path: 'pending',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>审核待处理</div>
               </Suspense>
             ),
@@ -89,7 +96,7 @@ const routeConfig: routerConfigType[] = [
             path: 'designate',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>群众指派</div>
               </Suspense>
             ),
@@ -98,7 +105,7 @@ const routeConfig: routerConfigType[] = [
             path: 'information-push',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>人员信息推送</div>
               </Suspense>
             ),
@@ -109,7 +116,11 @@ const routeConfig: routerConfigType[] = [
       {
         path: 'basic-information',
         auth: [1, 9, 8, 7, 'user1'],
-        element: <Aside></Aside>,
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <Aside></Aside>
+          </Suspense>
+        ),
         children: [
           {
             path: '',
@@ -120,7 +131,7 @@ const routeConfig: routerConfigType[] = [
             path: 'basic',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>基础信息</div>
               </Suspense>
             ),
@@ -129,7 +140,7 @@ const routeConfig: routerConfigType[] = [
             path: 'combine-masses',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>专群结合</div>
               </Suspense>
             ),
@@ -138,7 +149,7 @@ const routeConfig: routerConfigType[] = [
             path: 'livelihood',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>民生</div>
               </Suspense>
             ),
@@ -147,7 +158,7 @@ const routeConfig: routerConfigType[] = [
             path: 'civil',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>民政卫健</div>
               </Suspense>
             ),
@@ -156,7 +167,7 @@ const routeConfig: routerConfigType[] = [
             path: 'political-education',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>政治教育</div>
               </Suspense>
             ),
@@ -165,7 +176,7 @@ const routeConfig: routerConfigType[] = [
             path: 'production-operation',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>生产经营情况</div>
               </Suspense>
             ),
@@ -174,7 +185,7 @@ const routeConfig: routerConfigType[] = [
             path: 'other-information',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>其他情况</div>
               </Suspense>
             ),
@@ -183,7 +194,7 @@ const routeConfig: routerConfigType[] = [
             path: 'insure-person-information',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin size="large" />}>
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div>包保人员信息</div>
               </Suspense>
             ),
@@ -194,7 +205,7 @@ const routeConfig: routerConfigType[] = [
         path: 'event-management',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin size="large" />}>
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>事件管理</div>
           </Suspense>
         ),
@@ -203,7 +214,7 @@ const routeConfig: routerConfigType[] = [
         path: 'log-record',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin size="large" />}>
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>日志记录</div>
           </Suspense>
         ),
@@ -212,7 +223,7 @@ const routeConfig: routerConfigType[] = [
         path: 'check-performance',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin size="large" />}>
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>绩效查看</div>
           </Suspense>
         ),
@@ -221,7 +232,7 @@ const routeConfig: routerConfigType[] = [
         path: 'system-setting',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin size="large" />}>
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>系统设置</div>
           </Suspense>
         ),
