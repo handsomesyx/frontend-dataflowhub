@@ -2,7 +2,6 @@
 import React from 'react';
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { color } from 'echarts/types/dist/echarts';
 
 interface DataType {
   description: string;
