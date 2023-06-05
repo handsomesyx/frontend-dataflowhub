@@ -15,7 +15,7 @@ interface DataType {
   key: string;
 }
 
-const whatcolor= (e: string) => {
+const whatcolor= (e) => {
   if (e === '特别紧急') {
     return (
       <div style={{ backgroundColor: 'red', width: '50px', height: '20px' }}/>
