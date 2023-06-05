@@ -131,74 +131,7 @@ const columns: ColumnsType<DataType> = [
 ];
 
 const data: DataType[] = [
-  {
-    description: '初次增加姓名“xxx”的群众',
-    type: '新增群众',
-    belong: '咯咯gaga区',
-    creattime: '2023/6/4',
-    emergency: '特别紧急',
-    key: '1',
-    },
-  {
-    description: '初次增加姓名“xxx”的群众',
-    type: '新增群众',
-    belong: '埋土社区',
-    creattime: '2023/6/4',
-    emergency: '不紧急',
-    key: '2',
-    },
-    {
-      description: '初次增加姓名“xxx”的群众',
-      type: '新增群众',
-      belong: '埋土社区',
-      creattime: '2023/6/4',
-      emergency: '不紧急',
-      key: '2',
-      },
-      {
-        description: '初次增加姓名“xxx”的群众',
-        type: '新增群众',
-        belong: '埋土社区',
-        creattime: '2023/6/4',
-        emergency: '不紧急',
-        key: '2',
-        },
-    {
-      description: '初次增加姓名“xxx”的群众',
-      type: '新增群众',
-      belong: '咯咯社区',
-      creattime: '2023/6/4',
-      emergency: '不紧急',
-      key: '2',
-
-      },
-      {
-        description: '初次增加姓名“xxx”的群众',
-        type: '新增群众',
-        belong: '咯咯社区',
-        creattime: '2023/6/4',
-        emergency: '不紧急',
-        key: '2',
   
-        },
-        {
-          description: '初次增加姓名“xxx”的群众',
-          type: '新增群众',
-          belong: '咯咯社区',
-          creattime: '2023/6/4',
-          emergency: '不紧急',
-          key: '2',
-    
-          },
-      {
-        description: '初次增加姓名“xxx”的群众',
-        type: '新增群众',
-        belong: '呱呱社区',
-        creattime: '2023/6/4',
-        emergency: '紧急',
-        key: '2',
-
-        },
         {
           description: '初次增加姓名“xxx”的群众',
           type: '新增群众',
@@ -217,6 +150,78 @@ const data: DataType[] = [
           key: '2',
     
           },
+          {
+            description: '初次增加姓名“xxx”的群众',
+            type: '新增群众',
+            belong: '呱呱社区',
+            creattime: '2023/6/4',
+            emergency: '紧急',
+            key: '2',
+    
+            },
+          {
+            description: '初次增加姓名“xxx”的群众',
+            type: '新增群众',
+            belong: '咯咯社区',
+            creattime: '2023/6/4',
+            emergency: '不紧急',
+            key: '2',
+      
+            },
+            {
+              description: '初次增加姓名“xxx”的群众',
+              type: '新增群众',
+              belong: '呱呱社区',
+              creattime: '2023/6/4',
+              emergency: '紧急',
+              key: '2',
+      
+              },
+            {
+              description: '初次增加姓名“xxx”的群众',
+              type: '新增群众',
+              belong: '咯咯社区',
+              creattime: '2023/6/4',
+              emergency: '不紧急',
+              key: '2',
+        
+              },
+              {
+                description: '初次增加姓名“xxx”的群众',
+                type: '新增群众',
+                belong: '呱呱社区',
+                creattime: '2023/6/4',
+                emergency: '紧急',
+                key: '2',
+        
+                },
+              {
+                description: '初次增加姓名“xxx”的群众',
+                type: '新增群众',
+                belong: '咯咯社区',
+                creattime: '2023/6/4',
+                emergency: '不紧急',
+                key: '2',
+          
+                },
+                {
+                  description: '初次增加姓名“xxx”的群众',
+                  type: '新增群众',
+                  belong: '呱呱社区',
+                  creattime: '2023/6/4',
+                  emergency: '紧急',
+                  key: '2',
+          
+                  },
+                {
+                  description: '初次增加姓名“xxx”的群众',
+                  type: '新增群众',
+                  belong: '咯咯社区',
+                  creattime: '2023/6/4',
+                  emergency: '不紧急',
+                  key: '2',
+            
+                  },
           {
             description: '初次增加姓名“xxx”的群众',
             type: '新增群众',

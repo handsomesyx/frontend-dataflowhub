@@ -79,9 +79,9 @@ const columns: ColumnsType<DataType> = [
     key: 'action',
     render: (_, record) => (
       <Space size="middle">
-        <a>重新提交</a>
         <a>删除</a>
-        <a style={{visibility:record.status=='审核失败'?'visible':'hidden'}}>{record.status=='审核失败'?'查看处理意见':'______________'}</a>
+        <a style={{visibility:record.status=='审核失败'?'visible':'hidden'}}>{record.status=='审核失败'?'查看处理意见':''}</a>
+        <a style={{visibility:record.status=='审核失败'?'visible':'hidden'}}>{record.status=='审核失败'?'重新提交':''}</a>
       </Space>
     ),
   },

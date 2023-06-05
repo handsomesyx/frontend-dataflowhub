@@ -1,5 +1,4 @@
 /* eslint-disable */
-import React from 'react';
 import { Tabs } from 'antd';
 import Pending from './Pending';
 import Complete from './Complete';
@@ -28,7 +27,7 @@ const items: TabsProps['items'] = [
 function ReviewPage() {
   return (
     <>
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange} style={{paddingTop:'1vw',paddingLeft:'2vw',paddingRight:'2vw'}}/>
+      <Tabs defaultActiveKey="1" items={items} onChange={onChange}  style={{paddingTop:'1vw',paddingLeft:'2vw',paddingRight:'2vw'}}/>
     </>
   );
 }
