@@ -1,0 +1,34 @@
+.CardContent {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr;
+  row-gap: 4%;
+}
+
+.CardContentRow {
+  display: flex;
+  min-width: 0;
+  font-size: 14px;
+  flex-direction: row;
+  justify-content: flex-start;
+  column-gap: 2%;
+}
+
+.CardContentHead {
+  color: #000 75%;
+  width: auto;
+  font-size: 14px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.CardContentContent {
+  color: #001a29;
+  max-width: 100%;
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

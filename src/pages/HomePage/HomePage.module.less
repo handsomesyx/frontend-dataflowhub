@@ -97,7 +97,7 @@
       /* 添加中间的分割线 */
       > li:not(:nth-child(4n + 1))::before {
         height: 40%;
-        content: '';
+        content: "";
         border-left: 1px solid #414c71;
         position: absolute;
         left: 0;
@@ -253,17 +253,25 @@
       }
     }
 
+    :global {
+      .NotContentFFF{
+        background-color: transparent !important;
+        padding: 0 !important;
+      }
+    }
+
     > div {
       height: 100%;
       width: 80%;
       flex: 1;
-      background-color: #fff;
 
       /* 相对定位是为了主页面懒加载内容能够居中展示 */
       position: relative;
       border-radius: 2px;
       overflow: hidden;
       padding: 10px;
+      background-color: #fff;
+     
     }
 
     /* 设置的是有侧边栏页面 中的主页面内容 */
@@ -273,3 +281,4 @@
     }
   }
 }
+

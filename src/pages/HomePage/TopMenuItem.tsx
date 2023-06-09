@@ -113,6 +113,32 @@ function Menu() {
       text: '基础信息',
       path: '/basic-information',
       show: true,
+      children: [
+        {
+          id: '4-1',
+          text: '行政区域管理',
+          path: '/basic-information/administrativeRegion',
+          show: true,
+        },
+        // {
+        //   id: '4-2',
+        //   text: '网格区域管理',
+        //   path: '/basic-information/gridArea',
+        //   show: true,
+        // },
+        {
+          id: '4-3',
+          text: '警局管理',
+          path: '/basic-information/policeStation',
+          show: true,
+        },
+        {
+          id: '4-4',
+          text: '社区管理',
+          path: '/basic-information/community',
+          show: true,
+        },
+      ],
     },
     {
       id: '5',
