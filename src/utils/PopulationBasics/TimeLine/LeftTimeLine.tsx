@@ -12,15 +12,6 @@ type ItemConfigType = {
 // 不包含外层的布局  时间线含滑动同步功能
 function LeftTimeLine(props: any) {
     const [activeNum, setActiveNum] = useState(1);
-    const itemConfig: ItemConfigType[] = [
-        { id: 1, name: '基础信息', href: '#basicsInformation1' },
-        { id: 2, name: '专群结合', href: '#combination2' },
-        { id: 3, name: '民生', href: '#wellbeing3' },
-        { id: 4, name: '民政卫健', href: '#administration4' },
-        { id: 5, name: '生产经营情况', href: '#production5' },
-        { id: 6, name: '其他情况', href: '#otherInformation6' },
-        { id: 7, name: '包保人员信息', href: '#warrantor7' },
-    ];
 
     // 节流函数
     const throttle = (func: any, delay: any) => {
@@ -78,10 +69,10 @@ function LeftTimeLine(props: any) {
 
 
     const transformItems = (items: ItemConfigType[]) => {
-        return items.map((item: ItemConfigType) => {
+        return items?.map((item: ItemConfigType) => {
             return {
                 dot: activeNum === item.id ? '' : <div className={styles.CommonDot}></div>,
-                children: <a href={item.href}
+                children: <a href={`#${item.href}`}
                     style={activeNum === item.id ? { color: '#1677ff' } : {}}>{item.name}</a>
             };
         });
@@ -92,7 +83,7 @@ function LeftTimeLine(props: any) {
             <div id="fyLeftAnchor">
                 <Timeline
                     className={styles.TimeLineStyle}
-                    items={transformItems(itemConfig)}
+                    items={transformItems(props?.menuConfig)}
                 />
             </div>
         </>

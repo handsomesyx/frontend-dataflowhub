@@ -11,7 +11,8 @@ const AdministrativeRegion = React.lazy(
   () => import('@/pages/BasicInformation/AdministrativeRegion')
 );
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
-const IndexHome = React.lazy(() => import('@/pages/PopulationBasics'));
+const InformationShow = React.lazy(() => import('@/pages/PerpleInformation/Show'));
+const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'));
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 
 import Community from '@/pages/BasicInformation/Community';
@@ -81,7 +82,7 @@ const routeConfig: routerConfigType[] = [
               <Suspense
                 fallback={<Spin className="SetLazySpinCent" size="large" />}
               >
-                <div className='NotContentFFF'><IndexHome /></div>
+                <div className='NotContentFFF'><InformationShow /></div>
               </Suspense>
             ),
           },
@@ -107,17 +108,18 @@ const routeConfig: routerConfigType[] = [
               </Suspense>
             ),
           },
-          // {
-          //   path: 'designate',
-          //   auth: [1, 9, 8, 7, 'user1'],
-          //   element: (
-          //     <Suspense
-          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
-          //     >
-          //       <div>群众指派</div>
-          //     </Suspense>
-          //   ),
-          // },
+          // 新增加人员基础信息
+          {
+            path: 'person-management-add',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense
+                fallback={<Spin className="SetLazySpinCent" size="large" />}
+              >
+                <div className='NotContentFFF'><InformationAdd></InformationAdd></div>
+              </Suspense>
+            ),
+          },
           // {
           //   path: 'information-push',
           //   auth: [1, 9, 8, 7, 'user1'],
