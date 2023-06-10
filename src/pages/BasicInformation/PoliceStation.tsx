@@ -2,7 +2,7 @@ import './index.css';
 
 import { Button, Card, Col, Form, Image, Modal, Row, Select, Space, Table, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import shanchu from '../../assets/delete.svg';
 import xiugai from '../../assets/xiugai.svg';

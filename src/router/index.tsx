@@ -11,6 +11,7 @@ const AdministrativeRegion = React.lazy(
   () => import('@/pages/BasicInformation/AdministrativeRegion')
 );
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
+const IndexHome = React.lazy(() => import('@/pages/PopulationBasics'));
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 
 import Community from '@/pages/BasicInformation/Community';
@@ -19,8 +20,7 @@ import { userType } from '@/store';
 
 import type { routerConfigType } from './routerConfigType';
 // ———————— 说明 （1、2级路由正常）————————————
-// 需要全部白色背景的页面在suspend里面加上div即可
-// 需要侧边栏的页面在父级路由上面加上element:<Aside></Aside>即可   侧边栏菜单在HomePage/AsideItems中配置(现在没写好)
+// 需要全部白色背景的页面在suspend里面加上div即可  不需要全部白色背景的加类名NotContentFFF
 // 需要写哪个页面，就在哪个页面对应的路由下，将文字替换为组件名称 使用懒加载形式引入
 
 // 没有路由需要自己加到相应位置，添加后 一级 二级菜单路由在HomePage/TopMenuItem.tsx中配置
@@ -81,7 +81,7 @@ const routeConfig: routerConfigType[] = [
               <Suspense
                 fallback={<Spin className="SetLazySpinCent" size="large" />}
               >
-                <div>人员管理</div>
+                <div className='NotContentFFF'><IndexHome /></div>
               </Suspense>
             ),
           },
@@ -107,31 +107,30 @@ const routeConfig: routerConfigType[] = [
               </Suspense>
             ),
           },
-          {
-            path: 'designate',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense
-                fallback={<Spin className="SetLazySpinCent" size="large" />}
-              >
-                <div>群众指派</div>
-              </Suspense>
-            ),
-          },
-          {
-            path: 'information-push',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense
-                fallback={<Spin className="SetLazySpinCent" size="large" />}
-              >
-                <div>人员信息推送</div>
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: 'designate',
+          //   auth: [1, 9, 8, 7, 'user1'],
+          //   element: (
+          //     <Suspense
+          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
+          //     >
+          //       <div>群众指派</div>
+          //     </Suspense>
+          //   ),
+          // },
+          // {
+          //   path: 'information-push',
+          //   auth: [1, 9, 8, 7, 'user1'],
+          //   element: (
+          //     <Suspense
+          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
+          //     >
+          //       <div>人员信息推送</div>
+          //     </Suspense>
+          //   ),
+          // },
         ],
       },
-      // 基础信息 有侧边栏的例子
       {
         path: 'basic-information/*',
         auth: [1, 9, 8, 7, 'user1'],
