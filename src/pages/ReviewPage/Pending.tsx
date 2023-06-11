@@ -1,7 +1,8 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Space, Table, Tag, Divider, Button, Modal, Descriptions } from 'antd';
+import { Space, Table, Tag, Divider, Button, Modal, Descriptions,message, Popconfirm } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import TextArea from 'antd/es/input/TextArea';
 
 interface ChangeWhat {
   key: React.Key;
@@ -9,6 +10,16 @@ interface ChangeWhat {
   before: string;
   after: string;
 }
+
+
+
+const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  console.log('Change:', e.target.value);
+};  
+
+const confirm = () => {
+  message.info('删除完成');
+};
 
 const changecolumns: ColumnsType<ChangeWhat> = [
   {
@@ -50,6 +61,7 @@ interface DataType {
   description: string;
   type: string;
   belong: string;
+  admin: string;
   creattime: string;
   emergency: string;
   key: string;
@@ -57,17 +69,33 @@ interface DataType {
 const App: React.FC = () => {
 
     const [open, setOpen] = useState(false);
+    const [refuseopen, setRefuseOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
-    const [modalText, setModalText] = useState('初次增加姓名“xxx”的群众');
-  
-    const showModal = () => {
+    const [modalText, setModalText] = useState<DataType>();
+
+    const handleRefuse = () =>{
+      setRefuseOpen(true);
+    };
+
+    const handlereReview = () =>{
+      setRefuseOpen(false);
+      setOpen(false);
+    };
+
+    const showModal = (e) => {
+      setModalText(e);
       setOpen(true);
     };
 
   
     const handleCancel = () => {
-      console.log('Clicked cancel button');
       setOpen(false);
+
+    };
+
+    const handlerefuseCancel = () => {
+
+      setRefuseOpen(false);
     };
 
 const whatcolor= (e: string) => {
@@ -104,6 +132,11 @@ const columns: ColumnsType<DataType> = [
     key: ' belong',
   },
   {
+    title: '所属网格员',
+    dataIndex: 'admin',
+    key: 'admin',
+  },
+  {
     title: '创建时间',
     dataIndex: 'creattime',
     key: 'creattime',
@@ -123,8 +156,17 @@ const columns: ColumnsType<DataType> = [
     key: 'action',
     render: (_, record) => (
       <Space size="middle">
-        <a onClick={showModal}>查看具体信息</a>
+        <a onClick={()=>showModal(record)}>查看具体信息</a>
+        <Popconfirm
+        placement="topRight"
+        title="你确定要删除吗？"
+        onConfirm={confirm}
+        okText="Yes"
+        cancelText="No"
+      >
         <a>删除</a>
+      </Popconfirm>
+        
       </Space>
     ),
   },
@@ -136,24 +178,26 @@ const data: DataType[] = [
           description: '初次增加姓名“xxx”的群众',
           type: '新增群众',
           belong: '呱呱社区',
+          admin: '小格',
           creattime: '2023/6/4',
           emergency: '紧急',
           key: '2',
-  
           },
         {
           description: '初次增加姓名“xxx”的群众',
           type: '新增群众',
           belong: '咯咯社区',
+          admin: '小格',
           creattime: '2023/6/4',
           emergency: '不紧急',
           key: '2',
     
           },
           {
-            description: '初次增加姓名“xxx”的群众',
+            description: '初次',
             type: '新增群众',
             belong: '呱呱社区',
+            admin: '小格',
             creattime: '2023/6/4',
             emergency: '紧急',
             key: '2',
@@ -163,6 +207,7 @@ const data: DataType[] = [
             description: '初次增加姓名“xxx”的群众',
             type: '新增群众',
             belong: '咯咯社区',
+            admin: '小格',
             creattime: '2023/6/4',
             emergency: '不紧急',
             key: '2',
@@ -172,6 +217,7 @@ const data: DataType[] = [
               description: '初次增加姓名“xxx”的群众',
               type: '新增群众',
               belong: '呱呱社区',
+              admin: '小格',
               creattime: '2023/6/4',
               emergency: '紧急',
               key: '2',
@@ -181,6 +227,7 @@ const data: DataType[] = [
               description: '初次增加姓名“xxx”的群众',
               type: '新增群众',
               belong: '咯咯社区',
+              admin: '小格',
               creattime: '2023/6/4',
               emergency: '不紧急',
               key: '2',
@@ -191,6 +238,7 @@ const data: DataType[] = [
                 type: '新增群众',
                 belong: '呱呱社区',
                 creattime: '2023/6/4',
+                admin: '小格',
                 emergency: '紧急',
                 key: '2',
         
@@ -199,6 +247,7 @@ const data: DataType[] = [
                 description: '初次增加姓名“xxx”的群众',
                 type: '新增群众',
                 belong: '咯咯社区',
+                admin: '小格',
                 creattime: '2023/6/4',
                 emergency: '不紧急',
                 key: '2',
@@ -209,6 +258,7 @@ const data: DataType[] = [
                   type: '新增群众',
                   belong: '呱呱社区',
                   creattime: '2023/6/4',
+                  admin: '小格',
                   emergency: '紧急',
                   key: '2',
           
@@ -218,6 +268,7 @@ const data: DataType[] = [
                   type: '新增群众',
                   belong: '咯咯社区',
                   creattime: '2023/6/4',
+                  admin: '小格',
                   emergency: '不紧急',
                   key: '2',
             
@@ -226,6 +277,7 @@ const data: DataType[] = [
             description: '初次增加姓名“xxx”的群众',
             type: '新增群众',
             belong: '咯咯社区',
+            admin: '小格',
             creattime: '2023/6/4',
             emergency: '不紧急',
             key: '2',
@@ -242,13 +294,16 @@ const data: DataType[] = [
       footer={[
         <Button key="cancel" onClick={handleCancel}>
           取消
+        </Button>,<Button key="cancel" onClick={handleRefuse} style={{backgroundColor:"red",color:"white"}}>
+          拒绝
+        </Button>,<Button key="cancel"  type="primary" onClick={handleCancel} >
+          同意
         </Button>,
       ]}
-      confirmLoading={confirmLoading}
       onCancel={handleCancel}
     >
       <Descriptions
-      title={modalText}
+      title={modalText?.description}
       bordered
       column={{ xxl: 1, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
     >
@@ -257,6 +312,16 @@ const data: DataType[] = [
     </Descriptions>
     <Divider />
     <Table  pagination={false} columns={changecolumns} dataSource={changedata} size="middle" />
-    </Modal></>)}
+    </Modal><Modal okText="确认"
+    cancelText="取消" title="提交拒绝原因" open={refuseopen} onOk={handlereReview} onCancel={handlerefuseCancel}>
+    <TextArea
+      style={{marginTop:30,marginBottom:40}}
+      autoSize={{ minRows: 3, maxRows: 5 }}
+      showCount
+      maxLength={1000}
+      onChange={onChange}
+      placeholder="输入审核意见"
+    />
+</Modal></>)}
 
 export default App;
