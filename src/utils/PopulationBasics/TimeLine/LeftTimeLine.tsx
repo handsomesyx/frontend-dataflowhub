@@ -72,7 +72,7 @@ function LeftTimeLine(props: any) {
         return items?.map((item: ItemConfigType) => {
             return {
                 dot: activeNum === item.id ? '' : <div className={styles.CommonDot}></div>,
-                children: <a href={`#${item.href}`}
+                children: <a href={`#${item.href}`} className={styles.MenuAFontSize}
                     style={activeNum === item.id ? { color: '#1677ff' } : {}}>{item.name}</a>
             };
         });

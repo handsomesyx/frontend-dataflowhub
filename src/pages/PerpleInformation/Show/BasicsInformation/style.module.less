@@ -1,12 +1,202 @@
+/* stylelint-disable no-descending-specificity */
+@no:100;
+
+@aa:30;
+
+/* index页面 */
 .BorderBox{
     width: 100%;
-    height:100px ;
     border: 1px solid #d9d9d9;
+    box-sizing: border-box;
     border-radius: 5px;
-    display: flex;
+    padding: 0 1% 1%;
+    font-size: 14px;
 
-    img{
-        height: 413px;
-        width: 295px;
+    .Dir{
+        width: 100%;
+        border-top: 1px solid #d9d9d9;
+        margin-top: 1%;
     }
+}
+
+/* 基础信息页面 */
+.CommonBox{
+    @media screen and (min-width: 768px) {
+        font-size: ((768px / @no)+4);
+    }
+    
+    @media screen and (min-width: 800px) {
+        font-size: ((800px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1024px) {
+        font-size: ((1024px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1200px) {
+        font-size: ((1200px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1440px) {
+        font-size: ((1440px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1920px) {
+        font-size: ((1920px / @no)+4);
+    }
+    
+    @media screen and (min-width: 2200) {
+        font-size: ((2200px / @no)+4);
+    }
+
+    .TopSelf{
+        width: 100%;
+        display: flex;
+        font-size: .9em;
+    
+        >div>div{
+            height: 2.4em;
+            border-bottom: 1.5px dashed  #d9d9d9;
+            align-items: center;
+            display: flex;
+            box-sizing: border-box;
+    
+            >span:nth-child(1){
+                color: red;
+                width: 10px;
+            }
+    
+            >span:nth-child(2){
+                flex: 1;
+                overflow-wrap: break-word;
+                word-break: break-all;
+                font-weight: bold;
+            }
+        }
+    
+        /* 基本信息标签 */
+        >div:nth-child(1){
+            width: (350em/@aa);
+            margin-top: 10px;
+            font-size: 1em;
+    
+            img{
+                height: (413em/@aa);
+                width: (295em/@aa);
+            }
+        }
+    
+        /* 姓名列 */
+        >div:nth-child(2)
+            {
+            flex:1 ;
+        }
+    
+        /* 身份证号列 */
+        >div:nth-child(3)
+            {
+            flex: 1;
+        }
+    
+    }
+    
+    .TopDataLong{
+        font-size: .9em;
+        margin-left: (350em/@aa);
+    
+        >div{
+            height: 2.4em;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px dashed  #d9d9d9;
+        }
+    }
+
+    :global{
+        .SpanRedColor{
+            color: red;
+            width: 10px;
+        }
+    }
+
+}
+
+/* 家庭成员列表页面 */
+.FamilyBox{
+    width: 100%;
+    
+    >div:nth-last-child(1){
+        border: none;
+        padding: 0;
+    }
+
+    .FamilyBorderBox{
+        display: flex;
+        padding: 0 0 1%;
+        border-bottom: 1px solid #d9d9d9;
+        @media screen and (min-width: 768px) {
+            font-size: ((768px / @no)+4);
+        }
+        
+        @media screen and (min-width: 800px) {
+            font-size: ((800px / @no)+4);
+        }
+        
+        @media screen and (min-width: 1024px) {
+            font-size: ((1024px / @no)+4);
+        }
+        
+        @media screen and (min-width: 1200px) {
+            font-size: ((1200px / @no)+4);
+        }
+        
+        @media screen and (min-width: 1440px) {
+            font-size: ((1440px / @no)+4);
+        }
+        
+        @media screen and (min-width: 1920px) {
+            font-size: ((1920px / @no)+4);
+        }
+        
+        @media screen and (min-width: 2200) {
+            font-size: ((2200px / @no)+4);
+        }
+    
+        >div{
+            font-size: .9em;
+        }
+    
+        >div>div{
+            height:2.4em ;   
+            border-bottom: 1.5px dashed  #d9d9d9;
+            display: flex;
+            align-items: center;
+    
+            span{
+                font-weight: bold;
+            }
+        }
+    
+        >div:nth-child(1){
+            width: (350em/@aa);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bolder;
+    
+            span{
+                font-size: 1.2em;
+            }
+        }
+    
+        >div:nth-child(2){
+            flex: 1;
+        }
+    
+        >div:nth-child(3){
+            flex: 1;
+        }
+    }
+    
 }
