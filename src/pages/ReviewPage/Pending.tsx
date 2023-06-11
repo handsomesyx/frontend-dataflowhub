@@ -1,15 +1,30 @@
 /* eslint-disable */
 import React, { useState } from 'react';
-import { Space, Table, Tag, Divider, Button, Modal, Descriptions,message, Popconfirm } from 'antd';
+import { Space, Table,  Typography ,Tag, Divider, Button, Modal, Descriptions,message, Popconfirm, Checkbox } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import TextArea from 'antd/es/input/TextArea';
+import { CheckboxValueType } from 'antd/es/checkbox/Group';
 
+
+const { Title } = Typography;
 interface ChangeWhat {
   key: React.Key;
   value: string;
   before: string;
   after: string;
 }
+
+const options = [
+  { label: 'A涉政、恐、毒、重大刑事犯罪前科人员，肇事肇祸精神病人，潜在社会危害性等重点人员', value: 'A' },
+  { label: 'B一般违法和其他刑满释放人员、社区矫正、取保候审监视居住、境外居留人员、旅游人员、涉枪涉爆涉危化、现实表现差等重点人员', value: 'B' },
+  { label: 'C其他流动人口、涉访人员和独居老人、生活困难等无人监管的鳏寡孤独残障病幼等特殊人员', value: 'C' },
+  { label: 'D有固定住所、稳定收入、家庭和睦、现实表现良好等各种人群', value: 'D' },
+
+];
+
+const checkonChange = (checkedValues: CheckboxValueType[]) => {
+  console.log('checked = ', checkedValues);
+};
 
 
 
@@ -175,7 +190,7 @@ const columns: ColumnsType<DataType> = [
 const data: DataType[] = [
   
         {
-          description: '初次增加姓名“xxx”的群众',
+          description: '初次的群众',
           type: '新增群众',
           belong: '呱呱社区',
           admin: '小格',
@@ -190,99 +205,10 @@ const data: DataType[] = [
           admin: '小格',
           creattime: '2023/6/4',
           emergency: '不紧急',
-          key: '2',
+          key: '3',
     
           },
-          {
-            description: '初次',
-            type: '新增群众',
-            belong: '呱呱社区',
-            admin: '小格',
-            creattime: '2023/6/4',
-            emergency: '紧急',
-            key: '2',
-    
-            },
-          {
-            description: '初次增加姓名“xxx”的群众',
-            type: '新增群众',
-            belong: '咯咯社区',
-            admin: '小格',
-            creattime: '2023/6/4',
-            emergency: '不紧急',
-            key: '2',
-      
-            },
-            {
-              description: '初次增加姓名“xxx”的群众',
-              type: '新增群众',
-              belong: '呱呱社区',
-              admin: '小格',
-              creattime: '2023/6/4',
-              emergency: '紧急',
-              key: '2',
-      
-              },
-            {
-              description: '初次增加姓名“xxx”的群众',
-              type: '新增群众',
-              belong: '咯咯社区',
-              admin: '小格',
-              creattime: '2023/6/4',
-              emergency: '不紧急',
-              key: '2',
-        
-              },
-              {
-                description: '初次增加姓名“xxx”的群众',
-                type: '新增群众',
-                belong: '呱呱社区',
-                creattime: '2023/6/4',
-                admin: '小格',
-                emergency: '紧急',
-                key: '2',
-        
-                },
-              {
-                description: '初次增加姓名“xxx”的群众',
-                type: '新增群众',
-                belong: '咯咯社区',
-                admin: '小格',
-                creattime: '2023/6/4',
-                emergency: '不紧急',
-                key: '2',
-          
-                },
-                {
-                  description: '初次增加姓名“xxx”的群众',
-                  type: '新增群众',
-                  belong: '呱呱社区',
-                  creattime: '2023/6/4',
-                  admin: '小格',
-                  emergency: '紧急',
-                  key: '2',
-          
-                  },
-                {
-                  description: '初次增加姓名“xxx”的群众',
-                  type: '新增群众',
-                  belong: '咯咯社区',
-                  creattime: '2023/6/4',
-                  admin: '小格',
-                  emergency: '不紧急',
-                  key: '2',
-            
-                  },
-          {
-            description: '初次增加姓名“xxx”的群众',
-            type: '新增群众',
-            belong: '咯咯社区',
-            admin: '小格',
-            creattime: '2023/6/4',
-            emergency: '不紧急',
-            key: '2',
-      
-            },
+
       ]
 
       return (<>
@@ -290,19 +216,19 @@ const data: DataType[] = [
       <Modal
       title="查看具体信息"
       open={open}
-      width={800}
+      width={910}
       footer={[
         <Button key="cancel" onClick={handleCancel}>
           取消
-        </Button>,<Button key="cancel" onClick={handleRefuse} style={{backgroundColor:"red",color:"white"}}>
+        </Button>,<Button key="refuse" onClick={handleRefuse} style={{backgroundColor:"red",color:"white"}}>
           拒绝
-        </Button>,<Button key="cancel"  type="primary" onClick={handleCancel} >
+        </Button>,<Button key="ok"  type="primary" onClick={handleCancel} >
           同意
         </Button>,
       ]}
       onCancel={handleCancel}
     >
-      <Descriptions
+    <Descriptions
       title={modalText?.description}
       bordered
       column={{ xxl: 1, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
@@ -311,7 +237,11 @@ const data: DataType[] = [
       <Descriptions.Item label="身份证号">Prepaid</Descriptions.Item>
     </Descriptions>
     <Divider />
+    
     <Table  pagination={false} columns={changecolumns} dataSource={changedata} size="middle" />
+    <Divider />
+    <Title level={5}>人员分级类别</Title>
+    <Checkbox.Group style={{marginTop:10,marginBottom: 10}} options={options} defaultValue={['Pear']} onChange={checkonChange} />
     </Modal><Modal okText="确认"
     cancelText="取消" title="提交拒绝原因" open={refuseopen} onOk={handlereReview} onCancel={handlerefuseCancel}>
     <TextArea
