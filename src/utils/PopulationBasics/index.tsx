@@ -4,21 +4,27 @@ import type { ReactElement } from 'react';
 import styles from './style.module.less';
 import LeftTimeLine from './TimeLine/LeftTimeLine';
 
-type ItemConfigType = {
+export type ItemConfigType = {
   id: number;
   name: string;
   href: string;
   elem: ReactElement;
 };
+interface Props {
+  itemData: ItemConfigType[];
+}
 
-function AnchorHome(props: { itemData: ItemConfigType[] }) {
+const AnchorHome: React.FC<Props> = ({ itemData }) => {
   // 将配置转换成jsx元素
   const getElem: any = () => {
-    const data = props?.itemData.map((item: ItemConfigType) => {
+    const data = itemData?.map((item: ItemConfigType) => {
       return (
-        <section id={item.href} key={item.id}>
-          {item.elem}
-        </section>
+        <>
+          <section id={item.href} key={item.id}>
+            <h3>{item.name}</h3>
+            {item.elem}
+          </section>
+        </>
       );
     });
     return data;
@@ -26,7 +32,7 @@ function AnchorHome(props: { itemData: ItemConfigType[] }) {
 
   // 解出跳转id配置
   const menuConfig = () => {
-    return props.itemData.map((item) => {
+    return itemData.map((item) => {
       return {
         href: item.href,
         id: item.id,
@@ -55,6 +61,6 @@ function AnchorHome(props: { itemData: ItemConfigType[] }) {
       </Watermark>
     </div>
   );
-}
+};
 
 export default AnchorHome;

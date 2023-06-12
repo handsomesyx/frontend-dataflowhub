@@ -21,7 +21,7 @@ const Family: React.FC<Props> = ({ familyData }) => {
         return (
           <div className={styles.FamilyBorderBox} key={index}>
             <div>
-              <span> 家 庭 成 员{index + 1}</span>
+              <span> 家 庭 成 员 {index + 1}</span>
             </div>
             <div>
               <div>

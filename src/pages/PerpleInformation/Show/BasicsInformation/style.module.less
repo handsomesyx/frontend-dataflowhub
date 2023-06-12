@@ -9,8 +9,7 @@
     border: 1px solid #d9d9d9;
     box-sizing: border-box;
     border-radius: 5px;
-    padding: 0 1% 1%;
-    font-size: 14px;
+    padding: 0 1% 1% 0;
 
     .Dir{
         width: 100%;
@@ -21,38 +20,10 @@
 
 /* 基础信息页面 */
 .CommonBox{
-    @media screen and (min-width: 768px) {
-        font-size: ((768px / @no)+4);
-    }
-    
-    @media screen and (min-width: 800px) {
-        font-size: ((800px / @no)+4);
-    }
-    
-    @media screen and (min-width: 1024px) {
-        font-size: ((1024px / @no)+4);
-    }
-    
-    @media screen and (min-width: 1200px) {
-        font-size: ((1200px / @no)+4);
-    }
-    
-    @media screen and (min-width: 1440px) {
-        font-size: ((1440px / @no)+4);
-    }
-    
-    @media screen and (min-width: 1920px) {
-        font-size: ((1920px / @no)+4);
-    }
-    
-    @media screen and (min-width: 2200) {
-        font-size: ((2200px / @no)+4);
-    }
-
     .TopSelf{
         width: 100%;
         display: flex;
-        font-size: .9em;
+        
     
         >div>div{
             height: 2.4em;
@@ -76,9 +47,11 @@
     
         /* 基本信息标签 */
         >div:nth-child(1){
-            width: (350em/@aa);
+            width: 20%;
             margin-top: 10px;
             font-size: 1em;
+            display: flex;
+            justify-content: center;
     
             img{
                 height: (413em/@aa);
@@ -101,8 +74,7 @@
     }
     
     .TopDataLong{
-        font-size: .9em;
-        margin-left: (350em/@aa);
+        margin-left: 20%;
     
         >div{
             height: 2.4em;
@@ -124,6 +96,7 @@
 /* 家庭成员列表页面 */
 .FamilyBox{
     width: 100%;
+    font-size: 1em;
     
     >div:nth-last-child(1){
         border: none;
@@ -134,37 +107,6 @@
         display: flex;
         padding: 0 0 1%;
         border-bottom: 1px solid #d9d9d9;
-        @media screen and (min-width: 768px) {
-            font-size: ((768px / @no)+4);
-        }
-        
-        @media screen and (min-width: 800px) {
-            font-size: ((800px / @no)+4);
-        }
-        
-        @media screen and (min-width: 1024px) {
-            font-size: ((1024px / @no)+4);
-        }
-        
-        @media screen and (min-width: 1200px) {
-            font-size: ((1200px / @no)+4);
-        }
-        
-        @media screen and (min-width: 1440px) {
-            font-size: ((1440px / @no)+4);
-        }
-        
-        @media screen and (min-width: 1920px) {
-            font-size: ((1920px / @no)+4);
-        }
-        
-        @media screen and (min-width: 2200) {
-            font-size: ((2200px / @no)+4);
-        }
-    
-        >div{
-            font-size: .9em;
-        }
     
         >div>div{
             height:2.4em ;   
@@ -178,16 +120,12 @@
         }
     
         >div:nth-child(1){
-            width: (350em/@aa);
+            width: 20%;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             font-weight: bolder;
-    
-            span{
-                font-size: 1.2em;
-            }
         }
     
         >div:nth-child(2){
