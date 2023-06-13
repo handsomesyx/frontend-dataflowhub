@@ -16,6 +16,7 @@ const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'))
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
+const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 
 import { userType } from '@/store';
 
@@ -69,10 +70,21 @@ const routeConfig: routerConfigType[] = [
           {
             path: '',
             auth: [1, 9, 8, 7, 'user1'],
-            element: <Navigate to="person-management" replace></Navigate>,
+            element: <Navigate to="person-search" replace></Navigate>,
           },
           {
-            path: 'person-management',
+            path: 'person-search',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div>
+                  <SearchBasic />
+                </div>
+              </Suspense>
+            ),
+          },
+          {
+            path: 'person-show',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>

@@ -19,12 +19,10 @@ const AnchorHome: React.FC<Props> = ({ itemData }) => {
   const getElem: any = () => {
     const data = itemData?.map((item: ItemConfigType) => {
       return (
-        <>
-          <section id={item.href} key={item.id}>
-            <h3>{item.name}</h3>
-            {item.elem}
-          </section>
-        </>
+        <section id={item.href} key={item.id}>
+          <h3>{item.name}</h3>
+          {item.elem}
+        </section>
       );
     });
     return data;
