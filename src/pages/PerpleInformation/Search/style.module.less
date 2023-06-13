@@ -1,3 +1,4 @@
+/* stylelint-disable declaration-block-no-redundant-longhand-properties */
 .FlexColomnBox {
     display: flex;
     flex-direction: column;
@@ -106,12 +107,23 @@
         justify-content: center;
     }
 
-    .Pagination {
+    .PaginationBox{
         width: 100%;
-        overflow: hidden;
-        display: flex;
-        justify-content: end;
         height: 50px;
-        align-items: center;
+        position: relative;
+
+
+        .Pagination {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            height: 50px;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 1000;
+        }
     }
+
+   
 }

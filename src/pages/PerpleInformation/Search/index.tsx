@@ -218,7 +218,9 @@ const SearchBasic = () => {
           onePageTotal={onePageTotal}
         ></BasicShowList>
       </div>
-      <Pagination className={styles.Pagination} total={200} showTotal={showTotal} />
+      <div className={styles.PaginationBox}>
+        <Pagination className={styles.Pagination} total={200} showTotal={showTotal} />
+      </div>
     </div>
   );
 };
