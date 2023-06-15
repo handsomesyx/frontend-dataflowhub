@@ -13,7 +13,7 @@ const AdministrativeRegion = React.lazy(
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 
-import Community from '@/pages/BasicInformation/Community';
+// import Community from '@/pages/BasicInformation/Community';
 import PoliceStation from '@/pages/BasicInformation/PoliceStation';
 import { userType } from '@/store';
 
@@ -175,18 +175,18 @@ const routeConfig: routerConfigType[] = [
               </Suspense>
             ),
           },
-          {
-            path: 'community',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense
-                fallback={<Spin className="SetLazySpinCent" size="large" />}
-              >
-                {/* <div>社区管理</div> */}
-                <Community />
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: 'community',
+          //   auth: [1, 9, 8, 7, 'user1'],
+          //   element: (
+          //     <Suspense
+          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
+          //     >
+          //       {/* <div>社区管理</div> */}
+          //       <Community />
+          //     </Suspense>
+          //   ),
+          // },
         ],
       },
       {

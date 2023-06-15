@@ -132,12 +132,12 @@ function Menu() {
           path: '/basic-information/policeStation',
           show: true,
         },
-        {
-          id: '4-4',
-          text: '社区管理',
-          path: '/basic-information/community',
-          show: true,
-        },
+        // {
+        //   id: '4-4',
+        //   text: '社区管理',
+        //   path: '/basic-information/community',
+        //   show: true,
+        // },
       ],
     },
     {
