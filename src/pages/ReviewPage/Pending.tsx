@@ -12,6 +12,7 @@ import {
   message,
   Popconfirm,
   Checkbox,
+  Radio,
 } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
@@ -282,10 +283,9 @@ const App: React.FC = () => {
         />
         <Divider />
         <Title level={5}>人员分级类别</Title>
-        <Checkbox.Group
+        <Radio.Group
           style={{ marginTop: 10, marginBottom: 10 }}
           options={options}
-          defaultValue={["Pear"]}
           onChange={checkonChange}
         />
       </Modal>
