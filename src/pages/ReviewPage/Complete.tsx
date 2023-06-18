@@ -1,27 +1,88 @@
 /* eslint-disable */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Modal, Popconfirm, Space, Table, Tag, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import TextArea from 'antd/es/input/TextArea';
+import { DELETE_AUDIT_MUTATION, QUERY_OK, QUERY_REFUSE } from '@/apis';
+import { ApolloClient, InMemoryCache, useMutation, useQuery } from '@apollo/client';
 
-interface DataType {
-  description: string;
-  type: string;
-  belong: string;
-  suggest:string;
-  admin: string,
-  creattime: string;
-  handletime: string;
-  emergency: string;
-  status: string;
-  key: string;
+
+
+interface Audi {
+  action_type: string;
+  create_time: Date;
+  creator_id: number;
+  id: string;
+  is_delete: boolean;
+  officer_id: number;
+  officer_name: string;
+  priority: number;
+  request_data: object;
+  request_time: Date;
+  review_comments: string;
+  review_time: Date;
+  status: number;
+  update_time: Date;
+  updater_id: number;
+  user_id: number;
+  user_name: string;
 }
+
+const client = new ApolloClient({
+  uri: 'http://127.0.0.1:7000/graphql',
+  cache: new InMemoryCache()
+});
 
 const App: React.FC = () => { 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModal2Open, setIsModal2Open] = useState(false);
+  const [datashow, setDataShow] = useState<Audi[]>([]);
   const [suggestion, setSuggestion] = useState("未设置处理意见");
+  const {data:re } = useQuery(QUERY_REFUSE,{client});
+  const {data:ok } = useQuery(QUERY_OK,{client});
+  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION,{client});
+  
+  const confirm = async(id: any) => {
+    const tmp=parseInt(id)
+    try {
+      await deleteAuditMutation({
+        variables: {rightnow_auditrecords_id:tmp},
+      });
+      message.info('删除完成');
+    } catch (e) {
+      console.error(e);
+    }
+      
 
+    
+  };
+
+  
+  useEffect(() => {
+    console.log(re)
+    console.log(ok)
+    if(re&&ok)
+    {
+      console.log("齐全")
+      console.log(re.findManyAudit.data)
+      console.log(ok.findManyAudit.data)
+      const newArray = re.findManyAudit.data.concat(ok.findManyAudit.data);
+      const formattedData = newArray.map((item:any) => {
+        const date = new Date(item.update_time);
+        const date1 = new Date(item.create_time);
+        const formattedDate = date.toLocaleString();
+        const formattedDate1 = date1.toLocaleString();
+        return {
+          ...item,
+          create_time:formattedDate1,
+          update_time: formattedDate
+        };
+      });
+      setDataShow(formattedData)
+      console.log(formattedData)
+    }
+  }, [re, ok]);
+  
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     console.log('Change:', e.target.value);
   };  
@@ -47,16 +108,14 @@ const App: React.FC = () => {
     setIsModalOpen(false);
     setIsModal2Open(false);
   };
-const confirm = () => {
-  message.info('删除完成');
-};
 
-const whatcolor= (e: string) => {
-  if (e === '特别紧急') {
+
+const whatcolor= (e: Number) => {
+  if (e === 1) {
     return (
       <div style={{ backgroundColor: 'red', width: '50px', height: '20px' }}/>
     );
-  } else if (e === '紧急') {
+  } else if (e ===2) {
     return (
       <div style={{ backgroundColor: 'orange', width: '50px', height: '20px' }}/>
     );
@@ -67,17 +126,17 @@ const whatcolor= (e: string) => {
   }
 }
 
-const columns: ColumnsType<DataType> = [
+const columns: ColumnsType= [
   {
     title: '详情描述',
-    dataIndex: 'description',
-    key: 'description',
+    dataIndex: 'action_type',
+    key: 'action_type',
     render: (text) => <a>{text}</a>,
   },
   {
     title: '事件类型',
-    dataIndex: 'type',
-    key: 'type',
+    dataIndex: 'action_type',
+    key: 'action_type',
   },
   {
     title: '所属群众',
@@ -86,18 +145,18 @@ const columns: ColumnsType<DataType> = [
   },
   {
     title: '所属网格员',
-    dataIndex: 'admin',
-    key: 'admin',
+    dataIndex: 'user_name',
+    key: 'user_name',
   },
   {
     title: '创建时间',
-    dataIndex: 'creattime',
-    key: 'creattime',
+    dataIndex: 'create_time',
+    key: 'create_time',
   },
   {
     title: '处理时间',
-    dataIndex: 'handletime',
-    key: 'handletime',
+    dataIndex: 'update_time',
+    key: 'update_time',
   },
   {
     title: '紧急程度',
@@ -105,15 +164,9 @@ const columns: ColumnsType<DataType> = [
     dataIndex: 'emergency',
     render: (_, emergency) => (
     <div>
-       {whatcolor(emergency.emergency)}
+       {whatcolor(emergency.priority)}
     </div>
     )
-  },
-  {
-    title: '处理状态',
-    dataIndex: 'status',
-    key: 'status',
-    
   },
   {
     title: '操作',
@@ -123,72 +176,20 @@ const columns: ColumnsType<DataType> = [
       <Popconfirm
         placement="topLeft"
         title="你确定要删除吗？"
-        onConfirm={confirm}
+        onConfirm={()=>{confirm(record.id)}}
         okText="Yes"
         cancelText="No"
       >
         <a>删除</a></Popconfirm>
-        <a onClick={()=>showModal(record.suggest)} >查看处理意见</a>
-        <a onClick={()=>showModal2()} style={{visibility:record.status=='审核失败'?'visible':'hidden'}}>{record.status=='审核失败'?'重新提交':''}</a>
+        <a onClick={()=>showModal(record.review_comments)} >查看处理意见</a>
+        <a style={{color:record.status==1?'green':'red'}}>{record.status==1?'审核通过':'审核未通过'}</a>
       </Space>
     ),
   },
 ];
 
-const data: DataType[] = [
-  {
-    description: '初次增加姓名“xxx”的群众',
-    type: '新增群众',
-    belong: '咯咯gaga区',
-    admin: '小格',
-    suggest:'再改改',
-    creattime: '2023/6/4',
-    handletime: '2023/6/9',
-    emergency: '特别紧急',
-    status: '审核失败',
-    key: '1',
-    },
-  {
-    description: '初次增加姓名“xxx”的群众',
-    type: '新增群众',
-    belong: '埋土社区',
-    admin: '小格',
-    suggest:'再改改',
-    creattime: '2023/6/4',
-    handletime: '2023/6/9',
-    emergency: '不紧急',
-    status: '审核成功',
-    key: '2',
-    },
-    {
-      description: '初次增加姓名“xxx”的群众',
-      type: '新增群众',
-      suggest:'再改改wwwwww五五咻咻咻',
-      belong: '咯咯社区',
-      admin: '小格',
-      creattime: '2023/6/4',
-      handletime: '2023/6/9',
-      emergency: '不紧急',
-      status: '审核失败',
-      key: '2',
 
-      },
-      {
-        description: '初次增加姓名“xxx”的群众',
-        type: '新增群众',
-        belong: '呱呱社区',
-        suggest:'再改改',
-        admin: '小格',
-        creattime: '2023/6/4',
-        handletime: '2023/6/9',
-        emergency: '紧急',
-        status: '审核成功',
-        key: '2',
-
-        },
-      ]
-
-return(<><Table  pagination={{pageSize:9}} columns={columns} dataSource={data} /><Modal okText="确认"
+return(<><Table  pagination={{pageSize:9}} columns={columns} dataSource={datashow} /><Modal okText="确认"
 cancelText="取消" title="查看具体处理意见" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
     <Card style={{marginTop:30,marginBottom:30}} title="处理意见">{suggestion}</Card>
 

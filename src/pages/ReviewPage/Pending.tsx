@@ -18,7 +18,7 @@ import type { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
 import { ApolloClient, InMemoryCache, useQuery } from "@apollo/client";
-import { QUERY_AUDITS } from "@/apis";
+import { GET_AUDIT_CHANGE, QUERY_AUDITS } from "@/apis";
 
 const client = new ApolloClient({
   uri: 'http://127.0.0.1:7000/graphql',
@@ -119,18 +119,27 @@ const App: React.FC = () => {
   const { loading, error, data } = useQuery(QUERY_AUDITS,{client});
   const [dataSource, setDataSource] = useState([]);
   const [tdata, settData] = useState([]);
+  const [rightnowAuditrecordsId, setrightnowAuditrecordsId] = useState(0);
   const [DataShow, setDataShow] = useState([]);
+  const { refetch } = useQuery(GET_AUDIT_CHANGE, {
+    client,
+    variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
+    onCompleted: (data) => {
+      console.log(data.getChangeRecord[0]); // 控制台结果
+    },
+  });
 
   useEffect(() => {
     console.log("请求完成")
     if (data) {
-      const filtered = data.findManyAudit.filter((item:any) => item.is_delete === false);
+      console.log(data)
+      const filtered = data.findManyAudit.data.filter((item:any) => item.is_delete === false);
       const formattedData = filtered.map((item:any) => {
         const date = new Date(item.create_time);
         const formattedDate = date.toLocaleString();
         return {
           ...item,
-          date: formattedDate
+          create_time: formattedDate
         };
       });
       console.log(formattedData)
@@ -152,6 +161,10 @@ const App: React.FC = () => {
   };
 
   const showModal = (e: any) => {
+    const tmp=parseInt(e.id)
+    setrightnowAuditrecordsId(tmp)
+    refetch()
+
     setModalText(e);
     setOpen(true);
   };
@@ -205,13 +218,13 @@ const App: React.FC = () => {
     },
     {
       title: "所属网格员",
-      dataIndex: "officer_name",
-      key: "officer_name",
+      dataIndex: "user_name",
+      key: "user_name",
     },
     {
       title: "创建时间",
-      dataIndex: "date",
-      key: "date",
+      dataIndex: "create_time",
+      key: "create_time",
     },
     {
       title: "紧急程度",
