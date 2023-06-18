@@ -24,3 +24,26 @@ export const GetDemoDashData = gql`
     }
   }
 `;
+
+export const QUERY_AUDITS = gql`
+  query  {
+    findManyAudit(
+      select: { status: 1 }
+      skip: 0
+      take: 1000
+    ) {
+      id
+      action_type
+      create_time
+      creator_id
+      is_delete
+      officer_id
+    officer_name
+    review_comments
+    status
+    update_time
+    updater_id
+    }
+  }
+`;
+
