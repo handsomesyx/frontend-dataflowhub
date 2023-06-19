@@ -1,0 +1,124 @@
+/* stylelint-disable declaration-block-no-redundant-longhand-properties */
+.FlexColomnBox {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 0 10px;
+
+  button {
+    height: 35px;
+    background-color: #0559ca;
+    border-radius: 5px;
+    padding: 8px;
+    border: none;
+    color: #fff;
+  }
+
+  button:hover {
+    background-color: #0670ff;
+    cursor: pointer;
+  }
+
+  .TopBox {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .TopTitle {
+      font-weight: bolder;
+      font-size: 16px;
+      height: 30px;
+    }
+
+    .AddPeople {
+      margin-left: 20px;
+    }
+  }
+
+  .TopSearchBox {
+    width: 100%;
+    margin-bottom: 10px;
+    background-color: #f8f8f8;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    max-height: 250px;
+
+    .TopSearchPadding {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      overflow: hidden;
+
+      /* 每一列 */
+      > div {
+        height: 100%;
+        overflow: hidden;
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        margin-right: 10px;
+
+        /* 每一列中的每一行 */
+        > div {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* 每行中的标签 */
+        > div > span {
+          display: inline-block;
+          width: 80px;
+          text-align: end;
+        }
+
+        > div:not(:nth-child(1)) {
+          margin-top: 10px;
+        }
+
+        button {
+          width: 70px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          justify-self: end;
+
+          img {
+            transform: scale(1.3);
+          }
+        }
+      }
+    }
+  }
+
+  .BottomShowList {
+    overflow: auto;
+    flex: 1;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .PaginationBox {
+    width: 100%;
+    height: 50px;
+    position: relative;
+
+    .Pagination {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      height: 50px;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 1000;
+    }
+  }
+}
