@@ -63,6 +63,20 @@ function Menu() {
       text: '首页',
       path: '/home',
       show: true,
+      children: [
+        {
+          id: '1-1',
+          text: '首页',
+          path: '/home/index',
+          show: true,
+        },
+        {
+          id: '1-2',
+          text: '可视化',
+          path: '/home/te',
+          show: true,
+        },
+      ],
     },
     {
       id: '2',
