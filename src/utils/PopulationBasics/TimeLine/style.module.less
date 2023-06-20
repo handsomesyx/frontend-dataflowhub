@@ -1,0 +1,55 @@
+@no:100;
+
+.TimeLineStyle{
+    font-size: 14px;
+
+    li{
+        padding-bottom:40px !important ;
+
+        a{
+            color: #000;
+        }
+
+        a:hover{
+            color: #3e8eff ;
+        }
+    }
+}
+
+.CommonDot{
+    height: 10px;
+    width: 10px;
+    background-color:#bfbfbf;
+    border: 3px solid #bfbfbf;
+    border-radius: 50%;
+}
+
+.MenuAFontSize{
+    @media screen and (min-width: 768px) {
+        font-size: ((768px / @no)+4);
+    }
+    
+    @media screen and (min-width: 800px) {
+        font-size: ((800px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1024px) {
+        font-size: ((1024px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1200px) {
+        font-size: ((1200px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1440px) {
+        font-size: ((1440px / @no)+4);
+    }
+    
+    @media screen and (min-width: 1920px) {
+        font-size: ((1920px / @no)+4);
+    }
+    
+    @media screen and (min-width: 2200) {
+        font-size: ((2200px / @no)+4);
+    }
+}

@@ -79,7 +79,7 @@ function Menu() {
         {
           id: '3-1',
           text: '人员管理',
-          path: '/population-manager/person-management',
+          path: '/population-manager/person-search',
           show: true,
         },
         {
@@ -90,22 +90,22 @@ function Menu() {
         },
         {
           id: '3-3',
-          text: '审核待处理',
+          text: '审核模块',
           path: '/population-manager/pending',
           show: true,
         },
         {
           id: '3-4',
-          text: '群众指派',
-          path: '/population-manager/designate',
+          text: '展示（暂时）',
+          path: '/population-manager/person-show',
           show: true,
         },
-        {
-          id: '3-5',
-          text: '人员信息推送',
-          path: '/population-manager/information-push',
-          show: true,
-        },
+        // {
+        //   id: '3-5',
+        //   text: '人员信息推送',
+        //   path: '/population-manager/information-push',
+        //   show: true,
+        // },
       ],
     },
     {
@@ -113,6 +113,32 @@ function Menu() {
       text: '基础信息',
       path: '/basic-information',
       show: true,
+      children: [
+        {
+          id: '4-1',
+          text: '行政区域管理',
+          path: '/basic-information/administrativeRegion',
+          show: true,
+        },
+        // {
+        //   id: '4-2',
+        //   text: '网格区域管理',
+        //   path: '/basic-information/gridArea',
+        //   show: true,
+        // },
+        {
+          id: '4-3',
+          text: '警局管理',
+          path: '/basic-information/policeStation',
+          show: true,
+        },
+        {
+          id: '4-4',
+          text: '社区管理',
+          path: '/basic-information/community',
+          show: true,
+        },
+      ],
     },
     {
       id: '5',

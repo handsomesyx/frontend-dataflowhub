@@ -28,7 +28,7 @@ function Aside() {
 
   return (
     <>
-      <aside>
+      {/* <aside>
         <ul id="menu">
           <li className="MenuActive">基础信息</li>
           <li>专群结合</li>
@@ -39,7 +39,7 @@ function Aside() {
           <li>其他情况</li>
           <li>包保人员信息</li>
         </ul>
-      </aside>
+      </aside> */}
       <div className={styles.ContentMarginLeft}>
         <Outlet></Outlet>
       </div>

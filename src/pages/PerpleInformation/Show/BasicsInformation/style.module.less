@@ -1,0 +1,140 @@
+/* stylelint-disable no-descending-specificity */
+@no:100;
+
+@aa:30;
+
+/* index页面 */
+.BorderBox{
+    width: 100%;
+    border: 1px solid #d9d9d9;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 0 1% 1% 0;
+
+    .Dir{
+        width: 100%;
+        border-top: 1px solid #d9d9d9;
+        margin-top: 1%;
+    }
+}
+
+/* 基础信息页面 */
+.CommonBox{
+    .TopSelf{
+        width: 100%;
+        display: flex;
+        
+    
+        >div>div{
+            height: 2.4em;
+            border-bottom: 1.5px dashed  #d9d9d9;
+            align-items: center;
+            display: flex;
+            box-sizing: border-box;
+    
+            >span:nth-child(1){
+                color: red;
+                width: 10px;
+            }
+    
+            >span:nth-child(2){
+                flex: 1;
+                overflow-wrap: break-word;
+                word-break: break-all;
+                font-weight: bold;
+            }
+        }
+    
+        /* 基本信息标签 */
+        >div:nth-child(1){
+            width: 20%;
+            margin-top: 10px;
+            font-size: 1em;
+            display: flex;
+            justify-content: center;
+    
+            img{
+                height: (413em/@aa);
+                width: (295em/@aa);
+            }
+        }
+    
+        /* 姓名列 */
+        >div:nth-child(2)
+            {
+            flex:1 ;
+        }
+    
+        /* 身份证号列 */
+        >div:nth-child(3)
+            {
+            flex: 1;
+        }
+    
+    }
+    
+    .TopDataLong{
+        margin-left: 20%;
+    
+        >div{
+            height: 2.4em;
+            display: flex;
+            align-items: center;
+            border-bottom: 1.5px dashed  #d9d9d9;
+        }
+    }
+
+    :global{
+        .SpanRedColor{
+            color: red;
+            width: 10px;
+        }
+    }
+
+}
+
+/* 家庭成员列表页面 */
+.FamilyBox{
+    width: 100%;
+    font-size: 1em;
+    
+    >div:nth-last-child(1){
+        border: none;
+        padding: 0;
+    }
+
+    .FamilyBorderBox{
+        display: flex;
+        padding: 0 0 1%;
+        border-bottom: 1px solid #d9d9d9;
+    
+        >div>div{
+            height:2.4em ;   
+            border-bottom: 1.5px dashed  #d9d9d9;
+            display: flex;
+            align-items: center;
+    
+            span{
+                font-weight: bold;
+            }
+        }
+    
+        >div:nth-child(1){
+            width: 20%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bolder;
+        }
+    
+        >div:nth-child(2){
+            flex: 1;
+        }
+    
+        >div:nth-child(3){
+            flex: 1;
+        }
+    }
+    
+}
