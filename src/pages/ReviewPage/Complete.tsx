@@ -51,6 +51,7 @@ const App: React.FC = () => {
       message.info('删除完成');
     } catch (e) {
       console.error(e);
+      message.error('删除失败');
     }
       
 

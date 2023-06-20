@@ -100,6 +100,9 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
   const [updateAudit] = useMutation(UPDATE_AUDIT,{client,onCompleted: (data) => {
     console.log(data); 
     if(data.updateAudit)message.info('操作成功');handleCancel();
+  },onError: (error) => {
+    console.error(error);
+    message.info('操作失败');
   },});
   const { refetch } = useQuery(GET_AUDIT_CHANGE, {
     client,
@@ -160,10 +163,12 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
       message.info('删除完成');
     } catch (e) {
       console.error(e);
+      message.error('删除失败');
     }
   };
 
   useEffect(() => {
+
     console.log("请求完成")
     if (data) {
       console.log(data)
