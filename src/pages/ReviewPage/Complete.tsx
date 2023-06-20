@@ -147,6 +147,7 @@ const columns: ColumnsType= [
     title: '所属网格员',
     dataIndex: 'user_name',
     key: 'user_name',
+    render: (_,text) => <div>{text.user_info.real_name}</div>,
   },
   {
     title: '创建时间',

@@ -39,18 +39,17 @@ create_time
 creator_id
 id
 is_delete
-officer_id
-officer_name
+officer_info{real_name}
 priority
 request_data
 request_time
 review_comments
 review_time
 status
+person_info{real_name,id}
 update_time
 updater_id
-user_id
-user_name}
+user_info{real_name}}
     }
   }
 `;
@@ -63,24 +62,23 @@ export const QUERY_OK = gql`
       take: 1000
     ) {
       count
-    data{
+      data{
       action_type
 create_time
 creator_id
 id
 is_delete
-officer_id
-officer_name
+officer_info{real_name}
 priority
 request_data
 request_time
 review_comments
 review_time
+person_info{real_name,id}
 status
 update_time
 updater_id
-user_id
-user_name}
+user_info{real_name}}
     }
   }
 `;
@@ -93,14 +91,13 @@ export const QUERY_REFUSE = gql`
       take: 1000
     ) {
       count
-    data{
+      data{
       action_type
 create_time
 creator_id
 id
 is_delete
-officer_id
-officer_name
+officer_info{real_name}
 priority
 request_data
 request_time
@@ -108,9 +105,9 @@ review_comments
 review_time
 status
 update_time
+person_info{real_name,id}
 updater_id
-user_id
-user_name}
+user_info{real_name}}
     }
   }
 `;
@@ -144,3 +141,9 @@ export const GET_AUDIT_CHANGE = gql`query {
   username}
   update_time
   updater_id}}`;
+  //  修改审核信息
+  export const UPDATE_AUDIT = gql`
+  mutation UpdateAudit($new_data: auditCreateInput!, $rightnow_auditrecords_id: Int!) {
+    updateAudit(new_data: $new_data, rightnow_auditrecords_id: $rightnow_auditrecords_id)
+  }
+`;

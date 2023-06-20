@@ -17,8 +17,8 @@ import {
 import type { ColumnsType } from "antd/es/table";
 import TextArea from "antd/es/input/TextArea";
 import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { ApolloClient, InMemoryCache, useQuery } from "@apollo/client";
-import { GET_AUDIT_CHANGE, QUERY_AUDITS } from "@/apis";
+import { ApolloClient, InMemoryCache, useMutation, useQuery } from "@apollo/client";
+import { DELETE_AUDIT_MUTATION, GET_AUDIT_CHANGE, QUERY_AUDITS, UPDATE_AUDIT } from "@/apis";
 
 const client = new ApolloClient({
   uri: 'http://127.0.0.1:7000/graphql',
@@ -62,9 +62,7 @@ const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
   console.log("Change:", e.target.value);
 };
 
-const confirm = () => {
-  message.info("删除完成");
-};
+
 
 const changecolumns: ColumnsType<ChangeWhat> = [
   {
@@ -121,6 +119,10 @@ const App: React.FC = () => {
   const [tdata, settData] = useState([]);
   const [rightnowAuditrecordsId, setrightnowAuditrecordsId] = useState(0);
   const [DataShow, setDataShow] = useState([]);
+  const [updateAudit] = useMutation(UPDATE_AUDIT,{client,onCompleted: (data) => {
+    console.log(data); 
+    if(data.updateAudit)message.info('操作成功');handleCancel();
+  },});
   const { refetch } = useQuery(GET_AUDIT_CHANGE, {
     client,
     variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
@@ -128,6 +130,19 @@ const App: React.FC = () => {
       console.log(data.getChangeRecord[0]); // 控制台结果
     },
   });
+  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION,{client});
+  
+  const confirm = async(id: any) => {
+    const tmp=parseInt(id)
+    try {
+      await deleteAuditMutation({
+        variables: {rightnow_auditrecords_id:tmp},
+      });
+      message.info('删除完成');
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   useEffect(() => {
     console.log("请求完成")
@@ -164,7 +179,6 @@ const App: React.FC = () => {
     const tmp=parseInt(e.id)
     setrightnowAuditrecordsId(tmp)
     refetch()
-
     setModalText(e);
     setOpen(true);
   };
@@ -173,38 +187,46 @@ const App: React.FC = () => {
     setOpen(false);
   };
 
+  const handlePass = () => {
+    const newData = {
+      action_type: "example_action_type",
+      officer_id: 1,
+      person_id: 2,
+      priority: 3,
+      request_data: { key: "value" },
+      review_comments: "example_review_comments",
+      status: 1,
+      user_id: 5
+    };
+    updateAudit({ variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId } });
+  };
+
   const handlerefuseCancel = () => {
     setRefuseOpen(false);
   };
 
-  const whatcolor = (e: string) => {
-    if (e === "特别紧急") {
+  const whatcolor= (e: Number) => {
+    if (e === 1) {
       return (
-        <div
-          style={{ backgroundColor: "red", width: "50px", height: "20px" }}
-        />
+        <div style={{ backgroundColor: 'red', width: '50px', height: '20px' }}/>
       );
-    } else if (e === "紧急") {
+    } else if (e ===2) {
       return (
-        <div
-          style={{ backgroundColor: "orange", width: "50px", height: "20px" }}
-        />
+        <div style={{ backgroundColor: 'orange', width: '50px', height: '20px' }}/>
       );
     } else {
       return (
-        <div
-          style={{ backgroundColor: "blue", width: "50px", height: "20px" }}
-        />
+        <div style={{ backgroundColor: 'blue', width: '50px', height: '20px' }}/>
       );
     }
-  };
+  }
 
   const columns: ColumnsType<DataType> = [
     {
       title: "详情描述",
       dataIndex: "action_type",
       key: "action_type",
-      render: (text) => <a onClick={showModal}>{text}</a>,
+      render: (_,text) => <a onClick={showModal}>{text.__typename}姓名为"{text.user_info.real_name}"的群众信息</a>,
     },
     {
       title: "事件类型",
@@ -215,11 +237,13 @@ const App: React.FC = () => {
       title: "所属群众",
       dataIndex: "action_type",
       key: " action_type",
+      render: (_,text) => <div>{text.user_info.id}</div>,
     },
     {
       title: "所属网格员",
       dataIndex: "user_name",
       key: "user_name",
+      render: (_,text) => <div>{text.user_info.real_name}</div>,
     },
     {
       title: "创建时间",
@@ -230,7 +254,7 @@ const App: React.FC = () => {
       title: "紧急程度",
       key: "status",
       dataIndex: "status",
-      render: (_, emergency) => <div>{whatcolor(emergency.emergency)}</div>,
+      render: (_, emergency) => <div>{whatcolor(emergency.priority)}</div>,
     },
     {
       title: "操作",
@@ -241,7 +265,7 @@ const App: React.FC = () => {
           <Popconfirm
             placement="topRight"
             title="你确定要删除吗？"
-            onConfirm={confirm}
+            onConfirm={()=>{confirm(record.id)}}
             okText="Yes"
             cancelText="No"
           >
@@ -272,7 +296,7 @@ const App: React.FC = () => {
           >
             拒绝
           </Button>,
-          <Button key="ok" type="primary" onClick={handleCancel}>
+          <Button key="ok" type="primary" onClick={handlePass}>
             同意
           </Button>,
         ]}
