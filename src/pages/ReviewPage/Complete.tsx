@@ -132,7 +132,7 @@ const columns: ColumnsType= [
     title: '详情描述',
     dataIndex: 'action_type',
     key: 'action_type',
-    render: (_,text) => <a onClick={showModal}>{text?.__typename}姓名为"{text?.person_info?.real_name}"的群众信息</a>,
+    render: (_,text) => <a>{text?.__typename}姓名为"{text?.person_info?.real_name}"的群众信息</a>,
   },
   {
     title: '事件类型',
