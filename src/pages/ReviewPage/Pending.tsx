@@ -35,28 +35,26 @@ interface ChangeWhat {
 const options = [
   {
     label:
-      "A涉政、恐、毒、重大刑事犯罪前科人员，肇事肇祸精神病人，潜在社会危害性等重点人员",
+      "A",
     value: "A",
   },
   {
     label:
-      "B一般违法和其他刑满释放人员、社区矫正、取保候审监视居住、境外居留人员、旅游人员、涉枪涉爆涉危化、现实表现差等重点人员",
+      "B",
     value: "B",
   },
   {
     label:
-      "C其他流动人口、涉访人员和独居老人、生活困难等无人监管的鳏寡孤独残障病幼等特殊人员",
+      "C",
     value: "C",
   },
   {
-    label: "D有固定住所、稳定收入、家庭和睦、现实表现良好等各种人群",
+    label: "D",
     value: "D",
   },
 ];
 
-const checkonChange = (checkedValues: CheckboxValueType[]) => {
-  console.log("checked = ", checkedValues);
-};
+
 
 const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
   console.log("Change:", e.target.value);
@@ -131,7 +129,33 @@ const App: React.FC = () => {
     },
   });
   const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION,{client});
+  const [plainOptions, setPlainOptions] = useState([]);
+  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
+  const onsubChange = (list: CheckboxValueType[]) => {
+    setCheckedList(list);
+  };
   
+  const checkonChange = (checkedValues: CheckboxValueType[]) => {
+    console.log("checked = ", checkedValues.target.value);
+    let newPlainOptions: string[] | ((prevState: never[]) => never[]) = [];
+
+    switch (checkedValues.target.value) {
+      case 'A':
+        newPlainOptions = ['涉政、恐、毒、重大刑事犯罪前科人员', '肇事肇祸精神病人', '潜在社会危害性人员','其他重点人员'];
+        break;
+      case 'B':
+        newPlainOptions = ['一般违法和其他刑满释放人员', '社区矫正、取保候审监视居住、境外居留人员', '旅游人员','涉枪涉爆涉危化、现实表现差等重点人员','其他重点人员'];
+        break;
+      case 'C':
+        newPlainOptions = ['其他流动人口', '涉访人员和独居老人', '生活困难等无人监管的鳏寡孤独残障病幼等特殊人员','其他特殊人员'];
+        break;
+      default:
+        newPlainOptions = [];
+    }
+  
+    setPlainOptions(newPlainOptions);
+  };
+
   const confirm = async(id: any) => {
     const tmp=parseInt(id)
     try {
@@ -325,6 +349,7 @@ const App: React.FC = () => {
           options={options}
           onChange={checkonChange}
         />
+        <Checkbox.Group options={plainOptions} value={checkedList} onChange={onsubChange} />
       </Modal>
       <Modal
         okText="确认"
