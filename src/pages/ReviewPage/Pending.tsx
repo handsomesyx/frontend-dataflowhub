@@ -26,7 +26,6 @@ const client = new ApolloClient({
 });
 const { Title } = Typography;
 interface ChangeWhat {
-  key: React.Key;
   value: string;
   before: string;
   after: string;
@@ -56,9 +55,7 @@ const options = [
 
 
 
-const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-  console.log("Change:", e.target.value);
-};
+
 
 
 
@@ -77,26 +74,7 @@ const changecolumns: ColumnsType<ChangeWhat> = [
   },
 ];
 
-const changedata: ChangeWhat[] = [
-  {
-    key: "1",
-    value: "姓名",
-    before: "张大猫",
-    after: "张小狗",
-  },
-  {
-    key: "2",
-    value: "年龄",
-    before: "42",
-    after: "88",
-  },
-  {
-    key: "3",
-    value: "家庭成员信息",
-    before: "wuwuuw",
-    after: "xxxxxxxxxxx",
-  },
-];
+
 
 interface DataType {
   description: string;
@@ -114,7 +92,9 @@ const App: React.FC = () => {
   const [modalText, setModalText] = useState<DataType>();
   const { loading, error, data } = useQuery(QUERY_AUDITS,{client});
   const [dataSource, setDataSource] = useState([]);
+  const [changesShow, setChangesShow] = useState([]);
   const [tdata, settData] = useState([]);
+const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
   const [rightnowAuditrecordsId, setrightnowAuditrecordsId] = useState(0);
   const [DataShow, setDataShow] = useState([]);
   const [updateAudit] = useMutation(UPDATE_AUDIT,{client,onCompleted: (data) => {
@@ -125,11 +105,22 @@ const App: React.FC = () => {
     client,
     variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
     onCompleted: (data) => {
-      console.log(data.getChangeRecord[0]); // 控制台结果
+      console.log(data.getChangeRecord); // 控制台结果
+      setChangesShow(data.getChangeRecord)
+      const changewhat = data.getChangeRecord
+  .map(item => ({ after: item.content_after, before: item.content_before,value:item.change_item}));
+
+  console.log(changewhat); 
+  setChangedata(changewhat);
+
+      if(rightnowAuditrecordsId!=0){message.info('信息加载完成');}
+      
     },
   });
   const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION,{client});
   const [plainOptions, setPlainOptions] = useState([]);
+  const [comment, setComment] = useState("未填写");//拒绝原因
+  const [classabcd, setClassabcd] = useState("未分类");//人员ABCD分类
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
   const onsubChange = (list: CheckboxValueType[]) => {
     setCheckedList(list);
@@ -141,15 +132,19 @@ const App: React.FC = () => {
 
     switch (checkedValues.target.value) {
       case 'A':
+        setClassabcd("A");
         newPlainOptions = ['涉政、恐、毒、重大刑事犯罪前科人员', '肇事肇祸精神病人', '潜在社会危害性人员','其他重点人员'];
         break;
       case 'B':
+        setClassabcd("B");
         newPlainOptions = ['一般违法和其他刑满释放人员', '社区矫正、取保候审监视居住、境外居留人员', '旅游人员','涉枪涉爆涉危化、现实表现差等重点人员','其他重点人员'];
         break;
       case 'C':
+        setClassabcd("C");
         newPlainOptions = ['其他流动人口', '涉访人员和独居老人', '生活困难等无人监管的鳏寡孤独残障病幼等特殊人员','其他特殊人员'];
         break;
       default:
+        setClassabcd("D");
         newPlainOptions = [];
     }
   
@@ -194,7 +189,19 @@ const App: React.FC = () => {
     setRefuseOpen(true);
   };
 
+  const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    console.log("Change:", e.target.value);
+    setComment(e.target.value)
+
+  };
+
   const handlereReview = () => {
+    const newData = {
+      review_comments: comment,
+      status: 2,
+      review_time:new Date()
+      };
+    updateAudit({ variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId } });
     setRefuseOpen(false);
     setOpen(false);
   };
@@ -203,6 +210,7 @@ const App: React.FC = () => {
     const tmp=parseInt(e.id)
     setrightnowAuditrecordsId(tmp)
     refetch()
+    message.loading('加载中...', 1);
     setModalText(e);
     setOpen(true);
   };
@@ -213,14 +221,10 @@ const App: React.FC = () => {
 
   const handlePass = () => {
     const newData = {
-      action_type: "example_action_type",
-      officer_id: 1,
-      person_id: 2,
-      priority: 3,
-      request_data: { key: "value" },
-      review_comments: "example_review_comments",
+      request_data: { class: classabcd,detailClass:plainOptions },
+      review_comments: "审核通过",
       status: 1,
-      user_id: 5
+      review_time:new Date()
     };
     updateAudit({ variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId } });
   };
@@ -250,7 +254,7 @@ const App: React.FC = () => {
       title: "详情描述",
       dataIndex: "action_type",
       key: "action_type",
-      render: (_,text) => <a onClick={showModal}>{text.__typename}姓名为"{text.user_info.real_name}"的群众信息</a>,
+      render: (_,text) => <a onClick={showModal}>{text?.__typename}姓名为"{text?.person_info.real_name}"的群众信息</a>,
     },
     {
       title: "事件类型",
@@ -261,7 +265,7 @@ const App: React.FC = () => {
       title: "所属群众",
       dataIndex: "action_type",
       key: " action_type",
-      render: (_,text) => <div>{text.user_info.id}</div>,
+      render: (_,text) => <div>{text?.person_info?.id}</div>,
     },
     {
       title: "所属网格员",
@@ -331,8 +335,8 @@ const App: React.FC = () => {
           bordered
           column={{ xxl: 1, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
         >
-          <Descriptions.Item label="姓名">Cloud Database</Descriptions.Item>
-          <Descriptions.Item label="身份证号">Prepaid</Descriptions.Item>
+          <Descriptions.Item label="姓名">{changesShow[0]?.personal_info?.real_name}</Descriptions.Item>
+          <Descriptions.Item label="身份证号">{changesShow[0]?.personal_info?.id_card}</Descriptions.Item>
         </Descriptions>
         <Divider />
 

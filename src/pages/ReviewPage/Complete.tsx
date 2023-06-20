@@ -131,7 +131,7 @@ const columns: ColumnsType= [
     title: '详情描述',
     dataIndex: 'action_type',
     key: 'action_type',
-    render: (text) => <a>{text}</a>,
+    render: (_,text) => <a onClick={showModal}>{text?.__typename}姓名为"{text?.person_info?.real_name}"的群众信息</a>,
   },
   {
     title: '事件类型',
@@ -142,12 +142,13 @@ const columns: ColumnsType= [
     title: '所属群众',
     dataIndex: 'belong',
     key: ' belong',
+     render: (_,text) => <div>{text?.person_info?.id}</div>,
   },
   {
     title: '所属网格员',
     dataIndex: 'user_name',
     key: 'user_name',
-    render: (_,text) => <div>{text.user_info.real_name}</div>,
+    render: (_,text) => <div>{text?.user_info?.real_name}</div>,
   },
   {
     title: '创建时间',
@@ -182,8 +183,9 @@ const columns: ColumnsType= [
         cancelText="No"
       >
         <a>删除</a></Popconfirm>
-        <a onClick={()=>showModal(record.review_comments)} >查看处理意见</a>
+        
         <a style={{color:record.status==1?'green':'red'}}>{record.status==1?'审核通过':'审核未通过'}</a>
+        <a onClick={()=>showModal(record.review_comments)} >{record.status==1?'':'查看处理意见'}</a>
       </Space>
     ),
   },

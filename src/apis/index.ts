@@ -118,29 +118,36 @@ mutation DeleteAuditRecord($rightnow_auditrecords_id: Int!) {
 }
 `;
 //  获取变更
-export const GET_AUDIT_CHANGE = gql`query {
-  getChangeRecord(rightnow_auditrecords_id:8){
-  audit_records_id
-  change_item
-  change_time
-  content_after
-  content_before
-  create_time
-  creator_id
-  id
-  is_delete
-  personal_info{gender
-  head_url
-  id
-  id_card
-  is_delete
-  mobile
-  real_name
-  role
-  status
-  username}
-  update_time
-  updater_id}}`;
+export const GET_AUDIT_CHANGE = gql`
+query GetChangeRecords($rightnow_auditrecords_id: Int!) {
+  getChangeRecord(rightnow_auditrecords_id: $rightnow_auditrecords_id) {
+    audit_records_id
+    change_item
+    change_time
+    content_after
+    content_before
+    create_time
+    creator_id
+    id
+    is_delete
+    personal_info {
+      gender
+      head_url
+      id
+      id_card
+      is_delete
+      mobile
+      real_name
+      role
+      role_id
+      status
+      username
+    }
+    update_time
+    updater_id
+  }
+}
+`;
   //  修改审核信息
   export const UPDATE_AUDIT = gql`
   mutation UpdateAudit($new_data: auditCreateInput!, $rightnow_auditrecords_id: Int!) {
