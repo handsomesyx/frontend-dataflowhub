@@ -25,12 +25,24 @@ export const GetDemoDashData = gql`
   }
 `;
 
-// FindManyArea随便取的名字，（&data:data）前一个data和接口参数名一致，后一个data代表类型，
-// 第二个findManyArea是接口的名字，（data:$data）第一个data是接口参数名，第二个是上一行的$data{}是返回的数据
+
 export const FindManyArea = gql`
   query findManyArea($skip:Int!,$take:Int!) {
     findManyArea(skip:$skip,take:$take) {
       id
+      leader{
+        gender
+        head_url
+        id
+        id_card
+        is_delete
+        mobile
+        real_name
+        role
+        role_id
+        status
+        username
+      }
       create_time
       creator_id
       is_delete
@@ -64,7 +76,19 @@ export const FindManyGrid = gql`
     findManyGrid(select:$select,skip:$skip,take:$take) {
       count
       data {
-        area_name
+        area_leader_info{
+          gender
+          head_url
+          id
+          id_card
+          is_delete
+          mobile
+          real_name
+          role
+          role_id
+          status
+          username
+        }
         id
         creator_id
         update_time
@@ -72,8 +96,43 @@ export const FindManyGrid = gql`
         is_delete
         updater_id
         name
-        grid_leader_name
-        area_leader_name
+        grid_leader_info{
+          gender
+          head_url
+          id
+          id_card
+          is_delete
+          mobile
+          real_name
+          role
+          role_id
+          status
+          username
+        }
+        area_info{
+          create_time
+          creator_id
+          id
+          is_delete
+          leader{
+            gender
+          head_url
+          id
+          id_card
+          is_delete
+          mobile
+          real_name
+          role
+          role_id
+          status
+          username
+          }
+          level
+          name
+          parent_id
+          update_time
+          updater_id
+        }
       }
     }
   }
@@ -84,16 +143,17 @@ export const FindManyPolicestation = gql`
     findManyPolicestation(select:$select,skip:$skip,take:$take) {
     count
     data{
+      area
       id
-    creator_id
-    update_time
-    name
-    create_time
-    is_delete
-    updater_id
-    user_id
-    police_count
-    policeleader_name
+      creator_id
+      update_time
+      name
+      create_time
+      is_delete
+      updater_id
+      user_id
+      police_count
+      policeleader_name
     }
     }
   }
@@ -134,11 +194,53 @@ export const CreateCommunity = gql`
 export const CreateGrid = gql`
   mutation createGrid($data:gridCreateInput!) {
     createGrid(data:$data) {
-      area_leader_name
-      area_name
+      area_leader_info{
+        gender
+        head_url
+        id
+        id_card
+        is_delete
+        mobile
+        real_name
+        role
+        role_id
+        status
+        username
+      }
+      grid_leader_info{
+        gender
+        head_url
+        id
+        id_card
+        is_delete
+        mobile
+        real_name
+        role
+        role_id
+        status
+        username
+      }
       create_time
       creator_id
-      grid_leader_name
+      area_info{
+        create_time
+        creator_id
+        id
+        is_delete
+        leader{
+          gender
+          head_url
+          id
+          id_card
+          is_delete
+          mobile
+          real_name
+          role
+          role_id
+          status
+          username
+        }
+      }
       id
       is_delete
       name
@@ -230,6 +332,7 @@ query findUser($name:String!,$role:String!){
     mobile
     real_name
     role
+    role_id
     status
     username
   }

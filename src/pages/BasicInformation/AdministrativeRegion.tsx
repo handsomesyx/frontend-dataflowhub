@@ -78,21 +78,45 @@ export interface Params {
 
 const AdministrativeRegion: React.FC = () => {
   // const { Option } = Select;
+  // 添加网格抽屉
   const [open, setOpen] = useState(false);
+  // 修改网格抽屉
   const [update_open, setUpdate_Open] = useState(false);
+  // 添加行政区域
   const [modalAddVisible, setModalAddVisible] = useState(false);
+  // 删除行政区域
   const [modalDeleteVisible, setModalDeleteVisible] = useState(false);
+  // 修改行政区域
   const [modalRenameVisible, setModalRenameVisible] = useState(false);
+  // 删除网格区域
   const [modalDeleteGrid, setModalDeleteGrid] = useState(false);
+  // 行政区域右键点击弹出框
   const [editlevel, setEditlevel] = useState(false);
+  // 网格名称
+  const [gridName, setGridName] = useState();
+  // 网格长名称
+  const [gridleaderName, setGridleaderName] = useState();
+  // 行政区域名称
+  const [areaName, setAreaName] = useState();
+  // 行政区域ID
+  const [areaId, setAreaId] = useState<number>();
+  // 行政区域层级
   const [level, setLevel] = useState<number>(1);
+  // 网格区域数据
   const [griddata, setGriddata] = useState([]);
+  // 网格ID
   const [GridId, setGridId] = useState();
+  // 用户ID
   const [userid, setUserID] = useState();
+  // 用户名字
   const [searchName, setSearchName] = useState('');
+  // 用户角色
   const [searchRole, setSearchRole] = useState('');
+  // 网格长信息
   const [gridleader, setGridleader] = useState(false);
+  // 社区主任信息
   const [communityleader, setCommunityleader] = useState(false);
+  // 搜索的用户信息
   const [informationRole, setInformationRole] = useState();
   // 右键时添加区域的父ID，是当前所选的ID
   const [parentID, setParentID] = useState<number>();
@@ -129,9 +153,7 @@ const AdministrativeRegion: React.FC = () => {
     fetchData({ pagination });
   });
 
-  const showDrawer = () => {
-    setOpen(true);
-  };
+
   const columns: ColumnsType<DataType> = [
     {
       title: '网格名称',
@@ -167,7 +189,17 @@ const AdministrativeRegion: React.FC = () => {
       render: (text) => (
         <Space size="middle">
           <a onClick={() => {
+            formUpdate.setFieldsValue({
+              'Gridname': text.name,
+              'Areaname': text.area_name,
+              'leader': text.grid_leader_name,
+            });
+            // setGridName(text.name);
+            // setGridleaderName(text.grid_leader_name);
             setUpdate_Open(true);
+            setAreaId(parseInt(text.area_id));
+            setUserID(text.grid_leader_id);
+            // setAreaName(text.area_name);
             setGridId(text.id);
           }}>修改</a>
           <span>|</span>
@@ -223,6 +255,7 @@ const AdministrativeRegion: React.FC = () => {
       skip: 0,
     }
   });
+  // 网格数据
   const { data: Griddata } = useQuery(FindManyGrid, {
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
@@ -237,7 +270,7 @@ const AdministrativeRegion: React.FC = () => {
     }
 
   });
-  console.log('checkedKeys', checkedKeys);
+  // 用户数据
   const { data: searchNamedata } = useQuery(FindUser, {
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
@@ -246,13 +279,31 @@ const AdministrativeRegion: React.FC = () => {
       role: searchRole,
     }
   });
-  // const { data: countGrid } = useQuery(CountGrid);
-  // const grid_count = countGrid;
-  // console.log('grid_count', grid_count?.countGrid);
 
   useEffect(() => {
     if (Griddata) {
-      setGriddata(Griddata.findManyGrid.data);
+      let grid_data = Griddata.findManyGrid.data;
+      let data = grid_data.map((item: any) => {
+        let grid_name = item.name;
+        let grid_leader_name = item.grid_leader_info.real_name;
+        let area_name = item.area_info.name;
+        let area_leader_name = item.area_leader_info.real_name;
+        let grid_leader_id = item.grid_leader_info.id;
+        let id = item.id;
+        let area_id = item.area_info.id;
+        return {
+          name: grid_name,
+          grid_leader_name: grid_leader_name,
+          area_name: area_name,
+          area_id: area_id,
+          area_leader_name: area_leader_name,
+          grid_leader_id: grid_leader_id,
+          id: id,
+        };
+      });
+      setGriddata(data);
+      // let grid_data = [];
+
       setTotal(Griddata.findManyGrid.count);
       setPagination((pagination) => {
         return {
@@ -262,11 +313,25 @@ const AdministrativeRegion: React.FC = () => {
       });
     }
   }, [Griddata]);
+
   useEffect(() => {
     if (searchNamedata) {
       setInformationRole(searchNamedata.findUser);
     }
   }, [searchNamedata]);
+
+  useEffect(() => {
+    if (gridName) {
+      setGridName(gridName);
+    }
+  }, [gridName]);
+
+  useEffect(() => {
+    if (gridleaderName) {
+      setGridleaderName(gridleaderName);
+    }
+  }, [gridleaderName]);
+
   // 删除
   const [deleteArea] = useMutation(DeleteArea);
   const [deleteGrid] = useMutation(DeleteGrid);
@@ -274,7 +339,6 @@ const AdministrativeRegion: React.FC = () => {
   // 添加
   const [addArea] = useMutation(CreateArea);
   const [addGrid] = useMutation(CreateGrid);
-
 
   // 编辑
   const [updateArea] = useMutation(UpdateArea);
@@ -309,9 +373,11 @@ const AdministrativeRegion: React.FC = () => {
   const handle_cancelDeleteGrid = () => {
     setModalDeleteGrid(false);
   };
+  const showDrawer = () => {
+    setOpen(true);
+  };
   // 扁平化数据转树
   const flatToTree = (data: any) => {
-    console.log('ddddata', data);
     // 先初始化这个数组，将根节点加进去，有几个parent_id为null，就有几个根节点
     // 第一层
     // 主要考虑表中的这个节点顺序可能是没有顺序的，不固定
@@ -364,13 +430,17 @@ const AdministrativeRegion: React.FC = () => {
       let level = item.level;
       let parentId = item.parent_id;
       let key = item.id;
+      // let areaLeaderName = item.leader.real_name;
+      let leader = item.leader;
       let dict = {};
       dict = {
         title: name,
         key: key,
         parentId,
         children: [],
-        level: 3
+        level: 3,
+        // areaLeaderName: areaLeaderName,
+        leader: leader,
       };
       // 判断是第几层
       if (level === 3) {
@@ -399,10 +469,21 @@ const AdministrativeRegion: React.FC = () => {
 
   // 右键分类方法
   const rigthChecked = (e: any) => {
-    console.log('e', e);
     let level = e.node.level;
     let key = parseInt(e.node.key);
     let parentid = parseInt(e.node.parentId);
+    if (level === 3) {
+      let area_leader_name = e.node.leader.real_name;
+      let area_leader_id = e.node.leader.id;
+      formRename.setFieldsValue({
+        areaname: e.node.title,
+        CommunityLeadername: area_leader_name,
+      });
+      setUserID(area_leader_id);
+    }
+
+
+    setAreaName(e.node.title);
     setEditlevel(true);
     setLevel(level);
     setParentID(key);
@@ -413,7 +494,6 @@ const AdministrativeRegion: React.FC = () => {
     let res = checkedKeysValue.map((item: any) => {
       return parseInt(item);
     });
-    console.log(res);
     setCheckedKeys(res);
   };
   const onAddGrid = async () => {
@@ -442,17 +522,23 @@ const AdministrativeRegion: React.FC = () => {
       //   }
       // ],
     });
+    if (addGriddata.data.createGrid.id) {
+      message.success('添加成功');
+    } else {
+      message.error('添加失败');
+    }
     setOpen(false);
     formSubmit.resetFields();
-    console.log('addgrid', addGriddata);
-    console.log('checkedKeysadd', checkedKeys);
-
   };
   const onUpdateGrid = async () => {
     let name = formUpdate.getFieldValue('Areaname');
-    let areaid = parseInt(name[name.length - 1]);
-    console.log('gridid', GridId);
-    console.log('checkedKeys111', checkedKeys);
+    let areaid;
+    if (typeof name === 'string') {
+      areaid = areaId;
+    } else {
+      areaid = parseInt(name[name.length - 1]);
+    }
+
     const updateGriddata: any = await updateGrid({
       variables: {
         new_data: {
@@ -477,21 +563,16 @@ const AdministrativeRegion: React.FC = () => {
       //   }
       // ],
     });
+    if (updateGriddata.data.updateGrid === 1) {
+      message.success('修改成功');
+    } else {
+      message.error('修改失败');
+    }
     setUpdate_Open(false);
     formUpdate.resetFields();
-    console.log('addgrid', updateGriddata);
-    console.log('checkedKeys222', checkedKeys);
-
   };
-  console.log('1111', total);
-  console.log('information', informationRole);
-  console.log('griddata', griddata);
-  console.log(Areadata);
-  console.log('Griddata', Griddata);
   return (
-
     <>
-
       <Row gutter={16} style={{ height: '100%' }}>
         <Col span={4} style={{ height: '100%' }}>
           <Card
@@ -667,6 +748,11 @@ const AdministrativeRegion: React.FC = () => {
         <Form
           style={{ width: '100%' }}
           layout="vertical"
+          // initialValues={{
+          //   Gridname: gridName,
+          //   Areaname: areaName,
+          //   leader: gridleaderName,
+          // }}
           form={formUpdate}>
           <Form.Item
             name="Gridname"
@@ -912,13 +998,15 @@ const AdministrativeRegion: React.FC = () => {
         okText="确认"
         cancelText="取消"
       >
-        <Form form={formRename}>
-          <Form.Item name="areaname" label="区域名称" rules={[
-            {
-              required: true,
-              message: '请输入行政区域名称',
-            },
-          ]}>
+        <Form form={formRename}
+          initialValues={{ areaname: areaName }}>
+          <Form.Item name="areaname" label="区域名称"
+            rules={[
+              {
+                required: true,
+                message: '请输入行政区域名称',
+              },
+            ]}>
             <Input placeholder='请输入行政区域名称' />
           </Form.Item>
           {level === 3 ? <Form.Item

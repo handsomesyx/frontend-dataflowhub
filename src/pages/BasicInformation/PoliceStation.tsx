@@ -46,17 +46,6 @@ export default function PoliceStation() {
         mobile: string;
         id_card: string;
     }
-    interface PoliceType {
-        id: string;
-        creator_id: number;
-        update_time: string;
-        name: string;
-        create_time: string;
-        user_id: number;
-        updater_id: number;
-        policeleader_name: string;
-        police_count: number;
-    }
     const layout = {
         labelCol: { span: 6 },
         wrapperCol: { span: 16 },
@@ -84,7 +73,6 @@ export default function PoliceStation() {
                 <Space size="middle">
                     <a onClick={() => {
                         setUserID(value.id);
-                        console.log('value', value);
                         setDeletePoliceInfo(true);
 
                     }}>删除</a>
@@ -135,7 +123,6 @@ export default function PoliceStation() {
     const [formupdatePoliceStation] = Form.useForm();
     const [formAddPoliceStation] = Form.useForm();
     const [onSearchForm] = Form.useForm();
-
     // 获取的警局信息
     const [policeStation, setPoliceStation] = useState([]);
     // 查看具体信息
@@ -152,12 +139,12 @@ export default function PoliceStation() {
     const [searchName, setSearchName] = useState('');
     const [searchRole, setSearchRole] = useState('');
     // 用户ID（所长/警员等）
-    const [userID, setUserID] = useState();
+    const [userID, setUserID] = useState<any>();
     // 警员具体信息
     const [policeInfo, setPoliceInfo] = useState();
-
     // 警员信息弹窗状态
     const [policeState, setPoliceState] = useState(false);
+    // 所长信息
     const [policeLeaderStation, setPoliceLeaderStation] = useState(false);
     // 筛选的镇的条件
     // const [town, setTown] = useState([]);
@@ -168,10 +155,14 @@ export default function PoliceStation() {
     // 筛选状态
     const [searchState, setSearchState] = useState(false);
     const [selectid, setSelectid] = useState<number[]>([]);
+    // 修改派出所
     const [updateState, setUpdateState] = useState(false);
+    // 派出所ID
     const [policeStationId, setPoliceStationId] = useState<number>();
+    // 警员信息
     const [policeDetail, setPoliceDetail] = useState();
     const [loading, setLoading] = useState(true);
+    const [updateLoading, setupdateLoading] = useState(false);
     const { SHOW_CHILD } = Cascader;
     // 总数
     const [total, setTotal] = useState<number>(0);
@@ -231,11 +222,7 @@ export default function PoliceStation() {
             role: 2,
         }
     });
-    useEffect(() => {
-        if (policeDetailData) {
-            setPoliceDetail(policeDetailData.getPoliceInfo);
-        }
-    }, [policeDetailData]);
+
     // 增加派出所
     const [addPoliceStationInfo] = useMutation(CreatePolicestation);
     // 删除派出所
@@ -244,30 +231,25 @@ export default function PoliceStation() {
     const [updatePoliceStation] = useMutation(UpdatePolicestation);
     // 增加警员
     const [addPoliceInfo] = useMutation(AddPolice);
-
     // 删除警员
     const [deletePolice] = useMutation(DeletePolice);
+
+    useEffect(() => {
+        if (policeDetailData) {
+            setPoliceDetail(policeDetailData.getPoliceInfo);
+        }
+    }, [policeDetailData]);
 
     useEffect(() => {
         if (Policestationdata) {
             setPoliceStation(Policestationdata.findManyPolicestation.data);
             setTotal(Policestationdata.findManyPolicestation.count);
-            setLoading(false);
-            // setPagination({
-            //     current: pagination.current,
-            //     pageSize: pagination.pageSize,
-            // });
+            if (!updateLoading) {
+                setLoading(false);
+            }
         }
-    }, [Policestationdata]);
-    console.log('Policestationdata', Policestationdata);
+    }, [Policestationdata, updateLoading]);
 
-    const changePage = (_current: any) => {
-        setTotal(total);
-        setPagination({
-            current: _current,
-            pageSize: pagination.pageSize,
-        });
-    };
     useEffect(() => {
         if (Areadata) {
             let data = Areadata.findManyArea;
@@ -284,7 +266,6 @@ export default function PoliceStation() {
             setCommunity(communityData);
         }
     }, [Areadata]);
-    console.log('Areadata', Areadata);
 
     useEffect(() => {
         if (searchNamedata) {
@@ -292,6 +273,13 @@ export default function PoliceStation() {
         }
     }, [searchNamedata]);
 
+    const changePage = (_current: any) => {
+        setTotal(total);
+        setPagination({
+            current: _current,
+            pageSize: pagination.pageSize,
+        });
+    };
     const VisitInfo_handleCancel = () => {
         setVisitInfo(false);
     };
@@ -338,8 +326,6 @@ export default function PoliceStation() {
         administrative_area_idArr.map((item: any) => {
             administrative_area_id.push(parseInt(item[item.length - 1]));
         });
-        console.log('administrative_area_id', administrative_area_id);
-
         addPoliceStationInfo({
             variables: {
                 data: {
@@ -352,7 +338,6 @@ export default function PoliceStation() {
             awaitRefetchQueries: true,
             refetchQueries: ['findManyPolicestation'],// 重新查询
         }).then((r) => {
-            console.log('addpolicestationrr', r);
             if (r.data.createPolicestation === null) {
                 message.error('添加失败');
                 formAddPoliceStation.resetFields();
@@ -420,8 +405,6 @@ export default function PoliceStation() {
         onSearchForm.resetFields();
         setSearchState(false);
     };
-    console.log('selectid', selectid);
-
     // 扁平化数据转树
     const flatToTree = (data: any) => {
         // 先初始化这个数组，将根节点加进去，有几个parent_id为null，就有几个根节点
@@ -500,7 +483,7 @@ export default function PoliceStation() {
     };
     // 警局信息卡片
     const PoliceStation_card = (
-        policeStation.map((item: PoliceType, index) => {
+        policeStation.map((item: any, index) => {
 
             return (
                 <>
@@ -509,6 +492,18 @@ export default function PoliceStation() {
                             // eslint-disable-next-line react/jsx-key
                             <Tooltip placement="bottom" title="修改">
                                 <a onClick={() => {
+                                    let area = item.area.map((v: any) => {
+                                        let arr = v.map((item: any) => {
+                                            return item.toString();
+                                        });
+                                        return arr;
+                                    });
+                                    formupdatePoliceStation.setFieldsValue({
+                                        'policeStationname': item.name,
+                                        'policeStationLeader': item.policeleader_name,
+                                        'area': area,
+                                    });
+                                    setUserID(item.user_id);
                                     setPoliceStationId(parseInt(item.id));
                                     setUpdateState(true);
                                 }}>
@@ -830,15 +825,16 @@ export default function PoliceStation() {
                 title="修改派出所信息"
                 open={updateState}
                 getContainer={false}
-                onOk={() => {
+                onOk={async () => {
+                    setLoading(true);
+                    setupdateLoading(true);
+                    setUpdateState(false);
                     let administrative_area_idArr = formupdatePoliceStation.getFieldValue('area');
                     let administrative_area_id: any = [];
                     administrative_area_idArr.map((item: any) => {
                         administrative_area_id.push(parseInt(item[item.length - 1]));
-                    }),
-                        console.log('administrative_area_id', administrative_area_id);
-
-                    updatePoliceStation({
+                    });
+                    const updatepolicestationdata: any = await updatePoliceStation({
                         variables: {
                             new_data: {
                                 administrative_area_id: administrative_area_id,
@@ -851,17 +847,23 @@ export default function PoliceStation() {
                         },
                         awaitRefetchQueries: true,
                         refetchQueries: ['findManyPolicestation'],// 重新查询
-                    }).then((r) => {
-                        if (r.data.updatePolicestation === 1) {
-                            formupdatePoliceStation.resetFields();
-                            message.success('修改成功');
-                        } else {
-                            // formupdatePoliceStation.resetFields();
-                            message.success('修改失败');
-                        }
-
                     });
-                    setUpdateState(false);
+                    if (updatepolicestationdata.data.updatePolicestation === 1) {
+                        formupdatePoliceStation.resetFields();
+                        message.success('修改成功', onclose = () => {
+                            setLoading(false);
+                            setupdateLoading(false);
+                        });
+
+                    } else {
+                        // formupdatePoliceStation.resetFields();
+                        message.success('修改失败', onclose = () => {
+                            setLoading(false);
+                            setupdateLoading(false);
+                        });
+
+                    }
+
                 }}
                 onCancel={() => {
                     formupdatePoliceStation.resetFields();
@@ -872,7 +874,8 @@ export default function PoliceStation() {
                 okText="确认"
                 cancelText="取消"
             >
-                <Form {...layout} form={formupdatePoliceStation}>
+                <Form {...layout} form={formupdatePoliceStation}
+                >
                     <Form.Item
                         name='policeStationname'
                         label="派出所名称"
@@ -914,7 +917,6 @@ export default function PoliceStation() {
                             options={
                                 Areadata ? flatToTree(Areadata.findManyArea) : []
                             }
-                            // onChange={onChange}
                             multiple
                             showCheckedStrategy={SHOW_CHILD}
                             placeholder="请选择所属行政区域"
@@ -984,7 +986,6 @@ export default function PoliceStation() {
                             }, 'findManyPolicestation'
                         ],
                     }).then((r) => {
-                        console.log('rrrrdeletePolice', r);
                         if (r.data.deletePolice === 1) {
                             message.success('删除成功');
                         } else if (r.data.deletePolice === 0) {
