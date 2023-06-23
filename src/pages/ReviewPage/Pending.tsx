@@ -1,82 +1,83 @@
-/* eslint-disable */
-import React, { useEffect, useState } from "react";
+
+import { ApolloClient, InMemoryCache, useMutation, useQuery } from '@apollo/client';
+import type {
+  RadioChangeEvent} from 'antd';
 import {
+  Button,
+  Checkbox,
+  Descriptions,
+  Divider,
+  message,
+  Modal,
+  Popconfirm,
+  Radio,
   Space,
   Table,
-  Typography,
-  Tag,
-  Divider,
-  Button,
-  Modal,
-  Descriptions,
-  message,
-  Popconfirm,
-  Checkbox,
-  Radio,
-} from "antd";
-import type { ColumnsType } from "antd/es/table";
-import TextArea from "antd/es/input/TextArea";
-import { CheckboxValueType } from "antd/es/checkbox/Group";
-import { ApolloClient, InMemoryCache, useMutation, useQuery } from "@apollo/client";
-import { DELETE_AUDIT_MUTATION, GET_AUDIT_CHANGE, QUERY_AUDITS, UPDATE_AUDIT } from "@/apis";
+  Typography} from 'antd';
+import type { CheckboxValueType } from 'antd/es/checkbox/Group';
+import TextArea from 'antd/es/input/TextArea';
+import type { ColumnsType } from 'antd/es/table';
+import type { ReactNode} from 'react';
+import React, { useEffect, useState } from 'react';
+
+import {
+  DELETE_AUDIT_MUTATION,
+  GET_AUDIT_CHANGE,
+  QUERY_AUDITS,
+  UPDATE_AUDIT,
+} from '@/apis';
 
 const client = new ApolloClient({
   uri: 'http://127.0.0.1:7000/graphql',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 });
 const { Title } = Typography;
 interface ChangeWhat {
-  value: string;
-  before: string;
-  after: string;
+  change_item: string;
+  content_before: string;
+  content_after: string;
 }
 
 const options = [
   {
-    label:
-      "A",
-    value: "A",
+    label: 'A',
+    value: 'A',
   },
   {
-    label:
-      "B",
-    value: "B",
+    label: 'B',
+    value: 'B',
   },
   {
-    label:
-      "C",
-    value: "C",
+    label: 'C',
+    value: 'C',
   },
   {
-    label: "D",
-    value: "D",
+    label: 'D',
+    value: 'D',
   },
 ];
-
-
-
-
-
-
 
 const changecolumns: ColumnsType<ChangeWhat> = [
   {
-    title: "变更属性",
-    dataIndex: "value",
+    title: '变更属性',
+    dataIndex: 'value',
   },
   {
-    title: "变更前",
-    dataIndex: "before",
+    title: '变更前',
+    dataIndex: 'before',
   },
   {
-    title: "变更后",
-    dataIndex: "after",
+    title: '变更后',
+    dataIndex: 'after',
   },
 ];
 
-
-
 interface DataType {
+  id: any;
+  priority: Number;
+  user_info: any;
+  person_info: any;
+  __typename: ReactNode;
   description: string;
   type: string;
   belong: string;
@@ -85,80 +86,110 @@ interface DataType {
   emergency: string;
   key: string;
 }
+interface personinfo {
+  real_name: String;
+  id_card: String;
+}
+interface dataChange {
+  personal_info: personinfo
+}
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [refuseopen, setRefuseOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState<DataType>();
-  const { loading, error, data } = useQuery(QUERY_AUDITS,{client});
+  const { data } = useQuery(QUERY_AUDITS, { client });
   const [dataSource, setDataSource] = useState([]);
-  const [changesShow, setChangesShow] = useState([]);
-  const [tdata, settData] = useState([]);
-const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
+  const [changesShow, setChangesShow] = useState<dataChange[]>([]);
+  const [changedata, setChangedata] = useState<ChangeWhat[]>([]);
   const [rightnowAuditrecordsId, setrightnowAuditrecordsId] = useState(0);
-  const [DataShow, setDataShow] = useState([]);
-  const [updateAudit] = useMutation(UPDATE_AUDIT,{client,onCompleted: (data) => {
-    console.log(data); 
-    if(data.updateAudit)message.info('操作成功');handleCancel();
-  },onError: (error) => {
-    console.error(error);
-    message.info('操作失败');
-  },});
+  const [updateAudit] = useMutation(UPDATE_AUDIT, {
+    client,
+    onCompleted: (data) => {
+      console.log(data);
+      if (data.updateAudit) message.info('操作成功');
+      handleCancel();
+    },
+    onError: (error) => {
+      console.error(error);
+      message.info('操作失败');
+    },
+  });
   const { refetch } = useQuery(GET_AUDIT_CHANGE, {
     client,
     variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
     onCompleted: (data) => {
       console.log(data.getChangeRecord); // 控制台结果
-      setChangesShow(data.getChangeRecord)
-      const changewhat = data.getChangeRecord
-  .map(item => ({ after: item.content_after, before: item.content_before,value:item.change_item}));
+      setChangesShow(data.getChangeRecord);
+      const changewhat = data.getChangeRecord.map((item: ChangeWhat) => ({
+        after: item.content_after,
+        before: item.content_before,
+        value: item.change_item,
+      }));
 
-  console.log(changewhat); 
-  setChangedata(changewhat);
+      console.log(changewhat);
+      setChangedata(changewhat);
 
-      if(rightnowAuditrecordsId!=0){message.info('信息加载完成');}
-      
+      if (rightnowAuditrecordsId !== 0) {
+        message.info('信息加载完成');
+      }
     },
   });
-  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION,{client});
-  const [plainOptions, setPlainOptions] = useState([]);
-  const [comment, setComment] = useState("未填写");//拒绝原因
-  const [classabcd, setClassabcd] = useState("未分类");//人员ABCD分类
+ 
+  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, { client });
+  const [plainOptions, setPlainOptions] = useState<string[]>([]);
+  const [comment, setComment] = useState('未填写'); // 拒绝原因
+  const [classabcd, setClassabcd] = useState('未分类'); // 人员ABCD分类
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
   const onsubChange = (list: CheckboxValueType[]) => {
     setCheckedList(list);
   };
-  
-  const checkonChange = (checkedValues: CheckboxValueType[]) => {
-    console.log("checked = ", checkedValues.target.value);
+
+  const checkonChange = (e: RadioChangeEvent) => {
+    console.log('checked = ', e.target.value);
     let newPlainOptions: string[] | ((prevState: never[]) => never[]) = [];
 
-    switch (checkedValues.target.value) {
+    switch (e.target.value) {
       case 'A':
-        setClassabcd("A");
-        newPlainOptions = ['涉政、恐、毒、重大刑事犯罪前科人员', '肇事肇祸精神病人', '潜在社会危害性人员','其他重点人员'];
+        setClassabcd('A');
+        newPlainOptions = [
+          '涉政、恐、毒、重大刑事犯罪前科人员',
+          '肇事肇祸精神病人',
+          '潜在社会危害性人员',
+          '其他重点人员',
+        ];
         break;
       case 'B':
-        setClassabcd("B");
-        newPlainOptions = ['一般违法和其他刑满释放人员', '社区矫正、取保候审监视居住、境外居留人员', '旅游人员','涉枪涉爆涉危化、现实表现差等重点人员','其他重点人员'];
+        setClassabcd('B');
+        newPlainOptions = [
+          '一般违法和其他刑满释放人员',
+          '社区矫正、取保候审监视居住、境外居留人员',
+          '旅游人员',
+          '涉枪涉爆涉危化、现实表现差等重点人员',
+          '其他重点人员',
+        ];
         break;
       case 'C':
-        setClassabcd("C");
-        newPlainOptions = ['其他流动人口', '涉访人员和独居老人', '生活困难等无人监管的鳏寡孤独残障病幼等特殊人员','其他特殊人员'];
+        setClassabcd('C');
+        newPlainOptions = [
+          '其他流动人口',
+          '涉访人员和独居老人',
+          '生活困难等无人监管的鳏寡孤独残障病幼等特殊人员',
+          '其他特殊人员',
+        ];
         break;
       default:
-        setClassabcd("D");
+        setClassabcd('D');
         newPlainOptions = [];
     }
-  
+
     setPlainOptions(newPlainOptions);
   };
 
-  const confirm = async(id: any) => {
-    const tmp=parseInt(id)
+  const confirm = async (id: any) => {
+    const tmp = parseInt(id);
     try {
       await deleteAuditMutation({
-        variables: {rightnow_auditrecords_id:tmp},
+        variables: { rightnow_auditrecords_id: tmp },
       });
       message.info('删除完成');
     } catch (e) {
@@ -168,53 +199,51 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
   };
 
   useEffect(() => {
-
-    console.log("请求完成")
+    console.log('请求完成');
     if (data) {
-      console.log(data)
-      const filtered = data.findManyAudit.data.filter((item:any) => item.is_delete === false);
-      const formattedData = filtered.map((item:any) => {
+      console.log(data);
+      const filtered = data.findManyAudit.data.filter(
+        (item: any) => item.is_delete === false,
+      );
+      const formattedData = filtered.map((item: any) => {
         const date = new Date(item.create_time);
         const formattedDate = date.toLocaleString();
         return {
           ...item,
-          create_time: formattedDate
+          create_time: formattedDate,
         };
       });
-      console.log(formattedData)
+      console.log(formattedData);
       setDataSource(formattedData);
     }
-    
   }, [data]);
-
-
-
 
   const handleRefuse = () => {
     setRefuseOpen(true);
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log("Change:", e.target.value);
-    setComment(e.target.value)
-
+    console.log('Change:', e.target.value);
+    setComment(e.target.value);
   };
 
   const handlereReview = () => {
     const newData = {
       review_comments: comment,
       status: 2,
-      review_time:new Date()
-      };
-    updateAudit({ variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId } });
+      review_time: new Date(),
+    };
+    updateAudit({
+      variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId },
+    });
     setRefuseOpen(false);
     setOpen(false);
   };
 
   const showModal = (e: any) => {
-    const tmp=parseInt(e.id)
-    setrightnowAuditrecordsId(tmp)
-    refetch()
+    const tmp = parseInt(e.id);
+    setrightnowAuditrecordsId(tmp);
+    refetch();
     message.loading('加载中...', 1);
     setModalText(e);
     setOpen(true);
@@ -225,80 +254,83 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
   };
 
   const handlePass = () => {
+    console.log(checkedList);
     const newData = {
-      request_data: { class: classabcd,detailClass:plainOptions },
-      review_comments: "审核通过",
+      request_data: { class: classabcd, detailClass: checkedList },
+      review_comments: '审核通过',
       status: 1,
-      review_time:new Date()
+      review_time: new Date(),
     };
-    updateAudit({ variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId } });
+    updateAudit({
+      variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId },
+    });
   };
 
   const handlerefuseCancel = () => {
     setRefuseOpen(false);
   };
 
-  const whatcolor= (e: Number) => {
+  const whatcolor = (e: Number) => {
     if (e === 1) {
-      return (
-        <div style={{ backgroundColor: 'red', width: '50px', height: '20px' }}/>
-      );
-    } else if (e ===2) {
-      return (
-        <div style={{ backgroundColor: 'orange', width: '50px', height: '20px' }}/>
-      );
+      return <div style={{ backgroundColor: 'red', width: '50px', height: '20px' }} />;
+    } else if (e === 2) {
+      return <div style={{ backgroundColor: 'orange', width: '50px', height: '20px' }} />;
     } else {
-      return (
-        <div style={{ backgroundColor: 'blue', width: '50px', height: '20px' }}/>
-      );
+      return <div style={{ backgroundColor: 'blue', width: '50px', height: '20px' }} />;
     }
-  }
+  };
 
   const columns: ColumnsType<DataType> = [
     {
-      title: "详情描述",
-      dataIndex: "action_type",
-      key: "action_type",
-      render: (_,text) => <a onClick={showModal}>{text?.__typename}姓名为"{text?.person_info.real_name}"的群众信息</a>,
+      title: '详情描述',
+      dataIndex: 'action_type',
+      key: 'action_type',
+      render: (_, text) => (
+        <a onClick={showModal}>
+          {text?.__typename}姓名为&quot;{text?.person_info.real_name}&quot;的群众信息
+        </a>
+      ),
     },
     {
-      title: "事件类型",
-      dataIndex: "action_type",
-      key: "action_type",
+      title: '事件类型',
+      dataIndex: 'action_type',
+      key: 'action_type',
     },
     {
-      title: "所属群众",
-      dataIndex: "action_type",
-      key: " action_type",
-      render: (_,text) => <div>{text?.person_info?.id}</div>,
+      title: '所属群众',
+      dataIndex: 'action_type',
+      key: ' action_type',
+      render: (_, text) => <div>{text?.person_info?.id}</div>,
     },
     {
-      title: "所属网格员",
-      dataIndex: "user_name",
-      key: "user_name",
-      render: (_,text) => <div>{text.user_info.real_name}</div>,
+      title: '所属网格员',
+      dataIndex: 'user_name',
+      key: 'user_name',
+      render: (_, text) => <div>{text.user_info.real_name}</div>,
     },
     {
-      title: "创建时间",
-      dataIndex: "create_time",
-      key: "create_time",
+      title: '创建时间',
+      dataIndex: 'create_time',
+      key: 'create_time',
     },
     {
-      title: "紧急程度",
-      key: "status",
-      dataIndex: "status",
+      title: '紧急程度',
+      key: 'status',
+      dataIndex: 'status',
       render: (_, emergency) => <div>{whatcolor(emergency.priority)}</div>,
     },
     {
-      title: "操作",
-      key: "action",
+      title: '操作',
+      key: 'action',
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => showModal(record)}>查看具体信息</a>
           <Popconfirm
             placement="topRight"
             title="你确定要删除吗？"
-            onConfirm={()=>{confirm(record.id)}}
+            onConfirm={() => {
+              confirm(record.id);
+            }}
             okText="Yes"
             cancelText="No"
           >
@@ -308,8 +340,6 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
       ),
     },
   ];
-
-
 
   return (
     <>
@@ -325,7 +355,7 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
           <Button
             key="refuse"
             onClick={handleRefuse}
-            style={{ backgroundColor: "red", color: "white" }}
+            style={{ backgroundColor: 'red', color: 'white' }}
           >
             拒绝
           </Button>,
@@ -340,8 +370,12 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
           bordered
           column={{ xxl: 1, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
         >
-          <Descriptions.Item label="姓名">{changesShow[0]?.personal_info?.real_name}</Descriptions.Item>
-          <Descriptions.Item label="身份证号">{changesShow[0]?.personal_info?.id_card}</Descriptions.Item>
+          <Descriptions.Item label="姓名">
+            {changesShow[0]?.personal_info?.real_name}
+          </Descriptions.Item>
+          <Descriptions.Item label="身份证号">
+            {changesShow[0]?.personal_info?.id_card}
+          </Descriptions.Item>
         </Descriptions>
         <Divider />
 
@@ -358,7 +392,11 @@ const [changedata, setChangedata]=useState<ChangeWhat[]>([]);
           options={options}
           onChange={checkonChange}
         />
-        <Checkbox.Group options={plainOptions} value={checkedList} onChange={onsubChange} />
+        <Checkbox.Group
+          options={plainOptions}
+          value={checkedList}
+          onChange={onsubChange}
+        />
       </Modal>
       <Modal
         okText="确认"

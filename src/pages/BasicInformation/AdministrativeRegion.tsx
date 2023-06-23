@@ -12,7 +12,7 @@ import {
   Select,
   Space,
   Table,
-  Tree
+  Tree,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import type { DataNode } from 'antd/es/tree';
@@ -30,7 +30,6 @@ interface DataType {
   commit: string;
   police: string;
 }
-
 
 const treeData: DataNode[] = [
   {
@@ -91,9 +90,12 @@ const columns: ColumnsType<DataType> = [
     title: '网格员名称',
     dataIndex: 'age',
     key: 'age',
-    render: (text) => <a style={{ color: 'black' }}>{text}
-      <Image src={wanggeyuan}
-        preview={false} /></a>
+    render: (text) => (
+      <a style={{ color: 'black' }}>
+        {text}
+        <Image src={wanggeyuan} preview={false} />
+      </a>
+    ),
   },
   {
     title: '所属网格长',
@@ -163,10 +165,7 @@ const AdministrativeRegion: React.FC = () => {
     setOpen(false);
     formSubmit.resetFields();
   };
-  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([
-    '0-0-0',
-    '0-0-1',
-  ]);
+  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>(['0-0-0', '0-0-1']);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>(['0-0-0']);
   const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
   const [autoExpandParent, setAutoExpandParent] = useState<boolean>(true);
@@ -195,7 +194,7 @@ const AdministrativeRegion: React.FC = () => {
     variables: {
       take: 10,
       skip: 0,
-    }
+    },
   });
   const { data: Griddata } = useQuery(FindManyGrid, {
     fetchPolicy: 'network-only',
@@ -203,11 +202,10 @@ const AdministrativeRegion: React.FC = () => {
     variables: {
       take: 10,
       skip: 0,
-    }
+    },
   });
   console.log(Areadata);
   console.log('Griddata', Griddata);
-
 
   return (
     <>
@@ -241,29 +239,27 @@ const AdministrativeRegion: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col
-          style={{ backgroundColor: 'white', borderRadius: '4px' }}
-          span={20}
-        >
-          <div style={{
-            display: 'flex', flexDirection: 'row', justifyContent: 'space-between',
-            marginTop: '2vh', marginLeft: '1vw'
-          }}>
+        <Col style={{ backgroundColor: 'white', borderRadius: '4px' }} span={20}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: '2vh',
+              marginLeft: '1vw',
+            }}
+          >
             <div
               style={{
                 fontSize: '16px',
                 fontFamily: 'MicrosoftYaHeiUI',
                 color: '#000000',
                 lineHeight: '24px',
-
               }}
             >
               网格区域
             </div>
-            <Row
-              justify={'end'}
-              style={{ marginRight: '1vw', columnGap: '20px' }}
-            >
+            <Row justify={'end'} style={{ marginRight: '1vw', columnGap: '20px' }}>
               <Space>
                 <Button>网格长</Button>
                 <Button>民警</Button>
@@ -286,25 +282,28 @@ const AdministrativeRegion: React.FC = () => {
                   footer={
                     <Row justify={'end'}>
                       <Space>
-                        <Button onClick={() => {
-                          setOpen(false);
-                          formSubmit.resetFields();
-                        }}>取消</Button>
-                        <Button style={{ background: '#0757CB', color: 'white' }}>确认</Button>
+                        <Button
+                          onClick={() => {
+                            setOpen(false);
+                            formSubmit.resetFields();
+                          }}
+                        >
+                          取消
+                        </Button>
+                        <Button style={{ background: '#0757CB', color: 'white' }}>
+                          确认
+                        </Button>
                       </Space>
                     </Row>
                   }
                 >
-                  <Form
-                    style={{ width: '100%' }}
-                    layout="vertical"
-                    form={formSubmit}>
+                  <Form style={{ width: '100%' }} layout="vertical" form={formSubmit}>
                     <Form.Item
                       name="username"
                       label="网格名称"
-                      rules={[{ required: true, message: '请输入网格名称', }]}
+                      rules={[{ required: true, message: '请输入网格名称' }]}
                     >
-                      <Input placeholder='请输入' />
+                      <Input placeholder="请输入" />
                     </Form.Item>
                     <Form.Item
                       name="name"
@@ -316,13 +315,17 @@ const AdministrativeRegion: React.FC = () => {
                           {
                             value: 'zhejiang',
                             label: 'Zhejiang',
-                            children: [{
-                              value: 'hangzhou', label: 'Hangzhou', children: [
-                                { value: '夏明村', label: '夏明村' },
-                                { value: '0-0-0-1', label: '0-0-0-1' },
-                                { value: '0-0-0-2', label: '0-0-0-2' },
-                              ],
-                            }],
+                            children: [
+                              {
+                                value: 'hangzhou',
+                                label: 'Hangzhou',
+                                children: [
+                                  { value: '夏明村', label: '夏明村' },
+                                  { value: '0-0-0-1', label: '0-0-0-1' },
+                                  { value: '0-0-0-2', label: '0-0-0-2' },
+                                ],
+                              },
+                            ],
                           },
                         ]}
                       />
@@ -330,11 +333,13 @@ const AdministrativeRegion: React.FC = () => {
                     <Form.Item
                       name="select-multiple"
                       label="所属派出所"
-                      rules={[{
-                        required: true,
-                        message: '请选择所属派出所',
-                        type: 'array'
-                      }]}
+                      rules={[
+                        {
+                          required: true,
+                          message: '请选择所属派出所',
+                          type: 'array',
+                        },
+                      ]}
                     >
                       <Select mode="multiple" placeholder="请选择所属派出所">
                         <Option value="red">Red</Option>
@@ -345,7 +350,8 @@ const AdministrativeRegion: React.FC = () => {
                     <Form.Item
                       name="police"
                       label="所属民警"
-                      rules={[{ required: true, message: '请选择所属民警' }]}>
+                      rules={[{ required: true, message: '请选择所属民警' }]}
+                    >
                       <Select>
                         <Select.Option value="demo">Demo</Select.Option>
                       </Select>
@@ -353,15 +359,13 @@ const AdministrativeRegion: React.FC = () => {
                     <Form.Item
                       name="commit"
                       label="所属社区"
-                      rules={[{ required: true, message: '请选择所属社区' }]}>
+                      rules={[{ required: true, message: '请选择所属社区' }]}
+                    >
                       <Select>
                         <Select.Option value="demo">Demo</Select.Option>
                       </Select>
                     </Form.Item>
-                    <Form.Item
-                      name="leader"
-                      label="所属网格长"
-                    >
+                    <Form.Item name="leader" label="所属网格长">
                       <Select>
                         <Select.Option value="demo">Demo</Select.Option>
                       </Select>
@@ -369,11 +373,11 @@ const AdministrativeRegion: React.FC = () => {
                     <Form.Item
                       name="people"
                       label="所属网格员"
-                      rules={[{ required: true, message: '请输入所属网格员' }]}>
-                      <Input placeholder='请输入' />
+                      rules={[{ required: true, message: '请输入所属网格员' }]}
+                    >
+                      <Input placeholder="请输入" />
                     </Form.Item>
                   </Form>
-
                 </Drawer>
               </Space>
             </Row>
@@ -386,4 +390,3 @@ const AdministrativeRegion: React.FC = () => {
 };
 
 export default AdministrativeRegion;
-

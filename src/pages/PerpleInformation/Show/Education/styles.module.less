@@ -1,51 +1,51 @@
 .EducationBox {
-    width: 100%;
+  width: 100%;
 
-    table {
-        width: 100%;
-        border-collapse: collapse; /* 合并边框 */
-        border-radius: 5px;
+  table {
+    width: 100%;
+    border-collapse: collapse; /* 合并边框 */
+    border-radius: 5px;
+  }
+
+  td {
+    padding: 20px !important;
+    border: 1px solid #d9d9d9; /* 设置单元格边框 */
+  }
+
+  tr {
+    width: 100%;
+    font-size: 0.9em;
+
+    > td {
+      word-break: break-all;
+      text-align: center;
     }
+
+    > td:nth-child(2n-1) {
+      width: 15%;
+      text-align: center;
+      background-color: #fafafa;
+      font-weight: bold;
+      color: #424542;
+    }
+
+    > td:nth-child(2n) {
+      width: (55%/3);
+      font-weight: bolder;
+    }
+  }
+
+  tr:hover {
+    background-color: #f7f9f9 !important;
 
     td {
-        padding: 20px !important;
-        border: 1px solid #d9d9d9; /* 设置单元格边框 */
+      background-color: #f7f9f9 !important;
     }
+  }
 
-    tr {
-        width: 100%;
-        font-size: 0.9em;
-
-        > td {
-            word-break: break-all;
-            text-align: center;
-        }
-
-        > td:nth-child(2n-1) {
-            width: 15%;
-            text-align: center;
-            background-color: #fafafa;
-            font-weight: bold;
-            color: #424542;
-        }
-
-        > td:nth-child(2n) {
-            width: (55%/3);
-            font-weight: bolder;
-        }
-    }
-
-    tr:hover {
-        background-color: #f7f9f9 !important;
-
-        td {
-            background-color: #f7f9f9 !important;
-        }
-    }
-
-    span {
-        color: red;
-        display: inline-block;
-        width: 10px;
-    }
+  span {
+    color: red;
+    display: inline-block;
+    width: 10px;
+  }
 }

@@ -1,39 +1,38 @@
-.CombinationBox{
+.CombinationBox {
+  width: 100%;
+
+  table {
+    width: 100%;
+    border-collapse: collapse; /* 合并边框 */
+    border-radius: 5px;
+  }
+
+  td {
+    padding: 20px !important;
+    border: 1px solid #d9d9d9; /* 设置单元格边框 */
+  }
+
+  tr {
     width: 100%;
 
-    table{
-        width: 100%;
-        border-collapse: collapse; /* 合并边框 */
-        border-radius: 5px;
-      
+    > td:nth-child(1) {
+      width: 20%;
+      color: #424542;
+      text-align: center;
+      font-weight: bolder;
+      background-color: #fafafa;
     }
 
-    td{
-        padding: 20px !important; border: 1px solid #d9d9d9; /* 设置单元格边框 */
+    > td:nth-child(2) {
+      width: 80%;
     }
+  }
 
-    tr{
-        width: 100%;
+  tr:hover {
+    background-color: #f7f9f9 !important;
 
-        >td:nth-child(1){
-            width: 20%;
-            color: #424542;
-            text-align: center;
-            font-weight: bolder;
-            background-color: #fafafa;
-        }
-
-        >td:nth-child(2){
-            width: 80%;
-        }
+    td {
+      background-color: #f7f9f9 !important;
     }
-
-    tr:hover{
-        background-color: #f7f9f9 !important;
-        
-        td{
-            background-color: #f7f9f9 !important;
-        }
-    }
-    
+  }
 }

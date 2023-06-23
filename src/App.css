@@ -18,7 +18,6 @@
   float: right;
 }
 
-
 ::-webkit-scrollbar-thumb {
   /* 滚动条里面小方块 */
   border-radius: 1rem;
@@ -32,7 +31,6 @@
   box-shadow: inset 0 0 12px rgb(144 144 144 / 20%);
   background: rgb(144 144 144);
 }
-
 
 ::-webkit-scrollbar-track {
   /* 滚动条里面轨道 */

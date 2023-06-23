@@ -1,8 +1,8 @@
-/* eslint-disable */
-import { Tabs } from 'antd';
-import Pending from './Pending';
-import Complete from './Complete';
 import type { TabsProps } from 'antd';
+import { Tabs } from 'antd';
+
+import Complete from './Complete';
+import Pending from './Pending';
 const onChange = (key: string) => {
   console.log(key);
 };
@@ -10,24 +10,25 @@ const onChange = (key: string) => {
 const items: TabsProps['items'] = [
   {
     key: '1',
-    label: ` 待处理 `,
-    children: <Pending/>,
+    label: ' 待处理 ',
+    children: <Pending />,
   },
   {
     key: '2',
-    label: ` 已处理 `,
-    children:<Complete/>,
-  }
+    label: ' 已处理 ',
+    children: <Complete />,
+  },
 ];
-
-
-
-
 
 function ReviewPage() {
   return (
     <>
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange}  style={{paddingTop:'1vw',paddingLeft:'2vw',paddingRight:'2vw'}}/>
+      <Tabs
+        defaultActiveKey="1"
+        items={items}
+        onChange={onChange}
+        style={{ paddingTop: '1vw', paddingLeft: '2vw', paddingRight: '2vw' }}
+      />
     </>
   );
 }

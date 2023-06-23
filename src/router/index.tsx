@@ -1,7 +1,4 @@
-
-/* eslint-disable */
 import './index.css';
-
 import { Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
 import React from 'react';
@@ -20,10 +17,10 @@ const Community = React.lazy(() => import('@/pages/BasicInformation/Community'))
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 
+import ReviewPage from '@/pages/ReviewPage';
 import { userType } from '@/store';
 
 import type { routerConfigType } from './routerConfigType';
-import ReviewPage from '@/pages/ReviewPage';
 // ———————— 说明 （1、2级路由正常）————————————
 // 需要全部白色背景的页面在suspend里面加上div即可  不需要全部白色背景的加类名NotContentFFF
 // 需要写哪个页面，就在哪个页面对应的路由下，将文字替换为组件名称 使用懒加载形式引入
@@ -111,7 +108,9 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div style={{overflow:'scroll',overflowX:'hidden'}}><ReviewPage/></div>
+                <div style={{ overflow: 'scroll', overflowX: 'hidden' }}>
+                  <ReviewPage />
+                </div>
               </Suspense>
             ),
           },
