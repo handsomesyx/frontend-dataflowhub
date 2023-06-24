@@ -1,10 +1,6 @@
 /* eslint-disable max-len */
 import styles from './style.module.less';
 
-interface Props {
-  OtherInfoData: OtherInfoType;
-}
-
 // 全部传入没有传空
 export type OtherInfoType = {
   house_info: string; // 房子信息 开关没有暂时没用上
@@ -24,62 +20,65 @@ export type OtherInfoType = {
 };
 
 // 民政卫健
-const OtherInfo: React.FC<Props> = ({ OtherInfoData }) => {
-  return (
-    <div className={styles.HealthInfoBox}>
-      <table>
-        <tbody>
-          <tr>
-            <td>
-              <span className="LeftRedSpan">*</span>吸烟与否
-            </td>
-            <td>{OtherInfoData?.smoking_status}</td>
-            <td>志愿者</td>
-            <td>{OtherInfoData?.volunteer_status}</td>
-            <td>车辆所有人</td>
-            <td>{OtherInfoData?.car_owner}</td>
-          </tr>
-          <tr>
-            <td>车型号</td>
-            <td>{OtherInfoData?.car_model}</td>
-            <td>车牌照</td>
-            <td>{OtherInfoData?.car_plate}</td>
-            <td>车身颜色</td>
-            <td>{OtherInfoData?.car_color}</td>
-          </tr>
-          <tr>
-            <td>驾驶证类型</td>
-            <td>{OtherInfoData?.driving_license_type}</td>
-            <td>兴趣爱好</td>
-            <td colSpan={3}>{OtherInfoData?.hobbies}</td>
-          </tr>
-        </tbody>
-      </table>
-      <table style={{ marginTop: 10 }}>
-        <tbody>
-          <tr>
-            <td className="FirstWidth" rowSpan={6}>
-              房屋信息
-            </td>
-            <td>房子产权人</td>
-            <td>建筑面积</td>
-          </tr>
-          <tr>
-            <td>{OtherInfoData?.house_owner}</td>
-            <td>{OtherInfoData?.house_area}</td>
-          </tr>
-          <tr>
-            <td>房屋类型</td>
-            <td>危房等级</td>
-          </tr>
-          <tr>
-            <td>{OtherInfoData?.house_type}</td>
-            <td>{OtherInfoData?.house_condition}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  );
+const OtherInfo = ({ OtherInfoData }: any) => {
+  return OtherInfoData?.map((item: any, index: number) => {
+    return (
+      <div className={styles.HealthInfoBox} key={index}>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                <span className="LeftRedSpan">*</span>吸烟与否
+              </td>
+              <td>{item?.smoking_status}</td>
+              <td>志愿者</td>
+              {/* proof_contraindication */}
+              <td>{}</td>
+              <td>车辆所有人</td>
+              <td>{item?.car_owner}</td>
+            </tr>
+            <tr>
+              <td>车型号</td>
+              <td>{item?.car_model}</td>
+              <td>车牌照</td>
+              <td>{item?.car_plate}</td>
+              <td>车身颜色</td>
+              <td>{item?.car_color}</td>
+            </tr>
+            <tr>
+              <td>驾驶证类型</td>
+              <td>{item?.driving_license_type}</td>
+              <td>兴趣爱好</td>
+              <td colSpan={3}>{item?.hobbies}</td>
+            </tr>
+          </tbody>
+        </table>
+        <table style={{ marginTop: 10 }}>
+          <tbody>
+            <tr>
+              <td className="FirstWidth" rowSpan={6}>
+                房屋信息
+              </td>
+              <td>房子产权人</td>
+              <td>建筑面积</td>
+            </tr>
+            <tr>
+              <td>{item?.house_owner}</td>
+              <td>{item?.house_area}</td>
+            </tr>
+            <tr>
+              <td>房屋类型</td>
+              <td>危房等级</td>
+            </tr>
+            <tr>
+              <td>{item?.house_type}</td>
+              <td>{item?.house_condition}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    );
+  });
 };
 
 export default OtherInfo;

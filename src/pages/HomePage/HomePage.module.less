@@ -8,6 +8,7 @@
 
   .HeaderBox {
     display: inline-block;
+    z-index: 1000;
     position: relative;
     padding: 0 !important;
     background: linear-gradient(180deg, #082366 0%, #021042 40%);
@@ -92,6 +93,7 @@
         white-space: nowrap;
         text-align: center;
         position: relative;
+        user-select: none;
       }
 
       /* 添加中间的分割线 */
@@ -161,6 +163,7 @@
           font-size: 0.9em;
           padding: 8px 15px;
           box-sizing: border-box;
+          user-select: none;
         }
 
         > li:hover {

@@ -7,7 +7,12 @@ interface Props {
   peopleData: CommonPeopleBasics;
 }
 
+/**
+ * @description 基础信息接口
+ */
+
 export type CommonPeopleBasics = {
+  img?: string;
   name?: string;
   card?: string;
   spell?: string;
@@ -21,8 +26,20 @@ export type CommonPeopleBasics = {
   gridding?: string;
   placeDomicile?: string;
   currentAddress?: string;
-  history?: string;
+  history?: [{}];
 };
+
+function formatLocalDate(aa: any) {
+  if (aa) {
+    let timestamp = parseInt(aa);
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  } else return '--';
+}
 
 // 组件使用的时候需要写一个边框外层border: 1px solid #d9d9d9;  width： 100% 不用写高度
 const Common: React.FC<Props> = ({ peopleData }) => {
@@ -31,7 +48,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
       <div className={styles.TopSelf}>
         {/* 图片 */}
         <div>
-          <img src="" alt="" />
+          <img src={peopleData?.img} />
         </div>
         {/* 本人姓名列 */}
         <div>
@@ -85,10 +102,21 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           <span className="SpanRedColor">*</span>现住址：
           <span>{peopleData?.currentAddress}</span>
         </div>
-        <div>
-          <span className="SpanRedColor">*</span>历史数据(电话、住址)：
-          <span>{peopleData?.history}</span>
-        </div>
+        {peopleData?.history?.map((item: any) => {
+          return (
+            <>
+              <div>
+                <span className="SpanRedColor">*</span>历史数据(电话、住址)：
+                <div className={styles.BottomHistory}>
+                  电话：<span>{item.phone}</span>&nbsp;&nbsp;&nbsp;&nbsp; 住址：
+                  <span>{item.current_address}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 时间：
+                  <span>{formatLocalDate(item.update_time)}</span>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                </div>
+              </div>
+            </>
+          );
+        })}
       </div>
     </div>
   );

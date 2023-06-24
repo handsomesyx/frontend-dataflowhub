@@ -1,7 +1,8 @@
 /* eslint-disable max-len */
 import { Layout } from 'antd';
 import { Content } from 'antd/es/layout/layout';
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
 
 import TopIcon from '../../assets/top.svg';
 import styles from './HomePage.module.less';
@@ -9,10 +10,25 @@ import Time from './Time';
 import Menu from './TopMenuItem';
 
 function HomePage() {
+  const local = useLocation();
+
+  useEffect(() => {
+    if (local.pathname === '/home') {
+      const elem = document.getElementById('headerBox');
+      if (elem) {
+        elem.style.background = 'none';
+      }
+    } else {
+      const elem = document.getElementById('headerBox');
+      if (elem) {
+        elem.style.background = 'linear-gradient(180deg, #082366 0%, #021042 40%)';
+      }
+    }
+  }, [local]);
   return (
     <>
       <Layout className={styles.LayoutBox}>
-        <header className={styles.HeaderBox}>
+        <header className={styles.HeaderBox} id="headerBox">
           <img src={TopIcon} className={styles.TopIcon} />
           <div className={styles.TopBox}>
             <div>
