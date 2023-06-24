@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import styles from './style.module.less';
 import LeftTimeLine from './TimeLine/LeftTimeLine';
 
+
 export type ItemConfigType = {
   id: number;
   name: string;

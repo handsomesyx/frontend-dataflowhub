@@ -8,17 +8,21 @@ interface Props {
   onePageTotal: number;
 }
 
+/**
+ * @description 基础信息搜索列表接口参数
+ */
 export type BasicShowListDataType = {
   basicsinfo: string;
   name: string;
-  griding: string;
+  former_name: string;
   pinyin: string;
   cardid: string;
   phone: string;
-  policeStation: string;
+  nickname: string;
   placeDomicile: string;
   currentAddress: string;
   level: string;
+  id: number;
 };
 
 const BasicShowList: React.FC<Props> = ({
@@ -27,7 +31,6 @@ const BasicShowList: React.FC<Props> = ({
   onePageTotal,
 }) => {
   const navigate = useNavigate();
-
   return (
     <>
       {BasicShowListData?.map((item: BasicShowListDataType, index: number) => {
@@ -46,36 +49,44 @@ const BasicShowList: React.FC<Props> = ({
                 姓名拼音：<span>{item?.pinyin}</span>
               </div>
               <div>
-                所属网格：<span>{item?.griding}</span>
+                曾用名：<span>{item?.former_name}</span>
               </div>
             </div>
             <div>
               <div>
-                身份证号(护照)：<span>{item.cardid}</span>
+                身份证号(护照)：<span>{item?.cardid}</span>
               </div>
               <div>
-                联系方式：<span>{item.phone}</span>
+                联系方式：<span>{item?.phone}</span>
               </div>
               <div>
-                所属派出所：<span>{item.policeStation}</span>
+                绰号：<span>{item?.nickname}</span>
               </div>
             </div>
             <div>
-              <div>户籍所在地：{item?.placeDomicile}</div>
-              <div>现住址：{item?.currentAddress}</div>
-              <div>人员分级类别：{item?.level}</div>
+              <div>
+                户籍所在地：<span>{item?.placeDomicile}</span>
+              </div>
+              <div>
+                现住址：<span>{item?.currentAddress}</span>
+              </div>
+              <div>
+                人员分级类别：<span>{item?.level}</span>
+              </div>
             </div>
             <div>
               <a
                 onClick={() => {
-                  navigate('/population-manager/person-show');
+                  navigate('/population-manager/person-show', {
+                    state: { id: item?.id },
+                  });
                 }}
               >
                 查看具体信息
               </a>
             </div>
             <div className={styles.BoxLeftIcon}>
-              {(currentPage - 1) * onePageTotal || 0 + index + 1}
+              {(currentPage - 1) * onePageTotal + index + 1 || 0 + index + 1}
             </div>
           </div>
         );

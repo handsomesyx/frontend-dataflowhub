@@ -28,8 +28,8 @@ export const GetDemoDashData = gql`
 // FindManyArea随便取的名字，（&data:data）前一个data和接口参数名一致，后一个data代表类型，
 // 第二个findManyArea是接口的名字，（data:$data）第一个data是接口参数名，第二个是上一行的$data{}是返回的数据
 export const FindManyArea = gql`
-  query findManyArea($skip:Int!,$take:Int!) {
-    findManyArea(skip:$skip,take:$take) {
+  query findManyArea($skip: Int!, $take: Int!) {
+    findManyArea(skip: $skip, take: $take) {
       id
       create_time
       creator_id
@@ -44,24 +44,24 @@ export const FindManyArea = gql`
 `;
 
 export const FindManyCommunity = gql`
-  query findManyCommunity($skip:Int!,$take:Int!) {
-    findManyCommunity(skip:$skip,take:$take) {
-    id
-    update_time
-    create_time
-    administrative_area_id
-    creator_id
-    is_delete
-    name
-    updater_id
-    user_id
+  query findManyCommunity($skip: Int!, $take: Int!) {
+    findManyCommunity(skip: $skip, take: $take) {
+      id
+      update_time
+      create_time
+      administrative_area_id
+      creator_id
+      is_delete
+      name
+      updater_id
+      user_id
     }
   }
 `;
 
 export const FindManyGrid = gql`
-  query findManyGrid($skip:Int!,$take:Int!) {
-    findManyGrid(skip:$skip,take:$take) {
+  query findManyGrid($skip: Int!, $take: Int!) {
+    findManyGrid(skip: $skip, take: $take) {
       area_id
       id
       creator_id
@@ -75,23 +75,23 @@ export const FindManyGrid = gql`
 `;
 
 export const FindManyPolicestation = gql`
-  query findManyPolicestation($skip:Int!,$take:Int!) {
-    findManyPolicestation(skip:$skip,take:$take) {
-    id
-    creator_id
-    update_time
-    name
-    create_time
-    is_delete
-    updater_id
-    user_id
+  query findManyPolicestation($skip: Int!, $take: Int!) {
+    findManyPolicestation(skip: $skip, take: $take) {
+      id
+      creator_id
+      update_time
+      name
+      create_time
+      is_delete
+      updater_id
+      user_id
     }
   }
 `;
 
 export const CreateArea = gql`
-  mutation createArea($data:administrativeareaCreateInput!) {
-    createArea(data:$data) {
+  mutation createArea($data: administrativeareaCreateInput!) {
+    createArea(data: $data) {
       name
       id
       creator_id
@@ -106,24 +106,24 @@ export const CreateArea = gql`
 `;
 
 export const CreateCommunity = gql`
-  mutation createCommunity($data:communityCreateInput!) {
-    createCommunity(data:$data) {
-    id
-    administrative_area_id
-    user_id
-    create_time
-    creator_id
-    is_delete
-    name
-    update_time
-    updater_id
+  mutation createCommunity($data: communityCreateInput!) {
+    createCommunity(data: $data) {
+      id
+      administrative_area_id
+      user_id
+      create_time
+      creator_id
+      is_delete
+      name
+      update_time
+      updater_id
     }
   }
 `;
 
 export const CreateGrid = gql`
-  mutation createGrid($data:gridCreateInput!) {
-    createGrid(data:$data) {
+  mutation createGrid($data: gridCreateInput!) {
+    createGrid(data: $data) {
       id
       area_id
       creator_id
@@ -136,16 +136,310 @@ export const CreateGrid = gql`
   }
 `;
 export const CreatePolicestation = gql`
-  mutation createPolicestation($data:policestationCreateInput!) {
-    createPolicestation(data:$data) {
-    id
-    creator_id
-    update_time
-    create_time
-    is_delete
-    name
-    updater_id
-    user_id
+  mutation createPolicestation($data: policestationCreateInput!) {
+    createPolicestation(data: $data) {
+      id
+      creator_id
+      update_time
+      create_time
+      is_delete
+      name
+      updater_id
+      user_id
+    }
+  }
+`;
+
+/**
+ *
+ * @description 警员下拉选择框
+ */
+export const getSelectPolicer = gql`
+  query getSelectPolicer($id: Int!) {
+    getSelectPolicer(police_station_id: $id) {
+      message
+      selectPolicer {
+        id
+        name
+      }
+    }
+  }
+`;
+
+/**
+ *@description 网格下拉选择框
+ */
+export const getSelectGrid = gql`
+  query getSelectGrid($admin_id: Int, $police_station_id: Int, $policer_id: Int) {
+    getSelectGrid(
+      option:{
+      admin_id: $admin_id
+      police_station_id: $police_station_id
+      policer_id: $policer_id
+    }
+    ) {
+      message
+      selectGrid {
+        id
+        name
+      }
+    }
+  }
+`;
+
+/**
+ * @description 行政区域下拉选择框
+ */
+export const getSelectAdmin = gql`
+  query getSelectAdmin {
+    getSelectAdmin {
+      message
+      selectAdmin {
+        id
+        name
+      }
+    }
+  }
+`;
+
+/**
+ * @description 人员详情接口查看
+ */
+export const getPeopleData = gql`
+  query getPeopleData($personal_id: Int!) {
+    getPeopleData(personal_id: $personal_id) {
+      isFound
+      message
+      peopleData {
+        age
+        classification_reason
+        # community
+        create_time
+        creator_id
+        current_address
+        date_of_residence
+        former_name
+        gender
+        grid
+        grid_user_id
+        head_url
+        # height
+        id
+        id_card
+        name
+        nickname
+        person_classification
+        petition
+        phone
+        pinyin
+        policeStation
+        residence
+        update_time
+        updater_id
+
+        bBData {
+          grid_name
+          grid_phone
+          grid_user_name
+          # police_name
+          police_phone
+        }
+        # disableData {
+        #   disability_id
+        #   disability_level
+        #   disability_subsidy
+        #   disability_type
+        #   severe_disability_subsidy
+        # }
+        economicData {
+          breeding_quantity
+          breeding_type
+          business_info
+          business_location
+          fire_equipment_quantity
+          fire_equipment_type
+          plant_quantity
+          plant_type
+          planting_area
+          surveillance_quantity
+          surveillance_status
+        }
+        family {
+          household_id
+          id
+          id_card
+          member_id
+          member_relation
+          name
+          phone
+        }
+        
+        healthData {
+          child_number
+          health_insurance
+          marriage_status
+          other_conditions
+          pension_insurance
+          proof_contraindication
+          special_group
+          supervisor
+          vaccination_status
+        }
+        history {
+          current_address
+          phone
+          update_time
+        }
+        politicalData {
+          education
+          military_service
+          nationality
+          party_organization
+          political_status
+          position
+          religion
+          school
+          work_unit
+        }
+        propertyData {
+          car_color
+          car_model
+          car_owner
+          car_plate
+          driving_license_type
+          hobbies
+          house_area
+          house_condition
+          house_owner
+          house_type
+          smoking_status
+          volunteer_status
+        }
+        reportInfoArr {
+          classification_basis
+          issue_level
+          public_demand
+          public_opinion
+        }
+      }
+    }
+  }
+`;
+/**
+ * @description 人员查询接口筛选接口  人口管理界面
+ */
+
+export const getPeopleDataFilter = gql`
+  query getPeopleDataFilter($content: PeoeleManageInput!, $pagingOption: PagingOption!) {
+    getPeopleDataFilter(content: $content, pagingOption: $pagingOption) {
+      data {
+        age
+        certificate_type
+        creator_id
+        classification_reason
+        # create_Time
+        current_address
+        date_of_residence
+        former_name
+        grid_user_id
+        height
+        id
+        id_card
+        name
+        nationality
+        nickname
+        person_classification
+        petition
+        phone
+        pinyin
+        religion
+        residence
+        update_time
+        gender
+        updater_id
+      }
+      info {
+        isStart
+        message
+      }
+      total
+    }
+  }
+`;
+/**
+ *  @description 搜索引擎
+ */
+
+export const mainSearch = gql`
+  query mainSearch(
+    $content: string!
+    $option: MainSearchOption!
+    $pagingOption: PagingOption!
+  ) {
+    mainSearch(content: $content, option: $option, pagingOption: $pagingOption) {
+      data {
+        age
+        current_address
+        did
+        disability_level
+        document_id
+        education
+        familyInfo {
+          household_id
+          id
+          id_card
+          member_id
+          member_relation
+          name
+          phone
+        }
+        former_name
+        gender
+        grid_user_id
+        height
+        id_card
+        indexcreate
+        indexupdate
+        marriage_status
+        nationality
+        nickname
+        party_organization
+        person_classification
+        phone
+        pid
+        pinyin
+        pname
+        poid
+        political_status
+        propertyinfo {
+          car_plate
+          id
+        }
+        religion
+        residence
+        school
+        table_name
+      }
+      info {
+        isStart
+        message
+      }
+      total
+    }
+  }
+`;
+
+/**
+ * @description  获取派出所下来菜单
+ */
+
+export const getSelectPoliceStation = gql`
+  query getSelectPoliceStation {
+    getSelectPoliceStation {
+      selectPoliceStation {
+        id
+        name
+      }
     }
   }
 `;

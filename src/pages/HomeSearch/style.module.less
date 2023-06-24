@@ -17,6 +17,7 @@
 
 
 .ContentBox{
+    user-select:none;
     position: absolute;
     width: 50%;
     height: 50%;
@@ -52,6 +53,12 @@
     
     @media screen and (min-width: 2200) {
         font-size: ((2200px / @no)+4);
+    }
+
+    :global{
+        .IconSpin{
+            transition: transform 0.2s;
+        }
     }
     
     .SearchBox{
@@ -130,6 +137,7 @@
             align-items: center;
             font-size: 1.2em;
             color: #fff;
+            user-select:none;
 
             >img{
                 height: 50%;
@@ -142,9 +150,12 @@
     }
 
     .SelectBox{
+        min-height: 153px;
         margin-top: 10px;
         padding-left: 8px;
-        height: calc(55% - 10px);
+        overflow: hidden;
+        height: calc(47% - 10px);
+        transition: all  0.2s ease;
         width: 100%;
         background: linear-gradient(to right, #174fbe 0%, #0e2081 100%);
         box-shadow: 0 1px 2px 0 #0063E9;
@@ -152,10 +163,10 @@
 
         .Radio{
             width: 100%;
-            height: 40%;
+            height: 35%;
             display: flex;
             overflow-X: scroll;
-            align-items: center;
+            align-items: flex-end;
             overflow-y: hidden;
             
 
@@ -185,5 +196,50 @@
             content: "";
             flex-grow: 1; 
         }
+
+        .TimeBox{
+            height: 65%;
+            display: flex;
+            align-items: center;
+            padding: 0 10% 0 3%;
+    
+            .Timetitle{
+                display: inline-block;
+                margin-right: 10px;
+                color: #fff;
+                font-size: 1.2em;
+            }
+    
+            .TimeTwo{
+                flex: 1;
+                height:40%;
+            }
+    
+            .TimeOne{
+                height:40%;
+                margin: 0 30px;
+                flex: 1;
+                position: relative;
+            }
+
+            .TimeOne::after{
+                content: '--';
+                position: absolute;
+                right: -20px;
+                color: #fff;
+            }
+
+            :global{
+                .ant-picker-input{
+                    input{
+                        font-size: 1.2em !important;
+                    }
+                }
+                
+            }
+        }
     }
+
+    
 }
+

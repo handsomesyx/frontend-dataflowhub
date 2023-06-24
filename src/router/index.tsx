@@ -51,7 +51,7 @@ const routeConfig: routerConfigType[] = [
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div className="NotContentFFF">
-              {/* <HomeSearch></HomeSearch> */}
+              <HomeSearch></HomeSearch>
             </div>
           </Suspense>
         ),

@@ -1,7 +1,6 @@
 import './index.css';
 
 import { Button, Card, Col, Form, Image, Row, Select, Tooltip } from 'antd';
-import React from 'react';
 
 import shanchu from '../../assets/delete.svg';
 import xiugai from '../../assets/xiugai.svg';
