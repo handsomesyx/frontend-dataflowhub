@@ -18,6 +18,7 @@ const Community = React.lazy(() => import('@/pages/BasicInformation/Community'))
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 
+import ReviewPage from '@/pages/ReviewPage';
 import Visualization from '@/pages/visualization';
 import { userType } from '@/store';
 
@@ -134,7 +135,9 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div>审核待处理</div>
+                <div style={{ overflow: 'scroll', overflowX: 'hidden' }}>
+                  <ReviewPage />
+                </div>
               </Suspense>
             ),
           },
