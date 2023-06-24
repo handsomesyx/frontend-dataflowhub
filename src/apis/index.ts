@@ -172,8 +172,6 @@ export const UPDATE_AUDIT = gql`
 export const FindManyArea = gql`
   query findManyArea($skip: Int!, $take: Int!) {
     findManyArea(skip: $skip, take: $take) {
-  query findManyArea($skip: Int!, $take: Int!) {
-    findManyArea(skip: $skip, take: $take) {
       id
       leader {
         gender
@@ -201,17 +199,6 @@ export const FindManyArea = gql`
 `;
 
 export const FindManyCommunity = gql`
-  query findManyCommunity($skip: Int!, $take: Int!) {
-    findManyCommunity(skip: $skip, take: $take) {
-      id
-      update_time
-      create_time
-      administrative_area_id
-      creator_id
-      is_delete
-      name
-      updater_id
-      user_id
   query findManyCommunity($skip: Int!, $take: Int!) {
     findManyCommunity(skip: $skip, take: $take) {
       id
@@ -318,8 +305,6 @@ export const FindManyPolicestation = gql`
 export const CreateArea = gql`
   mutation createArea($data: administrativeareaCreateInput!) {
     createArea(data: $data) {
-  mutation createArea($data: administrativeareaCreateInput!) {
-    createArea(data: $data) {
       name
       id
       creator_id
@@ -334,17 +319,6 @@ export const CreateArea = gql`
 `;
 
 export const CreateCommunity = gql`
-  mutation createCommunity($data: communityCreateInput!) {
-    createCommunity(data: $data) {
-      id
-      administrative_area_id
-      user_id
-      create_time
-      creator_id
-      is_delete
-      name
-      update_time
-      updater_id
   mutation createCommunity($data: communityCreateInput!) {
     createCommunity(data: $data) {
       id

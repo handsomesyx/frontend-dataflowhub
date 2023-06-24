@@ -13,7 +13,7 @@ function HomePage() {
   const local = useLocation();
 
   useEffect(() => {
-    if (local.pathname === '/home') {
+    if (local.pathname === '/home/index') {
       const elem = document.getElementById('headerBox');
       if (elem) {
         elem.style.background = 'none';

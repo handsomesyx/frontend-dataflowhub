@@ -66,7 +66,9 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <HomeSearch></HomeSearch>
+                <div className="NotContentFFF">
+                  <HomeSearch></HomeSearch>
+                </div>
               </Suspense>
             ),
           },
