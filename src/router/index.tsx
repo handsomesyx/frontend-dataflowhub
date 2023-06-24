@@ -18,6 +18,7 @@ const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'))
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
+const PersonManage = React.lazy(() => import('@/pages/UserManage'));
 
 import ReviewPage from '@/pages/ReviewPage';
 import Visualization from '@/pages/visualization';
@@ -90,7 +91,9 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>用户管理</div>
+            <div>
+              <PersonManage />
+            </div>
           </Suspense>
         ),
       },
