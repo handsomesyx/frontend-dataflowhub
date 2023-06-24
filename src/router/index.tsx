@@ -14,7 +14,7 @@ const HomePage = React.lazy(() => import('@/pages/HomePage'));
 const InformationShow = React.lazy(() => import('@/pages/PerpleInformation/Show'));
 const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'));
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
-const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
+// const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 
@@ -207,16 +207,18 @@ const routeConfig: routerConfigType[] = [
               </Suspense>
             ),
           },
-          {
-            path: 'community',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                {/* <div>社区管理</div> */}
-                <Community />
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: 'community',
+          //   auth: [1, 9, 8, 7, 'user1'],
+          //   element: (
+          //     <Suspense
+          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
+          //     >
+          //       {/* <div>社区管理</div> */}
+          //       <Community />
+          //     </Suspense>
+          //   ),
+          // },
         ],
       },
       {
