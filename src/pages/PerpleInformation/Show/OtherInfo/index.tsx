@@ -30,7 +30,13 @@ const OtherInfo = ({ OtherInfoData }: any) => {
               <td>
                 <span className="LeftRedSpan">*</span>吸烟与否
               </td>
-              <td>{item?.smoking_status}</td>
+              <td>
+                {item?.smoking_status === 0
+                  ? '否'
+                  : item?.smoking_status === 1
+                  ? '是'
+                  : '--'}
+              </td>
               <td>志愿者</td>
               {/* proof_contraindication */}
               <td>{}</td>

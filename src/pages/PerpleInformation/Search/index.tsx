@@ -235,6 +235,7 @@ const SearchBasic = () => {
   const datalist = () => {
     return peopleData?.getPeopleDataFilter?.data?.map((item: any) => {
       return {
+        head_url: item?.head_url,
         basicsinfo: '',
         name: item?.name,
         former_name: item?.former_name || '--',
@@ -458,6 +459,9 @@ const SearchBasic = () => {
                 disabled={regionalSelect ? true : false}
                 onClear={() => {
                   setPoliceValue(undefined);
+                  setFilterData((pre) => {
+                    return { ...pre, police_user_id: undefined };
+                  });
                 }}
                 allowClear
                 style={{ width: '60%' }}

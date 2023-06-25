@@ -608,6 +608,7 @@ export const getPeopleDataFilter = gql`
         person_classification
         petition
         phone
+        head_url
         pinyin
         religion
         residence

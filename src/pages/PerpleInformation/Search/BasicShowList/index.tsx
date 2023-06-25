@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable max-len */
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +24,7 @@ export type BasicShowListDataType = {
   currentAddress: string;
   level: string;
   id: number;
+  head_url: string;
 };
 
 const BasicShowList: React.FC<Props> = ({
@@ -36,7 +38,9 @@ const BasicShowList: React.FC<Props> = ({
       {BasicShowListData?.map((item: BasicShowListDataType, index: number) => {
         return (
           <div className={styles.BorderBox} key={index}>
-            <img src="" alt="" />
+            <div className={styles.FirstDiv}>
+              <img src="https://tse2-mm.cn.bing.net/th/id/OIP-C.ZcjidB6ytMyNAjg9clT4PAHaNK?pid=ImgDet&rs=1" />
+            </div>
             <div>
               <span>基本信息</span>
             </div>
@@ -80,6 +84,7 @@ const BasicShowList: React.FC<Props> = ({
                   navigate('/population-manager/person-show', {
                     state: { id: item?.id },
                   });
+                  window.localStorage.setItem('userIdNum', item?.id?.toString());
                 }}
               >
                 查看具体信息

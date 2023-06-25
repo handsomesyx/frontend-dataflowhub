@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { Spin } from 'antd';
 import type { ReactElement } from 'react';
-import { useLocation } from 'react-router-dom';
 
 import { getPeopleData } from '@/apis';
 import AnchorHome from '@/utils/PopulationBasics';
@@ -34,11 +33,10 @@ type ItemConfigType = {
 
 // 信息展示页面  数据获取  页面整体配置
 function InformationShow() {
-  const location = useLocation();
-  const { state } = location;
+  const id = window.localStorage.getItem('userIdNum');
   const { data, loading } = useQuery(getPeopleData, {
     variables: {
-      personal_id: state?.id,
+      personal_id: Number(id),
     },
   });
   function formatLocalDate(aa: any) {
@@ -73,6 +71,8 @@ function InformationShow() {
     placeDomicile: dataAll?.residence,
     currentAddress: dataAll?.current_address,
     history: dataAll?.history,
+    height: dataAll?.height,
+    sex: dataAll?.gender,
   };
 
   // 家庭成员信息配置;
@@ -85,13 +85,20 @@ function InformationShow() {
       household_id: item?.household_id,
     };
   });
+  const objJson = (obj: any) => {
+    let output = '';
+    for (let key in obj) {
+      let value = obj[key];
+      output = key + ': ' + value;
+    }
+    return output;
+  };
 
   // 专群结合数据
   const CombinationData: CombinationType = {
-    level: '',
-    reason: '',
-    ispetition: false,
-    petition: null,
+    level: dataAll?.person_classification,
+    reason: objJson(dataAll?.classification_reason),
+    petition: dataAll?.petition,
   };
 
   // 民政卫健数据
@@ -104,19 +111,19 @@ function InformationShow() {
     proof_contraindication: dataAll?.healthData?.proof_contraindication,
     marriage_status: dataAll?.healthData?.marriage_status,
     other_conditions: dataAll?.healthData?.other_conditions,
-    disability_id: dataAll?.healthData?.disability_id, // 残疾证编号
-    disability_type: dataAll?.healthData?.disability_type, // 残疾类型
-    disability_subsidy: dataAll?.healthData?.disability_subsidy, // 困难残疾补贴用0代表空
-    severe_disability_subsidy: dataAll?.healthData?.severe_disability_subsidy, // 重度残疾补贴
-    disability_level: dataAll?.healthData?.disability_level, // 残疾级别
+    disability_id: dataAll?.disableData?.disability_id, // 残疾证编号
+    disability_type: dataAll?.disableData?.disability_type, // 残疾类型
+    disability_subsidy: dataAll?.disableData?.disability_subsidy, // 困难残疾补贴用0代表空
+    severe_disability_subsidy: dataAll?.disableData?.severe_disability_subsidy, // 重度残疾补贴
+    disability_level: dataAll?.disableData?.disability_level, // 残疾级别
     supervisor: dataAll?.healthData?.supervisor, // 监管
   };
-
+  // 民生
   const WellbeingData: WellbeingType = {
-    issue_level: '',
-    classification_basis: '',
-    public_demand: '',
-    public_opinion: '',
+    issue_level: dataAll?.reportInfoArr?.issue_level,
+    classification_basis: dataAll?.reportInfoArr?.classification_basis,
+    public_demand: dataAll?.reportInfoArr?.public_demand,
+    public_opinion: dataAll?.reportInfoArr?.public_opinion,
   };
   const EducationData: EducationType = {
     work_unit: dataAll?.politicalData?.work_unit,

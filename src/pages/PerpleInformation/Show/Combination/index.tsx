@@ -7,7 +7,6 @@ interface Props {
 export type CombinationType = {
   level: string;
   reason: string;
-  ispetition: Boolean;
   petition: null | string;
 };
 
@@ -23,10 +22,6 @@ const Combination: React.FC<Props> = ({ CombinationData }) => {
           <tr>
             <td>分类依据</td>
             <td>{CombinationData?.reason}</td>
-          </tr>
-          <tr>
-            <td>是否上访对象</td>
-            <td>{CombinationData?.ispetition ? '是' : '否'}</td>
           </tr>
           <tr>
             <td>上访诉求</td>

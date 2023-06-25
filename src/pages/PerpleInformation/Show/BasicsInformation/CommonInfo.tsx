@@ -27,6 +27,8 @@ export type CommonPeopleBasics = {
   placeDomicile?: string;
   currentAddress?: string;
   history?: [{}];
+  height?: string;
+  sex?: number;
 };
 
 function formatLocalDate(aa: any) {
@@ -71,6 +73,9 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           <div>
             <span>*</span> 所属网格：<span>{peopleData?.gridding}</span>
           </div>
+          <div>
+            <span>*</span>身高<span>{peopleData?.height}</span>
+          </div>
         </div>
         <div>
           <div>
@@ -92,6 +97,12 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           </div>
           <div>
             <span>*</span>户籍所在地：<span>{peopleData?.placeDomicile}</span>
+          </div>
+          <div>
+            <span>*</span>性别：
+            <span>
+              {peopleData?.sex === 0 ? '男' : peopleData?.sex === 1 ? '女' : ''}
+            </span>
           </div>
         </div>
       </div>
