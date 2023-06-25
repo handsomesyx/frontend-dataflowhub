@@ -7,7 +7,7 @@ interface Props {
 export type CombinationType = {
   level: string;
   reason: string;
-  ispetition: Boolean;
+  ispetition?: Boolean;
   petition: null | string;
 };
 

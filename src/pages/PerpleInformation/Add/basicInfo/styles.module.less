@@ -1,0 +1,82 @@
+.Container {
+    margin: 20px;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid rgb(0 0 0 / 15%);
+    position: relative;
+}
+
+.Btn{
+    position: absolute;
+    top: -50px;
+    right: 1px;
+}
+
+.Basic {
+    margin: 1vh 1vw;
+}
+
+.FormInput {
+    margin: 1vh 0;
+}
+
+.UploadImage {
+    height: 100px;
+    width: 100px;
+}
+
+.Label {
+    width: 6vw;
+    display: inline-block;
+    text-align: right;
+}
+
+.Require{
+    margin-right: 3px;
+    color: red;
+}
+
+.FamilyBox{
+    width: 100%;
+    font-size: 1em;
+    
+    >div:nth-last-child(1){
+        border: none;
+        padding: 0;
+    }
+
+    .FamilyBorderBox{
+        display: flex;
+        padding: 0 0 1%;
+        border-bottom: 1px solid #d9d9d9;
+    
+        >div>div{
+            height:2.4em ;   
+            border-bottom: 1.5px dashed  #d9d9d9;
+            display: flex;
+            align-items: center;
+    
+            span{
+                font-weight: bold;
+            }
+        }
+    
+        >div:nth-child(1){
+            width: 20%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bolder;
+        }
+    
+        >div:nth-child(2){
+            flex: 1;
+        }
+    
+        >div:nth-child(3){
+            flex: 1;
+        }
+    }
+    
+}

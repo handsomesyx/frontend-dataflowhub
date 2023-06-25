@@ -1,4 +1,6 @@
+import { Button } from 'antd';
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import styles from './style.module.less';
 
@@ -26,6 +28,8 @@ export type CommonPeopleBasics = {
 
 // 组件使用的时候需要写一个边框外层border: 1px solid #d9d9d9;  width： 100% 不用写高度
 const Common: React.FC<Props> = ({ peopleData }) => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.CommonBox}>
       <div className={styles.TopSelf}>
@@ -89,6 +93,15 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           <span className="SpanRedColor">*</span>历史数据(电话、住址)：
           <span>{peopleData?.history}</span>
         </div>
+      </div>
+
+      <div style={{ position: 'absolute', right: '1px', top: '-40px' }}>
+        <Button onClick={() => { navigate(`/population-manager/person-management-update/${1}`); }}>
+          修改信息
+        </Button>
+        <Button >
+          删除
+        </Button>
       </div>
     </div>
   );

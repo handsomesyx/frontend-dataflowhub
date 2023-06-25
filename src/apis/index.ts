@@ -149,3 +149,221 @@ export const CreatePolicestation = gql`
     }
   }
 `;
+
+export const CreatePeopleInfo = gql`
+mutation createPeopleInfo(
+  $createBasicInfoInput: manyBasicInfo!
+  $createDisabilityInfoInput: manyDisabilityInfo!
+  $createEconomicInfoInput: manyEconomicInfo!
+  $createHealthInfoInput: manyHealthInfo!
+  $createPoliticalInfoInput: manyPoliticalInfo!
+  $createPropertyInfoInput: manyPropertyInfo!
+  $priority: Int!
+){
+  createPeopleInfo(
+    createBasicInfoInput: $createBasicInfoInput
+    createDisabilityInfoInput: $createDisabilityInfoInput
+    createEconomicInfoInput: $createEconomicInfoInput
+    createHealthInfoInput: $createHealthInfoInput
+    createPoliticalInfoInput: $createPoliticalInfoInput
+    createPropertyInfoInput: $createPropertyInfoInput
+    priority: $priority
+  )
+}
+`;
+
+export const CreateFamilyInfo = gql`
+  mutation createFamilyInfo(
+    $id: Int!,
+    $priority: Int!,
+    $familyData: CreateFamilyInfoDto!
+  ) {
+    createFamilyInfo(
+      id:$id,
+      priority:$priority,
+      familyData: $familyData
+    )
+  }
+`;
+
+export const UpdatePeopleInfo = gql`
+  mutation updatePeopleInfo(
+  $id: Int!
+  $priority: Int!
+  $changeRecord: manyChangeInfo!
+
+  ){
+    updatePeopleInfo(
+      id: $id,
+      priority: $priority
+      changeRecord: $changeRecord
+    )
+  }
+`;
+
+export const DeleteFamilyInfo = gql`
+  mutation deleteFamilyInfo(
+    $id: Int!
+    $priority: Int!
+    $memberId: Int!
+  ){
+    deleteFamilyInfo(
+      id: $id
+      priority: $priority
+      memberId: $memberId
+    )
+  }
+`;
+
+
+export const DeletePeopleInfo = gql`
+  mutation deletePeopleInfo(
+    $id: Int!
+    $priority: Int!
+  ){
+    deletePeopleInfo(
+      id: $id
+      priority: $priority
+    )
+  }
+`;
+
+export const FindFamilyMember = gql`
+  query findFamilyMemberInfo(
+    $pesonal_id: Int!
+  ){
+    findFamilyMemberInfo(
+      pesonal_id: $pesonal_id
+    ){
+      idCard
+      id
+      householdId
+      memberRelation
+      name
+      phone
+      personalId
+      memberId
+    }
+  }
+`;
+
+export const getPeopleData = gql`
+  query getPeopleData($personal_id: Int!) {
+    getPeopleData(personal_id: $personal_id) {
+      isFound
+      message
+      peopleData {
+        age
+        classification_reason
+        # community
+        create_time
+        creator_id
+        current_address
+        date_of_residence
+        former_name
+        gender
+        grid
+        grid_user_id
+        head_url
+        # height
+        id
+        id_card
+        name
+        nickname
+        person_classification
+        petition
+        phone
+        pinyin
+        policeStation
+        residence
+        update_time
+        updater_id
+
+        bBData {
+          grid_name
+          grid_phone
+          grid_user_name
+          # police_name
+          police_phone
+        }
+        disableData {
+          disability_id
+          disability_level
+          # disability_subsidy
+          disability_type
+          # severe_disability_subsidy
+        }
+        economicData {
+          breeding_quantity
+          breeding_type
+          business_info
+          business_location
+          fire_equipment_quantity
+          fire_equipment_type
+          plant_quantity
+          plant_type
+          planting_area
+          surveillance_quantity
+          surveillance_status
+        }
+        family {
+          household_id
+          id
+          id_card
+          member_id
+          member_relation
+          name
+          phone
+        }
+
+        healthData {
+          child_number
+          health_insurance
+          marriage_status
+          other_conditions
+          pension_insurance
+          proof_contraindication
+          special_group
+          supervisor
+          vaccination_status
+        }
+        history {
+          current_address
+          phone
+          update_time
+        }
+        politicalData {
+          education
+          military_service
+          nationality
+          party_organization
+          political_status
+          position
+          religion
+          school
+          work_unit
+        }
+        propertyData {
+          car_color
+          car_model
+          car_owner
+          car_plate
+          driving_license_type
+          hobbies
+          house_area
+          house_condition
+          house_owner
+          house_type
+          smoking_status
+          volunteer_status
+        }
+        reportInfoArr {
+          classification_basis
+          issue_level
+          public_demand
+          public_opinion
+        }
+      }
+    }
+  }
+`;
