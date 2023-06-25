@@ -720,8 +720,9 @@ export default function PersonManage() {
                 rules={[
                   {
                     required: true,
-                    pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                    message: '密码必须包含至少一个字母和一个数字，且长度不少于6位',
+                    // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+                    min: 6,
+                    message: '密码长度不少于6位',
                   },
                 ]}
                 validateTrigger={['onBlur']}
@@ -925,8 +926,9 @@ export default function PersonManage() {
             rules={[
               {
                 required: true,
-                pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                message: '密码必须包含至少一个字母和一个数字，且长度不少于6位',
+                // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+                min: 6,
+                message: '密码长度不少于6位',
               },
             ]}
             validateTrigger={['onBlur']}
