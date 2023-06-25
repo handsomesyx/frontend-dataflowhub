@@ -12,7 +12,9 @@ type props = {
 const Volunteer = ({ form, data }: props) => {
     useEffect(() => {
         if (data) {
-            Array(data);
+            form.setFieldsValue({
+                Volunteer: data
+            });
         }
     });
 

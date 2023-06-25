@@ -31,13 +31,12 @@ type props = {
 }
 const PorpertyInfo = ({ porform, ecomomicform, healthform, disform,
     basicform, eduform, update, porData, imgSrc }: props) => {
-    console.log(update);
 
-    const [socialWorkOn, setSocialWorkOn] = useState<Boolean>(false);
-    const [volunteerOn, setVolunteerOn] = useState<Boolean>(false);
+    const [socialWorkOn, setSocialWorkOn] = useState<boolean>(false);
+    const [volunteerOn, setVolunteerOn] = useState<boolean>(false);
     const [errorVisible, setErrorVisibile] = useState<Boolean>(false);
-    const [volunteerStatus, setVolunteerStatus] = useState<string[]>();
-    const [socialWorker, setSocialWorker] = useState<string[]>();
+    const [volunteerStatus, setVolunteerStatus] = useState<any[]>();
+    const [socialWorker, setSocialWorker] = useState<any[]>();
     const [urgencyVisible, setUrgencyVisible] = useState<boolean>();
 
     useEffect(() => {
@@ -64,9 +63,39 @@ const PorpertyInfo = ({ porform, ecomomicform, healthform, disform,
                 drivingLicenseType: porData?.driving_license_type,
             });
             porData.volunteer_status;
+            if (volunteerArr.length !== 0) {
+                const resultVolunteer = volunteerArr.map((item, index) => {
+                    return {
+                        VolunteerStatus: item[index + 1]
+                    };
+                });
+                setVolunteerStatus(resultVolunteer);
+                setVolunteerOn(true);
+            }
+            if (socailArr.length !== 0) {
+                const resultSocial = socailArr.map((item, index) => {
+                    return {
+                        SocialWorker: item[index + 1]
+                    };
+                });
+                setSocialWorker(resultSocial);
+                setSocialWorkOn(true);
+            }
 
-            setVolunteerStatus(volunteerArr);
-            setSocialWorker(socailArr);
+
+        } else {
+            const jsonObjsocial = JSON.parse('[{"1":"asjdkfjaksd"},{"2":"xxxxx"}]');
+            const socailArr: string[] = Object.values(jsonObjsocial);
+            const resultSocial = socailArr.map((item, index) => {
+                return {
+                    SocialWorker: item[index + 1]
+                };
+            });
+
+            if (socailArr.length !== 0) {
+                setSocialWorker(resultSocial);
+                setSocialWorkOn(true);
+            }
         }
     }, [porData, porform]);
 
@@ -160,8 +189,6 @@ const PorpertyInfo = ({ porform, ecomomicform, healthform, disform,
             healthData.push({
                 childNumber: data?.childNumber,
                 specialGroup: data?.specialGroup,
-                remarkOne: data?.remarkOne,
-                remarkTow: data?.remarkTow,
                 healthInsurance: data?.healthInsurance,
                 pensionInsurance: data?.pensionInsurance,
                 vaccinationStatus: data?.vaccinationStatus,
@@ -170,7 +197,6 @@ const PorpertyInfo = ({ porform, ecomomicform, healthform, disform,
                 otherConditions: data?.otherConditions,
                 creatorId: data?.creatorId,
                 supervisorName: data?.supervisorName,
-                supervisorIdCard: data?.supervisorIdCard,
             });
 
             const disaility: disabilityInfo = disform.getFieldsValue();
@@ -383,47 +409,50 @@ const PorpertyInfo = ({ porform, ecomomicform, healthform, disform,
                                 </Form.Item>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col span={12}>
-                                <span>志愿者</span>
-                                <Switch
-                                    checkedChildren="开启"
-                                    unCheckedChildren="关闭"
-                                    style={{ marginLeft: '5px', marginBottom: '1.5vh' }}
-                                    onChange={(checked) => {
-                                        setVolunteerOn(checked);
-                                        if (!checked) {
-                                            porform.resetFields(['Volunteer'
-                                            ]);
-                                        }
-                                    }} />
-                                {volunteerOn ?
-                                    <Volunteer form={porform} data={volunteerStatus} /> : <></>}
-                            </Col>
-                            <Col span={12}
-                                style={{
-                                    borderLeft: '1px solid rgb(0 0 0 / 15%)',
-                                    paddingLeft: '1vw'
-                                }}>
-                                {/* <Divider type='vertical'
-                                    style={{ border: '1px solid rgb(0 0 0 / 15%)' }} /> */}
-                                <span>社工</span>
-                                <Switch
-                                    checkedChildren="开启"
-                                    unCheckedChildren="关闭"
-                                    style={{ marginLeft: '5px', marginBottom: '1.5vh' }}
-                                    onChange={(checked) => {
-                                        setSocialWorkOn(checked);
-                                        if (!checked) {
-                                            porform.resetFields(['Social'
-                                            ]);
-                                        }
-                                    }} />
-                                {socialWorkOn ?
-                                    <SocialWork form={porform} data={socialWorker} /> : <></>}
-                            </Col>
-                        </Row>
                     </Form>
+                    <Row>
+                        <Col span={12}>
+                            <span>志愿者</span>
+                            <Switch
+                                checkedChildren="开启"
+                                unCheckedChildren="关闭"
+                                checked={volunteerOn}
+                                style={{ marginLeft: '5px', marginBottom: '1.5vh' }}
+                                onChange={(checked) => {
+                                    setVolunteerOn(checked);
+                                    if (!checked) {
+                                        porform.resetFields(['Volunteer'
+                                        ]);
+                                    }
+                                }} />
+                            {volunteerOn ?
+                                <Volunteer form={porform} data={volunteerStatus} /> : <></>}
+                        </Col>
+                        <Col span={12}
+                            style={{
+                                borderLeft: '1px solid rgb(0 0 0 / 15%)',
+                                paddingLeft: '1vw'
+                            }}>
+                            {/* <Divider type='vertical'
+                                    style={{ border: '1px solid rgb(0 0 0 / 15%)' }} /> */}
+                            <span>社工</span>
+                            <Switch
+                                checkedChildren="开启"
+                                unCheckedChildren="关闭"
+                                checked={socialWorkOn}
+                                style={{ marginLeft: '5px', marginBottom: '1.5vh' }}
+                                onChange={(checked) => {
+                                    setSocialWorkOn(checked);
+                                    if (!checked) {
+                                        porform.resetFields(['Social'
+                                        ]);
+                                    }
+                                }} />
+                            {socialWorkOn ?
+                                <SocialWork form={porform} data={socialWorker} /> : <></>}
+                        </Col>
+                    </Row>
+
                 </div >
             </div >
             {update ? <></> :
@@ -459,7 +488,7 @@ const PorpertyInfo = ({ porform, ecomomicform, healthform, disform,
                         name='priority'
                         label='紧急程度：'>
                         <Input
-                            placeholder='请输入紧急程度,如：1-5' />
+                            placeholder='请输入紧急程度,如：1-3' />
                     </Form.Item>
                 </Form>
 

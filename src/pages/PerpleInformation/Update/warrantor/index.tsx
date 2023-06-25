@@ -195,15 +195,12 @@ const Warrantor = ({ porform, ecomomicform, disform, disUpdateData,
                 personalId: data?.personalId,
                 childNumber: data?.childNumber,
                 specialGroup: data?.specialGroup,
-                remarkOne: data?.remarkOne,
-                remarkTow: data?.remarkTow,
                 healthInsurance: data?.healthInsurance,
                 pensionInsurance: data?.pensionInsurance,
                 vaccinationStatus: data?.vaccinationStatus,
                 proofContraindication: data?.proofContraindication,
                 marriageStatus: data?.marriageStatus,
                 supervisorName: data?.supervisorName,
-                supervisorIdCard: data?.supervisorIdCard,
                 otherConditions: data?.otherConditions,
                 creatorId: data?.creatorId,
             });
@@ -463,7 +460,7 @@ const Warrantor = ({ porform, ecomomicform, disform, disUpdateData,
                         name='priority'
                         label='紧急程度：'>
                         <Input
-                            placeholder='请输入紧急程度,如：1-5' />
+                            placeholder='请输入紧急程度,如：1-3' />
                     </Form.Item>
                 </Form>
 

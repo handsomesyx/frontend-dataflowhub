@@ -12,7 +12,7 @@ export type basicInfo = {
     dateOfResidence: string;
     age: number;
     height: number;
-    headUrl: string;
+    headUrl?: string;
     gender: boolean;
     // # userId: number
     // # petition: string
@@ -82,15 +82,12 @@ export type healthInfo = {
     personalId?: number;
     childNumber: number;
     specialGroup: string;
-    remarkOne: string;
-    remarkTow: string;
     healthInsurance: string;
     pensionInsurance: string;
     vaccinationStatus: string;
     proofContraindication: string;
     marriageStatus: string;
     supervisorName: string;
-    supervisorIdCard: string;
     otherConditions: string;
     creatorId?: number;
 }
@@ -179,8 +176,8 @@ export type propertyInfo = {
     carColor: string;
     houseType: string;
     smokingStatus: number;
-    VolunteerStatus: JSON;
-    SocialWorker: JSON;
+    VolunteerStatus?: JSON;
+    SocialWorker?: JSON;
     drivingLicenseType: string;
     creatorId?: number;
 }

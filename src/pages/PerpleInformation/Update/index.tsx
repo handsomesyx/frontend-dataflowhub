@@ -74,7 +74,6 @@ function InformationUpdate() {
         return output;
     };
     const dataAll = data?.getPeopleData?.peopleData;
-    console.log(dataAll);
 
     // 基础信息配置
     // eslint-disable-next-line no-redeclare
@@ -179,8 +178,9 @@ function InformationUpdate() {
         car_plate: dataAll?.propertyData[0]?.car_plate, // 车牌照（可选）
         car_color: dataAll?.propertyData[0]?.car_color, // 车身颜色（可选）
         volunteer_status: JSON.stringify(dataAll?.propertyData[0]?.volunteer_status)
-            ?? '{}', // 志愿者{ } json里边写字符数组，来记录志愿者
-        social_worker: '{}', // 社工{ }  json里边写字符数组，来记录社工
+            ?? '[{}]', // 志愿者{ } json里边写字符数组，来记录志愿者
+        social_worker: JSON.stringify(dataAll?.propertyData[0]?.social_worker)
+            ?? '[{}]', // 社工{ }  json里边写字符数组，来记录社工
         driving_license_type: dataAll?.propertyData[0]?.driving_license_type, // 驾驶证类型（可选）
     };
 

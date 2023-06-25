@@ -463,7 +463,7 @@ const BasicInfo = ({ form, basicUpdateData,
                         <Col span={11}>
                             <Form.Item
                                 name='relationship'
-                                label="成员与户主关系:"
+                                label="成员与本人关系:"
                                 required>
                                 <Select
                                     placeholder='请选择'
@@ -490,7 +490,7 @@ const BasicInfo = ({ form, basicUpdateData,
                                 label='紧急程度：'>
                                 <Input
                                     style={{ width: '15vw' }}
-                                    placeholder='请输入紧急程度,如：1-5' />
+                                    placeholder='请输入紧急程度,如：1-3' />
                             </Form.Item>
                         </Col>
 
@@ -512,7 +512,7 @@ const BasicInfo = ({ form, basicUpdateData,
                         name='priority'
                         label='紧急程度：'>
                         <Input
-                            placeholder='请输入紧急程度,如：1-5' />
+                            placeholder='请输入紧急程度,如：1-3' />
                     </Form.Item>
                 </Form>
             </Modal>
