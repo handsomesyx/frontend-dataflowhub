@@ -289,8 +289,6 @@ const SearchBasic = () => {
     });
   };
 
-  console.log('aaa', filterData);
-  console.log('pagination?.total', pagination?.total);
   const handleSetPoliceStation = (e: any) => {
     setPoliceStationId(e);
     setPoliceValue(undefined);

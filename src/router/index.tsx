@@ -18,11 +18,13 @@ const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'))
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
+const Login = React.lazy(() => import('@/pages/Login/Login'));
 
 import ReviewPage from '@/pages/ReviewPage';
 import Visualization from '@/pages/visualization';
 import { userType } from '@/store';
 
+import LogOut from './LogOut';
 import type { routerConfigType } from './routerConfigType';
 // ———————— 说明 （1、2级路由正常）————————————
 // 需要全部白色背景的页面在suspend里面加上div即可  不需要全部白色背景的加类名NotContentFFF
@@ -256,11 +258,19 @@ const routeConfig: routerConfigType[] = [
       {
         path: 'system-setting',
         auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>系统设置</div>
-          </Suspense>
-        ),
+        children: [
+          {
+            path: 'logout',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div>
+                  <LogOut></LogOut>
+                </div>
+              </Suspense>
+            ),
+          },
+        ],
       },
     ],
   },
@@ -270,7 +280,11 @@ const routeConfig: routerConfigType[] = [
   },
   {
     path: 'login',
-    element: <>LOGIN</>,
+    element: (
+      <>
+        <Login></Login>
+      </>
+    ),
   },
 ];
 

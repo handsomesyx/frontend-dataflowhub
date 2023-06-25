@@ -201,6 +201,14 @@ function Menu() {
       text: '系统设置',
       path: '/system-setting',
       show: true,
+      children: [
+        {
+          id: '12-1',
+          text: '退出登入',
+          path: '/system-setting/logout',
+          show: true,
+        },
+      ],
     },
   ];
 

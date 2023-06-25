@@ -480,7 +480,7 @@ export const getPeopleData = gql`
         grid
         grid_user_id
         head_url
-        # height
+        height
         id
         id_card
         name
@@ -501,13 +501,13 @@ export const getPeopleData = gql`
           # police_name
           police_phone
         }
-        # disableData {
-        #   disability_id
-        #   disability_level
-        #   disability_subsidy
-        #   disability_type
-        #   severe_disability_subsidy
-        # }
+        disableData {
+          disability_id
+          disability_level
+          disability_subsidy
+          disability_type
+          severe_disability_subsidy
+        }
         economicData {
           breeding_quantity
           breeding_type
@@ -853,5 +853,32 @@ export const AddPolice = gql`
 export const DeletePolice = gql`
   mutation deletePolice($user_id: Int!) {
     deletePolice(user_id: $user_id)
+  }
+`;
+/**
+ * @description 登录接口
+ */
+export const login = gql`
+  mutation login($username: String!, $password: String!) {
+    login(data: { username: $username, password: $password }) {
+      accessToken
+      refreshToken
+      user {
+        role
+        username
+      }
+    }
+  }
+`;
+
+/**
+ * @description 获取新的accesstoken
+ */
+export const RefreshToken = gql`
+  mutation refreshToken($refresh_token: JWT!) {
+    refreshToken(token: $refresh_token) {
+      accessToken
+      refreshToken
+    }
   }
 `;
