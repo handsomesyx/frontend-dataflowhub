@@ -128,6 +128,29 @@ const App: React.FC = () => {
       title: '事件类型',
       dataIndex: 'action_type',
       key: 'action_type',
+      render: (_, text) => {
+        let content = '编辑';
+        switch (text?.action_type) {
+          case '1':
+            content = '新增信息';
+            break;
+          case '2':
+            content = '删除信息';
+            break;
+          case '3':
+            content = '修改信息';
+            break;
+          case '4':
+            content = '添加家庭关系';
+            break;
+          case '5':
+            content = '删除家庭关系';
+            break;
+          default:
+            break;
+        }
+        return <div>{content}</div>;
+      },
     },
     {
       title: '所属群众',

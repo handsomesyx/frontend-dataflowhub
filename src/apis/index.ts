@@ -27,7 +27,7 @@ export const GetDemoDashData = gql`
 //  获取待审
 export const QUERY_AUDITS = gql`
   query {
-    findManyAudit(select: { status: 0 }, skip: 0, take: 1000) {
+    findManyAudit(select: { status: 0 }, skip: 0, take: 10000) {
       count
       data {
         action_type
