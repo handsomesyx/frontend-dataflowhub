@@ -19,9 +19,11 @@ const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceSt
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
 const PersonManage = React.lazy(() => import('@/pages/UserManage'));
+const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
+const Login = React.lazy(() => import('@/pages/Login/Login'));
+const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
+const Visualization = React.lazy(() => import('@/pages/visualization'));
 
-import Login from '@/pages/Login/Login';
-import ReviewPage from '@/pages/ReviewPage';
 import { userType } from '@/store';
 
 import LogOut from './LogOut';
@@ -52,40 +54,35 @@ const routeConfig: routerConfigType[] = [
       {
         path: 'home',
         auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>首页内容</div>
-          </Suspense>
-        ),
-        // children: [
-        //   {
-        //     path: '',
-        //     auth: [1, 9, 8, 7, 'user1'],
-        //     element: <Navigate to="index" replace></Navigate>,
-        //   },
-        //   {
-        //     path: 'index',
-        //     auth: [1, 9, 8, 7, 'user1'],
-        //     element: (
-        //       <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-        //         <div className="NotContentFFF">
-        //           <HomeSearch></HomeSearch>
-        //         </div>
-        //       </Suspense>
-        //     ),
-        //   },
-        //   {
-        //     path: 'te',
-        //     auth: [1, 9, 8, 7, 'user1'],
-        //     element: (
-        //       <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-        //         <div className="NotContentFFF">
-        //           <Visualization></Visualization>
-        //         </div>
-        //       </Suspense>
-        //     ),
-        //   },
-        // ],
+        children: [
+          {
+            path: '',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: <Navigate to="index" replace></Navigate>,
+          },
+          {
+            path: 'index',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <HomeSearch></HomeSearch>
+                </div>
+              </Suspense>
+            ),
+          },
+          {
+            path: 'te',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <Visualization></Visualization>
+                </div>
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         path: 'user-manager',
