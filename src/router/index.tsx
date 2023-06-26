@@ -20,6 +20,7 @@ const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'))
 const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
 const Login = React.lazy(() => import('@/pages/Login/Login'));
 
+import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
 import ReviewPage from '@/pages/ReviewPage';
 import Visualization from '@/pages/visualization';
 import { userType } from '@/store';
@@ -251,7 +252,7 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>绩效查看</div>
+            <div><CheckPerformance /></div>
           </Suspense>
         ),
       },
