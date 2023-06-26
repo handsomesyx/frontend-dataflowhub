@@ -279,6 +279,33 @@ export const CreateCommunity = gql`
 export const CreateGrid = gql`
   mutation createGrid($data: gridCreateInput!) {
     createGrid(data: $data) {
+      area_leader_info {
+        gender
+        head_url
+        id
+        id_card
+        is_delete
+        mobile
+        real_name
+        role
+        role_id
+        status
+        username
+      }
+      grid_leader_info {
+        gender
+        head_url
+        id
+        id_card
+        is_delete
+        mobile
+        real_name
+        role
+        role_id
+        status
+        username
+      }
+      create_time
       id
       area_id
       creator_id
@@ -861,6 +888,100 @@ export const RefreshToken = gql`
     refreshToken(token: $refresh_token) {
       accessToken
       refreshToken
+    }
+  }
+`;
+
+// 增加人员
+export const CreatePerson = gql`
+  mutation create($input: personCreateInput!, $input2: role_userCreateInput!) {
+    createPerson(input: $input, input2: $input2) {
+      username
+      id
+    }
+  }
+`;
+
+// 删除人员
+export const DeletePerson = gql`
+  mutation deletePerson($id: Int!) {
+    deletePerson(id: $id) {
+      id
+    }
+  }
+`;
+
+// 修改人员信息
+export const UpdatePerson = gql`
+  mutation update($id: Int!, $input: personCreateInput!, $input2: role_userCreateInput!) {
+    updatePerson(id: $id, input: $input, input2: $input2) {
+      id
+      username
+    }
+  }
+`;
+
+// 查询人员信息
+export const GetPerson = gql`
+  query getPerson($skip: Int!, $take: Int!, $selectOption: selectOptionInput!) {
+    getPerson(skip: $skip, take: $take, selectOption: $selectOption) {
+      data {
+        id
+        username
+        role_name
+        grid_name
+        create_time
+        update_time
+        role_id
+        id_card
+        password
+        head_url
+        mobile
+      }
+      total
+    }
+  }
+`;
+
+// 查询角色表
+export const GetRole = gql`
+  query getRole {
+    getRole {
+      id
+      name
+      remark
+    }
+  }
+`;
+
+// 查询警员
+export const GetPolice = gql`
+  query getPolice {
+    getPolice {
+      police_user_id
+      username
+    }
+  }
+`;
+
+// 查询网格
+export const GetGrid = gql`
+  query getGrid {
+    getGrid {
+      id
+      name
+      area_id
+    }
+  }
+`;
+
+export const GetArea = gql`
+  query getArea {
+    getArea {
+      id
+      name
+      parent_id
+      level
     }
   }
 `;
