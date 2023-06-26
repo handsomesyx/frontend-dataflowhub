@@ -1,11 +1,15 @@
 import 'dayjs/locale/zh-cn';
 
-import { type DatePickerProps, Radio, type RadioChangeEvent } from 'antd';
+import { useQuery } from '@apollo/client';
+import { Input, Radio, type RadioChangeEvent, Select } from 'antd';
 import { ConfigProvider } from 'antd';
-import type { RangePickerProps } from 'antd/es/date-picker';
 import DatePicker from 'antd/es/date-picker';
 import zhCN from 'antd/locale/zh_CN';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { getSelectPoliceStation } from '@/apis';
+import { saveSearchData } from '@/store/SaveToken';
 
 import searchicon from '../../assets/search-outlined@2x.png';
 import showicon from '../../assets/xiala@2x.png';
@@ -14,22 +18,148 @@ import styles from './style.module.less';
 const HomeSearch = () => {
   const [value, setValue] = useState(1);
   const [isshowSearch, setShowSearch] = useState(true);
+  // 保存所有的配置信息
+  const [optiondata, setOption] = useState<any>({
+    type: undefined,
+    ageup: undefined,
+    agedown: undefined,
+    police_station_id: undefined,
+    timeup: undefined,
+    timedown: undefined,
+    heightup: undefined,
+    heightdown: undefined,
+    nameAZ: undefined,
+    grid_id: undefined,
+  });
+
   // const [timeStart, setTimeStart] = useState< | null>(null);
   const onChange = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+    // 重置配置信息
+    setOption({
+      type: undefined,
+      ageup: undefined,
+      agedown: undefined,
+      police_station_id: undefined,
+      timeup: undefined,
+      timedown: undefined,
+      heightup: undefined,
+      heightdown: undefined,
+      nameAZ: undefined,
+      grid_id: undefined,
+    });
   };
 
-  const TimeonChange = (
-    value: DatePickerProps['value'] | RangePickerProps['value'],
-    dateString: [string, string] | string,
-  ) => {
-    console.log('Selected Time: ', value);
-    console.log('Formatted Selected Time: ', dateString);
+  // 时间处理事件
+  const TimeonChangeUp = (value: any) => {
+    if (value) {
+      const time = new Date(value.$d);
+      setOption((pre: any) => {
+        return {
+          ...pre,
+          timeup: time.getTime(),
+        };
+      });
+    } else {
+      setOption((pre: any) => {
+        return {
+          ...pre,
+          timeup: undefined,
+        };
+      });
+    }
+  };
+  const TimeonChangeDown = (value: any) => {
+    if (value) {
+      const time = new Date(value.$d);
+      setOption((pre: any) => {
+        return {
+          ...pre,
+          timedown: time.getTime(),
+        };
+      });
+    } else {
+      setOption((pre: any) => {
+        return {
+          ...pre,
+          timedown: undefined,
+        };
+      });
+    }
   };
 
-  const onOk = (value: DatePickerProps['value'] | RangePickerProps['value']) => {
-    console.log('onOk: ', value);
+  const onchangegrid_id = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        grid_id: e.target.value,
+      };
+    });
   };
+
+  const ageonChangeUp = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        ageup: e.target.value,
+      };
+    });
+  };
+  const ageonChangeDown = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        agedown: e.target.value,
+      };
+    });
+  };
+  const { data: policeStationData } = useQuery(getSelectPoliceStation);
+
+  // 设置身高筛选
+  const heightonChangeUp = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        heightup: e.target.value,
+      };
+    });
+  };
+  const heightonChangeDown = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        heightdown: e.target.value,
+      };
+    });
+  };
+
+  // 设置人口类型筛选
+  const handleClassSelet = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        type: e.target.value,
+      };
+    });
+  };
+  const handleNameSelet = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        nameAZ: e.target.value,
+      };
+    });
+  };
+  const handlePolice = (e: any) => {
+    setOption((pre: any) => {
+      return {
+        ...pre,
+        police_station_id: e,
+      };
+    });
+  };
+  // 记录输入的内容
+  const [inputvalue, setInputValue] = useState('');
 
   const getElement = () => {
     switch (value) {
@@ -39,17 +169,124 @@ const HomeSearch = () => {
             <div className={styles.TimeBox}>
               <div className={styles.Timetitle}>时间筛选</div>
               <ConfigProvider locale={zhCN}>
-                <DatePicker
+                <DatePicker className={styles.TimeOne} onChange={TimeonChangeUp} />
+                <DatePicker className={styles.TimeTwo} onChange={TimeonChangeDown} />
+              </ConfigProvider>
+            </div>
+          </>
+        );
+      case 2:
+        return (
+          <div className={styles.TimeBox}>
+            <div className={styles.Agetitle}>姓名首字母筛选</div>
+            <div className={styles.ContentName}>
+              <Radio.Group
+                defaultValue={0}
+                onChange={(e) => {
+                  handleNameSelet(e);
+                }}
+              >
+                <Radio value={1}>是</Radio>
+                <Radio value={0}>否</Radio>
+              </Radio.Group>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <>
+            <div className={styles.TimeBox}>
+              <div className={styles.Agetitle}>年龄段筛选</div>
+              <ConfigProvider locale={zhCN}>
+                <Input
+                  placeholder="输入最小年龄"
+                  style={{ color: '#000' }}
                   className={styles.TimeOne}
-                  onChange={TimeonChange}
-                  onOk={onOk}
+                  onChange={ageonChangeUp}
                 />
-                <DatePicker
+                <Input
+                  placeholder="输入最大年龄"
+                  style={{ color: '#000' }}
                   className={styles.TimeTwo}
-                  onChange={TimeonChange}
-                  onOk={onOk}
+                  onChange={ageonChangeDown}
                 />
               </ConfigProvider>
+            </div>
+          </>
+        );
+      case 4:
+        return (
+          <>
+            <div className={styles.TimeBox}>
+              <div className={styles.Agetitle}>网格筛选</div>
+              <Input
+                placeholder="请输入网格号"
+                style={{ color: '#000' }}
+                className={styles.TimeOne}
+                onChange={onchangegrid_id}
+              />
+            </div>
+          </>
+        );
+      case 5:
+        return (
+          <div className={styles.TimeBox}>
+            <div className={styles.Agetitle}>人口类型筛选</div>
+            <div className={styles.ContentClass}>
+              <Radio.Group
+                defaultValue={0}
+                onChange={(e) => {
+                  handleClassSelet(e);
+                }}
+              >
+                <Radio value="A">A</Radio>
+                <Radio value="B">B</Radio>
+                <Radio value="C">C</Radio>
+                <Radio value="D">D</Radio>
+              </Radio.Group>
+            </div>
+          </div>
+        );
+      case 6:
+        return (
+          <>
+            <div className={styles.TimeBox}>
+              <div className={styles.Agetitle}>身高筛选</div>
+              <ConfigProvider locale={zhCN}>
+                <Input
+                  placeholder="输入身高最小值"
+                  style={{ color: '#000' }}
+                  className={styles.TimeOne}
+                  onChange={heightonChangeUp}
+                />
+                <Input
+                  placeholder="输入身高最大值"
+                  style={{ color: '#000' }}
+                  className={styles.TimeTwo}
+                  onChange={heightonChangeDown}
+                />
+              </ConfigProvider>
+            </div>
+          </>
+        );
+      case 7:
+        return (
+          <>
+            <div className={styles.TimeBox}>
+              <div className={styles.Agetitle}>公安局筛选</div>
+              <div style={{ flex: 1, justifyContent: 'center', display: 'flex' }}>
+                <Select
+                  style={{ color: '#000', width: '50%' }}
+                  placeholder="选择公安局id"
+                  options={policeStationData?.getSelectPoliceStation?.selectPoliceStation?.map(
+                    (item: any) => {
+                      return { value: item?.id, label: item?.name };
+                    },
+                  )}
+                  allowClear
+                  onChange={handlePolice}
+                ></Select>
+              </div>
             </div>
           </>
         );
@@ -81,6 +318,19 @@ const HomeSearch = () => {
 
     setShowSearch((pre) => !pre);
   };
+  const navigate = useNavigate();
+  const handleSearch = () => {
+    const option = {
+      content: inputvalue,
+      pagingOption: { skip: 0, take: 5 },
+      option: optiondata,
+    };
+    saveSearchData(option);
+
+    setTimeout(() => {
+      navigate('/search-info');
+    }, 200);
+  };
 
   return (
     <>
@@ -92,8 +342,15 @@ const HomeSearch = () => {
           <div className={styles.SearchBox}>
             <div className={styles.SearchLeft}>
               <img src={searchicon} />
-              <input type="text" placeholder="请输入关键词进行搜索" />
-              <img src={searchText} />
+              <input
+                type="text"
+                placeholder="请输入关键词进行搜索"
+                value={inputvalue}
+                onChange={(e) => {
+                  setInputValue(e.target.value);
+                }}
+              />
+              <img src={searchText} onClick={handleSearch} />
             </div>
             <div className={styles.SearchRight} onClick={handleShow}>
               高级搜索
@@ -107,9 +364,10 @@ const HomeSearch = () => {
                 <Radio value={1}>时间筛选</Radio>
                 <Radio value={2}>姓名首字母</Radio>
                 <Radio value={3}>年龄段筛选</Radio>
-                <Radio value={4}>人口类型</Radio>
-                <Radio value={5}>身高</Radio>
-                <Radio value={6}>公安局</Radio>
+                <Radio value={4}>网格</Radio>
+                <Radio value={5}>人口类型</Radio>
+                <Radio value={6}>身高</Radio>
+                <Radio value={7}>公安局</Radio>
               </Radio.Group>
             </div>
             {getElement()}

@@ -630,11 +630,22 @@ export const getPeopleDataFilter = gql`
 
 export const mainSearch = gql`
   query mainSearch(
-    $content: string!
+    $content: String!
     $option: MainSearchOption!
     $pagingOption: PagingOption!
   ) {
     mainSearch(content: $content, option: $option, pagingOption: $pagingOption) {
+      
+    #   info{
+    #   isStart
+    #   message
+    # }
+    # data{
+    #   id_card
+    #   indexcreate
+    #   pname
+    #   current_address
+    # }
       data {
         age
         current_address

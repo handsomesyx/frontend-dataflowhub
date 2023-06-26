@@ -37,12 +37,12 @@ export const getUserType = () => {
   return window.localStorage.getItem('userType') || '';
 };
 
-// 存储用户的名称
+// 获取用户的名称
 export const getUserName = () => {
   return window.localStorage.getItem('userName') || '';
 };
 
-// 获取用户的名称
+// 存储用户的名称
 export const saveUserName = (user: any) => {
   window.localStorage.setItem('userName', user || '');
 };
@@ -56,4 +56,12 @@ export const logout = () => {
   const url = window.location;
   const newUrl = url.origin + '/login';
   window.location.href = newUrl;
+};
+
+// 存储搜索数据
+export const saveSearchData = (data: any) => {
+  console.log("data", data);
+  let a = JSON.stringify(data);
+  console.log("a", a);
+  window.localStorage.setItem('searchData', a || '');
 };

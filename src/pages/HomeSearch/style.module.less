@@ -64,6 +64,7 @@
     height: 18%;
     display: flex;
     justify-content: space-between;
+    position: relative;
 
     .SearchLeft {
       width: 79%;
@@ -193,7 +194,7 @@
       height: 65%;
       display: flex;
       align-items: center;
-      padding: 0 10% 0 3%;
+      padding: 0 5% 0 3%;
 
       .Timetitle {
         display: inline-block;
@@ -228,6 +229,98 @@
           }
         }
       }
+    }
+  }
+}
+
+
+.DropDown{
+  position: absolute;
+  z-index: 10000;
+  top: 100%;
+  width: 79%;
+  min-height: 400px;
+  background-color: #fff;
+  border: 1px solid #e4e4e5;
+  border-radius: 5px;
+}
+
+.NameSelect{
+  height: 65%;
+  width: 100%;
+  padding:0 40%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  font-size: 1em;
+
+  :global{
+    .ant-radio-group{
+      display: flex;
+      align-items: start;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    .ant-radio-wrapper
+    {
+      font-size: 1.2em;
+      color: #fff;
+      flex: 1 !important;
+    }
+  }
+}
+
+.Agetitle {
+  display: inline-block;
+  margin-right: 0;
+  color: #fff;
+  font-size: 1.2em;
+}
+
+.ContentClass{
+  flex: 1;
+  display: flex;
+  font-size: 1em;
+
+  :global{
+    .ant-radio-group{
+      padding-left: 5em;
+      display: flex;
+      justify-content: space-around;
+      align-items: start;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    .ant-radio-wrapper
+    {
+      font-size: 1.2em;
+      color: #fff;
+      flex: 1 !important;
+    }
+  }
+}
+
+.ContentName{
+  flex: 1;
+  display: flex;
+  font-size: 1em;
+
+  :global{
+    .ant-radio-group{
+      padding-left: 5em;
+      display: flex;
+      align-items: start;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    .ant-radio-wrapper
+    {
+      font-size: 1.2em;
+      color: #fff;
+      flex: 1 !important;
     }
   }
 }

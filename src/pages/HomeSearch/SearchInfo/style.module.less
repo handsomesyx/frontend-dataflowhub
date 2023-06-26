@@ -1,0 +1,37 @@
+/* stylelint-disable no-descending-specificity */
+.BorderBox {
+    padding: 20px;
+    border: 1px solid #e2e2e2;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    position: relative;
+    height: 150px;
+    overflow: auto;
+    justify-content: space-between;
+
+    >div{
+        >div:not(:nth-child(1)){
+            margin-top: 5px;
+        }
+
+        >div{
+            span{
+                font-weight: bold;
+            }
+        }
+    }
+  
+    
+}
+  
+.BorderBox:not(:nth-child(1)) {
+    margin-top: 10px;
+}
+
+:global{
+    .LightRed{
+        color: red !important;
+    }
+}
+  
