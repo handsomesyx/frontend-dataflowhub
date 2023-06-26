@@ -41,6 +41,12 @@ const client = new ApolloClient({
 });
 
 
+// // 解码JWT令牌，获取载荷中的角色信息
+// const decodedToken = jwt_decode(token);
+// const userRoles = decodedToken.roles;
+
+// // 检查用户角色是否包含superAdmin
+// const isSuperAdmin = userRoles.includes('superAdmin');
 
 const items: MenuProps['items'] = [
   {
@@ -54,56 +60,6 @@ const items: MenuProps['items'] = [
     className: 'UpperMenuItem',
   },
 ];
-
-// Date格式需要注意一下，用假数据看眼行不行
-//  interface DataType {
-//    id: number;
-//    name: string;
-//    login_times: number;
-//    searchTimes: number;
-//    newPeople: number;
-//    submit_event_count: number;
-//    infoChanged: number;
-//    beginTime: string;
-//    endTime: string;
-//  }
-
-// 假数据
-//  const fakeData: DataType[] = [
-//    {
-//      id: 1,
-//      name: 'John',
-//      login_times: 1,
-//      searchTimes: 32,
-//      newPeople: 12,
-//      submit_event_count: 34,
-//      infoChanged: 14,
-//      beginTime: '2023-2-12 12:23',
-//      endTime: '2023-2-12 12:34',
-//    },
-//    {
-//      id: 2,
-//      name: 'admin',
-//      login_times: 3,
-//      searchTimes: 132,
-//      newPeople: 1,
-//      submit_event_count: 340,
-//      infoChanged: 14,
-//      beginTime: '2023-2-22 13:23',
-//      endTime: '2023-2-22 15:34',
-//    },
-//    {
-//      id: 3,
-//      name: 'admin',
-//      login_times: 10,
-//      searchTimes: 2,
-//      newPeople: 2,
-//      submit_event_count: 4,
-//      infoChanged: 1,
-//      beginTime: '2023-3-12 2:23',
-//      endTime: '2023-3-12 2:34',
-//    },
-//  ];
 
 // 一系列城市-镇-网格的数据，后面肯定需要修改，才能实现后端说的递归查询
 // 应该是每个label的value都是一个Int，这样方便GQL查询，到时候需要修改，并且修改状态
@@ -213,14 +169,14 @@ const xingAnOptionsData = [
 ];
 
 // 当前权限
-const Auth = {
-  superAdmin: 1,
-  filmPolice: 2,
-  communityDirector: 3,
-  gridMember: 4,
-  Director: 5,
-  gridLength: 6,
-};
+// const Auth = {
+//   superAdmin: 1,
+//   filmPolice: 2,
+//   communityDirector: 3,
+//   gridMember: 4,
+//   Director: 5,
+//   gridLength: 6,
+// };
 
 
 // Query查询
@@ -302,10 +258,12 @@ const CheckPerformance: React.FC = () => {
       case 'gridMember':
         setCurrentAuth(4);
         setIsDefault(true);
+        setIsSuperAdmin(true);
         break;
       case 'filmPolice':
         setCurrentAuth(2);
         setIsDefault(true);
+        setIsSuperAdmin(true);
         break;
       default:
         setCurrentAuth(0);
@@ -375,7 +333,7 @@ const CheckPerformance: React.FC = () => {
             begin_time: beginTime,
             end_time: endTime,
             skip: 1,
-            take: 10000,
+            take: 10,
           },
         });
       }
@@ -421,7 +379,7 @@ const CheckPerformance: React.FC = () => {
   variables: {
     role_id: currentAuth,
     skip: 1,
-    take: 10000,
+    take: 10,
   }
   });
 
@@ -506,7 +464,7 @@ const CheckPerformance: React.FC = () => {
   return (
     <ApolloProvider client={client}>
       <Layout className="CpLayout">
-      {/* Serial Experiments */}
+      {/* Serial Experiments
       <div>
         权限管理：
         <Button onClick={() => {
@@ -537,7 +495,7 @@ const CheckPerformance: React.FC = () => {
           console.log(client);
           console.log(accessToken);
           }}>header</Button>
-      </div>
+      </div> */}
         {/* 网格员 警员 菜单 */}
       <Menu
         onClick={onMenuClick}
