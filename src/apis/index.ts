@@ -215,89 +215,31 @@ export const FindManyCommunity = gql`
 `;
 
 export const FindManyGrid = gql`
-  query findManyGrid($select: gridWhereInput, $skip: Int, $take: Int) {
-    findManyGrid(select: $select, skip: $skip, take: $take) {
-      count
-      data {
-        area_leader_info {
-          gender
-          head_url
-          id
-          id_card
-          is_delete
-          mobile
-          real_name
-          role
-          role_id
-          status
-          username
-        }
-        id
-        creator_id
-        update_time
-        create_time
-        is_delete
-        updater_id
-        name
-        grid_leader_info {
-          gender
-          head_url
-          id
-          id_card
-          is_delete
-          mobile
-          real_name
-          role
-          role_id
-          status
-          username
-        }
-        area_info {
-          create_time
-          creator_id
-          id
-          is_delete
-          leader {
-            gender
-            head_url
-            id
-            id_card
-            is_delete
-            mobile
-            real_name
-            role
-            role_id
-            status
-            username
-          }
-          level
-          name
-          parent_id
-          update_time
-          updater_id
-        }
-      }
+  query findManyGrid($skip: Int!, $take: Int!) {
+    findManyGrid(skip: $skip, take: $take) {
+      area_id
+      id
+      creator_id
+      update_time
+      create_time
+      is_delete
+      updater_id
+      user_id
     }
   }
 `;
 
 export const FindManyPolicestation = gql`
-  query findManyPolicestation($select: pstationWhereInput, $skip: Int, $take: Int) {
-    findManyPolicestation(select: $select, skip: $skip, take: $take) {
-      count
-      data {
-        area
-        id
-        creator_id
-        update_time
-        name
-        create_time
-        is_delete
-        updater_id
-        user_id
-        police_count
-        policeleader_name
-      }
+  query findManyPolicestation($skip: Int!, $take: Int!) {
+    findManyPolicestation(skip: $skip, take: $take) {
+      id
+      creator_id
+      update_time
+      name
+      create_time
+      is_delete
+      updater_id
+      user_id
     }
   }
 `;
@@ -337,33 +279,8 @@ export const CreateCommunity = gql`
 export const CreateGrid = gql`
   mutation createGrid($data: gridCreateInput!) {
     createGrid(data: $data) {
-      area_leader_info {
-        gender
-        head_url
-        id
-        id_card
-        is_delete
-        mobile
-        real_name
-        role
-        role_id
-        status
-        username
-      }
-      grid_leader_info {
-        gender
-        head_url
-        id
-        id_card
-        is_delete
-        mobile
-        real_name
-        role
-        role_id
-        status
-        username
-      }
-      create_time
+      id
+      area_id
       creator_id
       area_info {
         create_time
@@ -403,6 +320,71 @@ export const CreatePolicestation = gql`
       name
       updater_id
       user_id
+    }
+  }
+`;
+
+export const CreatePeopleInfo = gql`
+  mutation createPeopleInfo(
+    $createBasicInfoInput: manyBasicInfo!
+    $createDisabilityInfoInput: manyDisabilityInfo!
+    $createEconomicInfoInput: manyEconomicInfo!
+    $createHealthInfoInput: manyHealthInfo!
+    $createPoliticalInfoInput: manyPoliticalInfo!
+    $createPropertyInfoInput: manyPropertyInfo!
+    $priority: Int!
+  ) {
+    createPeopleInfo(
+      createBasicInfoInput: $createBasicInfoInput
+      createDisabilityInfoInput: $createDisabilityInfoInput
+      createEconomicInfoInput: $createEconomicInfoInput
+      createHealthInfoInput: $createHealthInfoInput
+      createPoliticalInfoInput: $createPoliticalInfoInput
+      createPropertyInfoInput: $createPropertyInfoInput
+      priority: $priority
+    )
+  }
+`;
+
+export const CreateFamilyInfo = gql`
+  mutation createFamilyInfo(
+    $id: Int!
+    $priority: Int!
+    $familyData: CreateFamilyInfoDto!
+  ) {
+    createFamilyInfo(id: $id, priority: $priority, familyData: $familyData)
+  }
+`;
+
+export const UpdatePeopleInfo = gql`
+  mutation updatePeopleInfo($id: Int!, $priority: Int!, $changeRecord: manyChangeInfo!) {
+    updatePeopleInfo(id: $id, priority: $priority, changeRecord: $changeRecord)
+  }
+`;
+
+export const DeleteFamilyInfo = gql`
+  mutation deleteFamilyInfo($id: Int!, $priority: Int!, $memberId: Int!) {
+    deleteFamilyInfo(id: $id, priority: $priority, memberId: $memberId)
+  }
+`;
+
+export const DeletePeopleInfo = gql`
+  mutation deletePeopleInfo($id: Int!, $priority: Int!) {
+    deletePeopleInfo(id: $id, priority: $priority)
+  }
+`;
+
+export const FindFamilyMember = gql`
+  query findFamilyMemberInfo($pesonal_id: Int!) {
+    findFamilyMemberInfo(pesonal_id: $pesonal_id) {
+      idCard
+      id
+      householdId
+      memberRelation
+      name
+      phone
+      personalId
+      memberId
     }
   }
 `;

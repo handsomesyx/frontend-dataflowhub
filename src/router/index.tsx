@@ -17,11 +17,10 @@ const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'))
 // const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
-const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
-const Login = React.lazy(() => import('@/pages/Login/Login'));
+const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
 
+import Login from '@/pages/Login/Login';
 import ReviewPage from '@/pages/ReviewPage';
-import Visualization from '@/pages/visualization';
 import { userType } from '@/store';
 
 import LogOut from './LogOut';
@@ -50,42 +49,42 @@ const routeConfig: routerConfigType[] = [
         element: <Navigate to="home/index" replace></Navigate>,
       },
       {
-        path: 'home/*',
+        path: 'home',
         auth: [1, 9, 8, 7, 'user1'],
-        // element: (
-        //   <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-        //     <div>首页内容</div>
-        //   </Suspense>
-        // ),
-        children: [
-          {
-            path: '',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: <Navigate to="index" replace></Navigate>,
-          },
-          {
-            path: 'index',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <HomeSearch></HomeSearch>
-                </div>
-              </Suspense>
-            ),
-          },
-          {
-            path: 'te',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <Visualization></Visualization>
-                </div>
-              </Suspense>
-            ),
-          },
-        ],
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <div>首页内容</div>
+          </Suspense>
+        ),
+        // children: [
+        //   {
+        //     path: '',
+        //     auth: [1, 9, 8, 7, 'user1'],
+        //     element: <Navigate to="index" replace></Navigate>,
+        //   },
+        //   {
+        //     path: 'index',
+        //     auth: [1, 9, 8, 7, 'user1'],
+        //     element: (
+        //       <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+        //         <div className="NotContentFFF">
+        //           <HomeSearch></HomeSearch>
+        //         </div>
+        //       </Suspense>
+        //     ),
+        //   },
+        //   {
+        //     path: 'te',
+        //     auth: [1, 9, 8, 7, 'user1'],
+        //     element: (
+        //       <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+        //         <div className="NotContentFFF">
+        //           <Visualization></Visualization>
+        //         </div>
+        //       </Suspense>
+        //     ),
+        //   },
+        // ],
       },
       {
         path: 'user-manager',
@@ -156,6 +155,18 @@ const routeConfig: routerConfigType[] = [
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div className="NotContentFFF">
                   <InformationAdd></InformationAdd>
+                </div>
+              </Suspense>
+            ),
+          },
+          // 修改人员基础信息
+          {
+            path: 'person-management-update/:id',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <InformationUpdate></InformationUpdate>
                 </div>
               </Suspense>
             ),
