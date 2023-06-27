@@ -42,7 +42,7 @@ const Login = () => {
             window.location.href = newUrl;
           }, 300);
         })
-        .catch(() => {
+        .catch((_err) => {
           message.open({
             type: 'error',
             content: '账号或密码错误',

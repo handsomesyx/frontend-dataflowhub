@@ -66,7 +66,7 @@ function Menu() {
       children: [
         {
           id: '1-1',
-          text: '首页',
+          text: '搜索',
           path: '/home/index',
           show: true,
         },

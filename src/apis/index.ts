@@ -472,8 +472,8 @@ export const getSelectAdmin = gql`
  * @description 人员详情接口查看
  */
 export const getPeopleData = gql`
-  query getPeopleData($personal_id: Int!) {
-    getPeopleData(personal_id: $personal_id) {
+  query getPeopleData($personal_id: Int!, $isDelete: Boolean!) {
+    getPeopleData(personal_id: $personal_id, isDelete: $isDelete) {
       isFound
       message
       peopleData {
@@ -596,8 +596,16 @@ export const getPeopleData = gql`
  */
 
 export const getPeopleDataFilter = gql`
-  query getPeopleDataFilter($content: PeoeleManageInput!, $pagingOption: PagingOption!) {
-    getPeopleDataFilter(content: $content, pagingOption: $pagingOption) {
+  query getPeopleDataFilter(
+    $content: PeoeleManageInput!
+    $pagingOption: PagingOption!
+    $isDelete: Boolean!
+  ) {
+    getPeopleDataFilter(
+      content: $content
+      pagingOption: $pagingOption
+      isDelete: $isDelete
+    ) {
       data {
         age
         certificate_type
@@ -639,11 +647,21 @@ export const getPeopleDataFilter = gql`
 
 export const mainSearch = gql`
   query mainSearch(
-    $content: string!
+    $content: String!
     $option: MainSearchOption!
     $pagingOption: PagingOption!
   ) {
     mainSearch(content: $content, option: $option, pagingOption: $pagingOption) {
+      #   info{
+      #   isStart
+      #   message
+      # }
+      # data{
+      #   id_card
+      #   indexcreate
+      #   pname
+      #   current_address
+      # }
       data {
         age
         current_address
