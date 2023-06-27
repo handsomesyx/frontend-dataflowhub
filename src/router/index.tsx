@@ -21,6 +21,8 @@ const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Upd
 const PersonManage = React.lazy(() => import('@/pages/UserManage'));
 const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
 const Login = React.lazy(() => import('@/pages/Login/Login'));
+import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
+
 const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
 const Visualization = React.lazy(() => import('@/pages/visualization'));
 import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
@@ -262,7 +264,20 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>绩效查看</div>
+            <div>
+              <CheckPerformance />
+            </div>
+          </Suspense>
+        ),
+      },
+      {
+        path: 'search-info',
+        auth: [1, 9, 8, 7, 'user1'],
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <div>
+              <SearchInfo></SearchInfo>
+            </div>
           </Suspense>
         ),
       },
