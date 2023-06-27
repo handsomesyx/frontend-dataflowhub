@@ -25,6 +25,7 @@ import {
   QUERY_AUDITS,
   UPDATE_AUDIT,
 } from '@/apis';
+import { getUserName, getUserType} from '@/store/SaveToken';
 
 const client = new ApolloClient({
   uri: 'http://127.0.0.1:7000/graphql',
@@ -205,19 +206,32 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('getUserName', getUserName());
-    setRole(4);
-    console.log('请求完成');
+    console.log('getUserType', getUserType());
+    let tmp=7;
+    if (getUserType()==='superAdmin') {setRole(1);tmp=1;}
+    if (getUserType()==='filmPolice') {setRole(2);tmp=2;}
+    if (getUserType()==='gridMember') {setRole(4);tmp=4;}
+    console.log('身份验证完成');
+    
     if (data) {
       console.log(data);
-      const filtered = data.findManyAudit.data.filter(
-        (item: any) => item.is_delete === false,
-      );
+      const username=getUserName();
+      const filtered = data.findManyAudit.data.filter((item: any) => {
+        if (item.is_delete === false && tmp === 2 && item?.officer_info?.username === username) {
+          return true;
+        }
+        if (item.is_delete === false && tmp === 4 && item?.user_info?.username === username) {
+          return true;
+        }
+        return false;
+      });
+      message.info('列表加载完成');
       const formattedData = filtered.map((item: any) => {
         const date = new Date(item.create_time);
         const formattedDate = date.toLocaleString();
         return {
           ...item,
+          key:item.id,
           create_time: formattedDate,
         };
       });
@@ -469,7 +483,8 @@ const App: React.FC = () => {
           size="middle"
         />
         <Divider />
-        {showClass?<><Title level={5}>人员分级类别</Title>
+        
+        {showClass&&(role===1||role===2)?<><Title level={5}>人员分级类别</Title>
         <Radio.Group
           style={{ marginTop: 10, marginBottom: 10 }}
           options={options}

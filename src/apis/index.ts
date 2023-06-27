@@ -37,6 +37,7 @@ export const QUERY_AUDITS = gql`
         is_delete
         officer_info {
           real_name
+          username
         }
         priority
         request_data
@@ -53,6 +54,7 @@ export const QUERY_AUDITS = gql`
         user_info {
           real_name
           id
+          username
         }
       }
     }
@@ -71,6 +73,7 @@ export const QUERY_OK = gql`
         is_delete
         officer_info {
           real_name
+          username
         }
         priority
         request_data
@@ -87,6 +90,7 @@ export const QUERY_OK = gql`
         user_info {
           real_name
           id
+          username
         }
       }
     }
@@ -104,6 +108,7 @@ export const QUERY_REFUSE = gql`
         id
         is_delete
         officer_info {
+          username
           real_name
         }
         priority
@@ -121,6 +126,7 @@ export const QUERY_REFUSE = gql`
         user_info {
           real_name
           id
+          username
         }
       }
     }
