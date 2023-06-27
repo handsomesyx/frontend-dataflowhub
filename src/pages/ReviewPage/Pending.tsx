@@ -33,6 +33,7 @@ const client = new ApolloClient({
 });
 const { Title } = Typography;
 interface ChangeWhat {
+  id: any;
   change_item: string;
   content_before: string;
   content_after: string;
@@ -118,6 +119,7 @@ const App: React.FC = () => {
     },
     onError: (error) => {
       console.error(error);
+      listrefetch();
       message.info('操作失败');
     },
   });
@@ -131,6 +133,7 @@ const App: React.FC = () => {
         after: item?.content_after,
         before: item?.content_before,
         value: item?.change_item,
+        key:item?.id,
       }));
 
       console.log(changewhat);
@@ -143,11 +146,13 @@ const App: React.FC = () => {
     },
   });
 
-  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, { client });
+  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, { client,onCompleted: () => {
+    listrefetch();
+  } });
   const [plainOptions, setPlainOptions] = useState<string[]>([]);
   const [comment, setComment] = useState('未填写'); // 拒绝原因
   const [classabcd, setClassabcd] = useState('未分类'); // 人员ABCD分类
-  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
+  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(['未选择']);
   const onsubChange = (list: CheckboxValueType[]) => {
     setCheckedList(list);
   };
@@ -270,10 +275,12 @@ const App: React.FC = () => {
       setShowClass(true);
       setChangecolumns([
         {
+          key:'new',
           title: '新增属性',
           dataIndex: 'value',
         },
         {
+          key:'con',
           title: '内容',
           dataIndex: 'after',
         },
@@ -282,15 +289,18 @@ const App: React.FC = () => {
       setShowClass(false);
       setChangecolumns([
         {
+          key:'cvalue',
           title: '变更属性',
           dataIndex: 'value',
         },
         {
+          key:'cvalueb',
           title: '变更前',
           dataIndex: 'before',
         },
         {
           title: '变更后',
+          key:'cvaluea',
           dataIndex: 'after',
         },
       ]);
@@ -311,7 +321,6 @@ const App: React.FC = () => {
   };
 
   const handlePass = () => {
-    listrefetch();
     console.log(checkedList);
     const newData = {
       request_data: { class: classabcd, detailClass: checkedList },

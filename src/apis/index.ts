@@ -144,7 +144,6 @@ export const GET_AUDIT_CHANGE = gql`
     getChangeRecord(rightnow_auditrecords_id: $rightnow_auditrecords_id) {
       audit_records_id
       change_item
-      change_time
       content_after
       content_before
       create_time
