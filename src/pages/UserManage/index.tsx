@@ -850,6 +850,11 @@ export default function PersonManage() {
         cancelText="取消"
       >
         <h2>确定删除吗？</h2>
+        <span style={{ color: 'red' }}>
+          一旦删除将无法使用该账号绑定的身份证、手机号登注册新账号
+        </span>
+        <br />
+        <span style={{ color: 'red' }}>同时也将无法查看该账号的所有日志记录等信息</span>
       </Modal>
 
       {/* 修改的弹窗 */}

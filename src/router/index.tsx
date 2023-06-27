@@ -25,6 +25,7 @@ const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
 const Visualization = React.lazy(() => import('@/pages/visualization'));
 
 import { userType } from '@/store';
+import { getUserType } from '@/store/SaveToken';
 
 import LogOut from './LogOut';
 import type { routerConfigType } from './routerConfigType';
@@ -90,11 +91,26 @@ const routeConfig: routerConfigType[] = [
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>
-              <PersonManage />
+              {getUserType() === 'superAdmin' ? (
+                <PersonManage />
+              ) : (
+                '无权访问,只有超级管理员可对人员进行管理'
+              )}
             </div>
           </Suspense>
         ),
       },
+      // getUserType() !== 'superAdmin' ? {
+      //   path: 'user-manager',
+      //   auth: [1, 9, 8, 7, 'user1'],
+      //   element: (
+      //     <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+      //       <div>
+      //         <PersonManage />
+      //       </div>
+      //     </Suspense>
+      //   ),
+      // } : {},
       // 人口管理
       {
         path: 'population-manager/*',
