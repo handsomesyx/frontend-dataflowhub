@@ -6,47 +6,21 @@ import './index.css';
 import 'dayjs/locale/zh-cn';
 
 import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
-import { ApolloProvider, gql, useLazyQuery, useQuery } from '@apollo/client';
-import { ApolloClient, createHttpLink,InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import type { MenuProps } from 'antd';
 import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import ExcelJS from 'exceljs';
-import React, { useState } from 'react';
+import { DateTime } from 'luxon';
+import React, { useEffect, useState } from 'react';
+
+import { getUserType } from '../../store/SaveToken';
 
 const { Column } = Table;
 
 const { RangePicker } = DatePicker;
 
-const httpLink = createHttpLink({
-  uri: 'http://localhost:7000/graphql',
-});
-
-// 获取存储的accessToken
-const accessToken = localStorage.getItem('accessToken');
-
-const authLink = setContext((_, { headers }) => {
-  return {
-    headers: {
-      ...headers,
-      Authorization: accessToken ? `Bearer ${accessToken}` : '',
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
-
-
-// // 解码JWT令牌，获取载荷中的角色信息
-// const decodedToken = jwt_decode(token);
-// const userRoles = decodedToken.roles;
-
-// // 检查用户角色是否包含superAdmin
-// const isSuperAdmin = userRoles.includes('superAdmin');
+const loginAuth = getUserType();
 
 const items: MenuProps['items'] = [
   {
@@ -60,124 +34,6 @@ const items: MenuProps['items'] = [
     className: 'UpperMenuItem',
   },
 ];
-
-// 一系列城市-镇-网格的数据，后面肯定需要修改，才能实现后端说的递归查询
-// 应该是每个label的value都是一个Int，这样方便GQL查询，到时候需要修改，并且修改状态
-const cityOptionData = [
-  {
-    label: '漠河市',
-    value: 'MoHeCity',
-  },
-];
-
-const townOptionData = [
-  {
-    label: '西林吉镇',
-    value: 'XiLinJi',
-  },
-  {
-    label: '古莲镇',
-    value: 'GuLian',
-  },
-  {
-    label: '图强镇',
-    value: 'TuQiang',
-  },
-  {
-    label: '阿木尔镇',
-    value: 'AMuEr',
-  },
-  {
-    label: '北极镇',
-    value: 'BeiJi',
-  },
-  {
-    label: '兴安镇',
-    value: 'XingAn',
-  },
-];
-
-// area_id
-const xiLinJiOptionData = [
-  {
-    label: '名苑社区',
-    value: 1,
-  },
-  {
-    label: '其他等等社区',
-    value: 2,
-  },
-];
-
-const guLianOptionsData = [
-  {
-    label: '古莲社区',
-    value: 3,
-  },
-  {
-    label: '其他等等社区',
-    value: 4,
-  },
-];
-
-const tuQiangOptionsData = [
-  {
-    label: '图强社区',
-    value: 5,
-  },
-  {
-    label: '其他等等社区',
-    value: 6,
-  },
-];
-
-const aMuErOptionsData = [
-  {
-    label: '阿尔姆社区',
-    value: 7,
-  },
-  {
-    label: '其他等等社区',
-    value: 8,
-  },
-];
-
-const beiJiOptionsData = [
-  {
-    label: '北极村',
-    value: 9,
-  },
-  {
-    label: '洛古河村',
-    value: 10,
-  },
-  {
-    label: '北红村',
-    value: 11,
-  },
-];
-
-const xingAnOptionsData = [
-  {
-    label: '兴安社区',
-    value: 12,
-  },
-  {
-    label: '其他等等社区',
-    value: 13,
-  },
-];
-
-// 当前权限
-// const Auth = {
-//   superAdmin: 1,
-//   filmPolice: 2,
-//   communityDirector: 3,
-//   gridMember: 4,
-//   Director: 5,
-//   gridLength: 6,
-// };
-
 
 // Query查询
 const GET_USER_LOG_OPERATIONS = gql`
@@ -246,43 +102,92 @@ query GetUserLogOperations(
   }
 `;
 
+const GET_AREAS_QUERY = gql`
+  query GetAreas {
+    getArea {
+      id
+      level
+      name
+      parent_id
+    }
+  }
+`;
+
 
 const CheckPerformance: React.FC = () => {
   const [current, setCurrent] = useState('mail');
 
   const onMenuClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
-    console.log(e);
-    setMenuState(e.key as unknown as number); // 这段代码明明是从AntD官网抄的，居然会报错，忽略就行
+    // console.log(e);
+    setMenuState(e.key as unknown as number);
+    setTempAuth(currentAuth);// 这段代码明明是从AntD官网抄的，居然会报错，忽略就行
     switch (e.key) {
       case 'gridMember':
-        setCurrentAuth(4);
+        if (tempAuth === 1 || tempAuth === 2 || tempAuth === 5) {
+          setCurrentAuth(3);
+        } else if (tempAuth === 3) {
+          setCurrentAuth(3);
+        } else if (tempAuth === 6) {
+          setCurrentAuth(6);
+        } else if (tempAuth === 4) { 
+          setCurrentAuth(4);
+        }
         setIsDefault(true);
-        setIsSuperAdmin(true);
         break;
       case 'filmPolice':
-        setCurrentAuth(2);
+        if (tempAuth === 1) {
+          setCurrentAuth(5);
+        } else if (tempAuth === 5) {
+          setCurrentAuth(5);
+        } else if (tempAuth === 2) {   
+          setCurrentAuth(2);
+        } 
         setIsDefault(true);
-        setIsSuperAdmin(true);
         break;
       default:
         setCurrentAuth(0);
     }
+     // setCurrentAuth(temp);
   };
 
   // 一系列状态Hook，用来存储表单
   const [menuState, setMenuState] = useState(0);
   const [name, setName] = useState('');
-  const [city, setCity] = useState('default');
-  const [town, setTown] = useState('default');
-  const [grid, setGrid] = useState('default');
+  const [city, setCity] = useState(0);
+  const [town, setTown] = useState(0);
+  const [grid, setGrid] = useState(0);
   // const [gridID, setGridID] = useState(0);
   const [beginTime, setBeginTime] = useState();
   const [endTime, setEndTime] = useState();
   // 同样是一系列状态Hook，Auth负责管理权限，isDefault负责展示初始表单，isSuperAdmin负责判断是否可以导出数据
   const [currentAuth, setCurrentAuth] = useState(0);
+  const [tempAuth, setTempAuth] = useState(0);
   const [isDefault, setIsDefault] = useState(true);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
+  const areaID = grid !== 0
+  ? grid
+  : (town !== 0 ? town : city);
+
+  useEffect(() => {
+  const authMap = {
+    superAdmin: 1,
+    filmPolice: 2,
+    communityDirector: 3,
+    gridMember: 4,
+    Director: 5,
+    gridLength: 6,
+  };
+
+  const authValue = authMap[loginAuth];
+
+  if (authValue !== undefined) {
+    setCurrentAuth(authValue);
+  } else {
+    setCurrentAuth(0); // 默认设置为0或其他适当的默认值
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, []);
+  
 
   // Datetime
   const handleRangeChange = (values: any) => {
@@ -296,8 +201,8 @@ const CheckPerformance: React.FC = () => {
     // Handle the case when values is null
     setBeginTime(undefined);
     setEndTime(undefined);
-  }
-};
+    }
+  };
 
   // 上传查找表单
   // 注意判零思想，如果表单的数据为空，则默认返回所有数据
@@ -327,8 +232,8 @@ const CheckPerformance: React.FC = () => {
         setIsDefault(false);
         fetchData({
           variables: {
-            role_id: currentAuth,
-            area_id: 0 | parseInt(grid, 10),
+            role_id: tempAuth,
+            area_id: areaID,
             name: name,
             begin_time: beginTime,
             end_time: endTime,
@@ -342,33 +247,21 @@ const CheckPerformance: React.FC = () => {
 
   // 这里的Select级联使用了switch的思想，使用useState得到的city town 进行选择，调取相应的数组
   // 如果想要加入新的区划，直接const创建新数组，然后再switch加入新条件即可
-  const getTownOptions = (city: string) => {
-    switch (city) {
-      case 'MoHeCity':
-        return townOptionData;
-      default:
-        return [];
-    }
+  const getTownOptions = (city: number) => {
+  // Filter level2Areas based on parent_id matching with city
+  const townOptions = level2Areas.filter(area => area.parent_id === city);
+  // Map townOptions to options format with label and value properties
+  return townOptions.map(town => ({ label: town.name, value: town.id }));
   };
+  
 
-  const getGridOptions = (town: string) => {
-    switch (town) {
-      case 'XiLinJi':
-        return xiLinJiOptionData;
-      case 'GuLian':
-        return guLianOptionsData;
-      case 'TuQiang':
-        return tuQiangOptionsData;
-      case 'AMuEr':
-        return aMuErOptionsData;
-      case 'BeiJi':
-        return beiJiOptionsData;
-      case 'XingAn':
-        return xingAnOptionsData;
-      default:
-        return [];
-    }
+  const getGridOptions = (town: number) => {
+  // Filter level3Areas based on parent_id matching with town
+    const gridOptions = level3Areas.filter(area => area.parent_id === town); 
+    // Map gridOptions to options format with label and value properties
+    return gridOptions.map(grid => ({ label: grid.name, value: grid.id })); 
   };
+  
 
   // 调用GQL语句，向后端查询数据
   const [fetchData, { error, data: SearchedData }] = useLazyQuery(
@@ -380,8 +273,26 @@ const CheckPerformance: React.FC = () => {
     role_id: currentAuth,
     skip: 1,
     take: 10,
-  }
+    }
   });
+
+  const { data: AreaData } = useQuery(GET_AREAS_QUERY);
+  const level1Areas = [];
+  const level2Areas = [];
+  const level3Areas = [];
+
+  if (AreaData && AreaData.getArea) {
+  AreaData.getArea.forEach((area: { level: number; }) => {
+    if (area.level === 1) {
+      level1Areas.push(area);
+    } else if (area.level === 2) {
+      level2Areas.push(area);
+    } else if (area.level === 3) {
+      level3Areas.push(area);
+    }
+  });     
+  }
+  
 
   // 抽取接口得到的data，这是我们需要填入表单中的数据
   const DefaultData = 
@@ -394,11 +305,11 @@ const CheckPerformance: React.FC = () => {
     SearchedData.queryUserLogOperationList &&
     SearchedData.queryUserLogOperationList.data;
   
-  const UsedData = isDefault? DefaultData : TableData;
+  const UsedData = isDefault ? DefaultData : TableData;
 
   // 前端实现导出excel文档的设计，后端的嘛。。。不知道怎么调用
   const handleExport = async () => {
-    if (isSuperAdmin) {
+    if (loginAuth === 'superAdmin') {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Sheet 1');
 
@@ -411,25 +322,15 @@ const CheckPerformance: React.FC = () => {
       const data = UsedData;
 
       data.forEach((item: any, index: any) => {
-        worksheet.getCell(`A${index + 2}`).value = item.id;
+        worksheet.getCell(`A${index + 2}`).value = index + 1;
         worksheet.getCell(`B${index + 2}`).value = item.name;
-        worksheet.getCell(`C${index + 2}`).value = item.login_times;
+        worksheet.getCell(`C${index + 2}`).value = item.login_count;
         worksheet.getCell(`D${index + 2}`).value = item.query_count;
         worksheet.getCell(`E${index + 2}`).value = item.add_person_count;
         worksheet.getCell(`F${index + 2}`).value = item.submit_event_count;
         worksheet.getCell(`G${index + 2}`).value = item.modify_person_count;
-        worksheet.getCell(`H${index + 2}`).value = item.beginTime;
-        worksheet.getCell(`I${index + 2}`).value = item.endTime;
-        // 设置其他单元格...
-        // id
-        // name
-        // login_count
-        // modify_person_count = infoChanged
-        // query_count = searchTimes
-        // submit_event_count
-        // add_person_count = newPeople
-        // begin_time
-        // end_time
+        worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(item.begin_time).toFormat('yyyy-MM-dd HH:mm:ss');
+        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(item.end_time).toFormat('yyyy-MM-dd HH:mm:ss');
       });
 
       worksheet.getColumn(1).width = 10;
@@ -461,41 +362,21 @@ const CheckPerformance: React.FC = () => {
     }
   };
 
+ // 时间戳转换
+  const formatTimestamp = (timestamp: any) => {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
   return (
-    <ApolloProvider client={client}>
       <Layout className="CpLayout">
-      {/* Serial Experiments
-      <div>
-        权限管理：
-        <Button onClick={() => {
-            // setCurrentAuth(Auth.superAdmin);
-            setIsSuperAdmin(true);
-        }}>超级管理员</Button>
-        <Button onClick={() => setCurrentAuth(Auth.Director)}>所长</Button>
-        <Button onClick={() => setCurrentAuth(Auth.filmPolice)}>民警</Button>
-        <Button onClick={() => setCurrentAuth(Auth.communityDirector)}>社区主任</Button>
-        <Button onClick={() => setCurrentAuth(Auth.gridLength)}>网格长</Button>
-        <Button onClick={() => setCurrentAuth(Auth.gridMember)}>网格员</Button>
-        <Button
-          onClick={() => {
-            console.log(currentAuth);
-          }}
-        >
-          Console.log权限
-        </Button>
-        <Button onClick={() => { 
-          console.log(DefaultData);
-        }}>Default Test</Button>
-        <Button onClick={() => { 
-          console.log(TableData);
-          console.log(SearchedOrigin);
-          console.log(SearchedData);
-        }}>Data Test</Button>
-        <Button onClick={() => {
-          console.log(client);
-          console.log(accessToken);
-          }}>header</Button>
-      </div> */}
         {/* 网格员 警员 菜单 */}
       <Menu
         onClick={onMenuClick}
@@ -516,20 +397,17 @@ const CheckPerformance: React.FC = () => {
             setName(event.target.value);
           }}
         />
-        {/* <Input placeholder="城市占位" className="BlockType" /> */}
         <Select
           placeholder="请选择城市"
           className="BlockTypeGrid"
-          options={cityOptionData}
+          options={level1Areas.map(area => ({ label: area.name, value: area.id }))}
           onSelect={(value) => {
             // Find the selected option based on the value
-            const selectedOption = cityOptionData.find(
-              (option) => option.value === value,
-            );
+            const selectedOption = level1Areas.find(area => area.id === value);
             if (selectedOption) {
-              setCity(selectedOption.value);
-              setTown('default');
-              setGrid('default');
+              setCity(selectedOption.id);
+              setTown(0);
+              setGrid(0);
             }
           }}
         />
@@ -539,48 +417,31 @@ const CheckPerformance: React.FC = () => {
           options={getTownOptions(city)}
           onSelect={(value) => {
             // Find the selected option based on the value
-            const selectedOption = getTownOptions(city).find(
-              (option) => option.value === value,
-            );
+            const selectedOption = getTownOptions(city).find(option => option.value === value);
             if (selectedOption) {
               setTown(selectedOption.value);
-              setGrid('default');
+              setGrid(0);
             }
           }}
-          value={town !== 'default' ? town : null || null}
-          />
-          {/* 这里有warning，但是不要随便修改 */}
+          value={town !== 0 ? town : null || null}
+        /> 
         <Select
-          placeholder="请选择网格"
+          placeholder="请选择社区"  
           className="BlockTypeGrid"
-          options={getGridOptions(town)}
+          options={getGridOptions(town)}   
           onSelect={(value) => {
-            // Find the selected option based on the value
+            // Find the selected option based on the value    
             const selectedOption = getGridOptions(town).find(
-              (option) => option.value === value,
-            );
-            if (selectedOption) {
-              setGrid(selectedOption.value);
-            }
-            }}
-          value={grid !== 'default' ? grid : null || null}
+              option => option.value === value);       
+            if (selectedOption) {      
+              setGrid(selectedOption.value);       
+            }       
+          }}       
+          value={grid !== 0 ? grid : null || null}    
           // Set the value to the first option's value only if grid is not 'default'
           // 当重新选择上一个Select选项后，该选项需要重新选择
         />
-        {/*
-        // 备选的时间选择模块，但由于需要判断开始时间时候比结束时间晚，所以用了AntD中省事的RangePicker
-         <DatePicker
-          format="YYYY-MM-DD HH:mm:ss"
-          showTime={{ defaultValue: dayjs('00:00:00', 'HH:mm:ss') }}
-          placeholder="开始时间"
-          className="DateBlockType"
-        />
-        <DatePicker
-          format="YYYY-MM-DD HH:mm:ss"
-          showTime={{ defaultValue: dayjs('00:00:00', 'HH:mm:ss') }}
-          placeholder="结束时间"
-          className="DateBlockType"
-        /> */}
+        
         <RangePicker
           showTime
           locale={locale}
@@ -608,9 +469,10 @@ const CheckPerformance: React.FC = () => {
         <Table dataSource={UsedData} style={{ margin: '0px 0.5vw' }}>
           <Column
             title={<div style={{ textAlign: 'center' }}>编号</div>}
-            dataIndex="id"
-            key="id"
+            // dataIndex="id"
+            // key="id"
             align="center"
+            render={(text, record, index) => index + 1}
           />
           <Column
             title={<div style={{ textAlign: 'center' }}>姓名</div>}
@@ -650,21 +512,21 @@ const CheckPerformance: React.FC = () => {
           />
           <Column
             title={<div style={{ textAlign: 'center' }}>开始时间</div>}
-            dataIndex="begin_Time"
+            dataIndex="begin_time"
             key="begin_Time"
             align="center"
+            render={(text) => formatTimestamp(text)}
           />
           <Column
             title={<div style={{ textAlign: 'center' }}>结束时间</div>}
-            dataIndex="end_Time"
+            dataIndex="end_time"
             key="end_Time"
             align="center"
+            render={(text) => formatTimestamp(text)}
           />
         </Table>
       </div>
     </Layout>
-    </ApolloProvider>
-    
   );
 };
 
