@@ -34,9 +34,10 @@ type ItemConfigType = {
 // 信息展示页面  数据获取  页面整体配置
 function InformationShow() {
   const id = window.localStorage.getItem('userIdNum');
-  const { data, loading } = useQuery(getPeopleData, {
+  const { data, loading, error } = useQuery(getPeopleData, {
     variables: {
       personal_id: Number(id),
+      isDelete: false,
     },
   });
   function formatLocalDate(aa: any) {
@@ -241,6 +242,12 @@ function InformationShow() {
         <div className={styles.Box}>
           <Spin spinning={loading} size="large"></Spin>
         </div>
+      ) : error ? (
+        <>
+          <div className={styles.Box} style={{ backgroundColor: '#efefef' }}>
+            <div>加载出错。。。</div>
+          </div>
+        </>
       ) : (
         ''
       )}

@@ -38,13 +38,13 @@ module.exports = {
     // eslint-disable-line react-hooks/exhaustive-deps
     'react-hooks/exhaustive-deps': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
-    '@typescript-eslint/no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': ['off'],
     '@typescript-eslint/consistent-type-imports': ['error'],
     // 允许使用async
     'generator-star-spacing': 0,
     'babel/generator-star-spacing': 0,
-    '@typescript-eslint/no-var-requires': 'off',
-    '@typescript-eslint/type-annotation-spacing': 'off',
+    '@typescript-eslint/no-var-requires': 2,
+    '@typescript-eslint/type-annotation-spacing': 2,
     // 开发环境换行符
     'linebreak-style': [0, 'windows'],
     // 三等号

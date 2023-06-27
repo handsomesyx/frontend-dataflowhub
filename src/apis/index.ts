@@ -463,8 +463,8 @@ export const getSelectAdmin = gql`
  * @description 人员详情接口查看
  */
 export const getPeopleData = gql`
-  query getPeopleData($personal_id: Int!) {
-    getPeopleData(personal_id: $personal_id) {
+  query getPeopleData($personal_id: Int!, $isDelete: Boolean!) {
+    getPeopleData(personal_id: $personal_id, isDelete: $isDelete) {
       isFound
       message
       peopleData {
@@ -635,17 +635,16 @@ export const mainSearch = gql`
     $pagingOption: PagingOption!
   ) {
     mainSearch(content: $content, option: $option, pagingOption: $pagingOption) {
-      
-    #   info{
-    #   isStart
-    #   message
-    # }
-    # data{
-    #   id_card
-    #   indexcreate
-    #   pname
-    #   current_address
-    # }
+      #   info{
+      #   isStart
+      #   message
+      # }
+      # data{
+      #   id_card
+      #   indexcreate
+      #   pname
+      #   current_address
+      # }
       data {
         age
         current_address

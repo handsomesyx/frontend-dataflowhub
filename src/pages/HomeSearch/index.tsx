@@ -92,7 +92,7 @@ const HomeSearch = () => {
     setOption((pre: any) => {
       return {
         ...pre,
-        grid_id: e.target.value,
+        grid_id: Number(e.target.value || ''),
       };
     });
   };
@@ -322,7 +322,6 @@ const HomeSearch = () => {
   const handleSearch = () => {
     const option = {
       content: inputvalue,
-      pagingOption: { skip: 0, take: 5 },
       option: optiondata,
     };
     saveSearchData(option);
@@ -348,6 +347,12 @@ const HomeSearch = () => {
                 value={inputvalue}
                 onChange={(e) => {
                   setInputValue(e.target.value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSearch();
+                    // 在这里执行回车事件的逻辑操作
+                  }
                 }}
               />
               <img src={searchText} onClick={handleSearch} />
