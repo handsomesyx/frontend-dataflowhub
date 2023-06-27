@@ -12,6 +12,7 @@ const AdministrativeRegion = React.lazy(
 );
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
 const InformationShow = React.lazy(() => import('@/pages/PerpleInformation/Show'));
+const HistoryInfoBasic = React.lazy(() => import('@/pages/HistoryLook/Search'));
 const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'));
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 // const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
@@ -133,7 +134,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div>历史数据查看</div>
+                <HistoryInfoBasic />
               </Suspense>
             ),
           },

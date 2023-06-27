@@ -173,7 +173,6 @@ const SearchBasic = () => {
   useEffect(() => {
     getFilterPeopleData({
       variables: {
-        isDelete: false,
         content: {},
         pagingOption: {
           skip: skip,
@@ -195,7 +194,7 @@ const SearchBasic = () => {
   useEffect(() => {
     getFilterPeopleData({
       variables: {
-        isDelete: false,
+        isDelete: true,
         content: { ...filterDataOld },
         pagingOption: {
           skip: skip,
