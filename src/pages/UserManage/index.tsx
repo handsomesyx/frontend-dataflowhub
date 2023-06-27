@@ -577,9 +577,10 @@ export default function PersonManage() {
           <Col span={12}>
             <span style={{ fontWeight: '700', fontSize: '16px' }}>用户管理</span>
           </Col>
-          <Col span={2} offset={9}>
+          {/* <Col span={2} offset={9}> */}
+          <Col span={12} style={{ textAlign: 'right' }}>
             <Button
-              style={{ marginRight: '-100px' }}
+              // style={{ marginRight: '-100px' }}
               type="primary"
               onClick={showModalAdd}
             >
@@ -591,14 +592,14 @@ export default function PersonManage() {
       <Divider />
       <div>
         <Row>
-          <Col span={2}>
+          <Col span={4}>
             <span>数据总数({db?.getPerson.total})</span>
           </Col>
-          <Col span={2} offset={4}>
+          <Col span={20} style={{ textAlign: 'right' }}>
             <Space>
               <Select
                 placeholder="请选择行政区域"
-                style={{ width: '200px' }}
+                style={{ width: '150px' }}
                 onChange={selectAdministrionArea}
               >
                 {administrationAreaList?.map((item: any) => (
@@ -610,7 +611,7 @@ export default function PersonManage() {
 
               <Select
                 placeholder="请选择社区"
-                style={{ width: '200px' }}
+                style={{ width: '150px' }}
                 onChange={selectCommunity}
                 value={firstCommunity}
               >
@@ -623,7 +624,7 @@ export default function PersonManage() {
 
               <Select
                 placeholder="请选择网格"
-                style={{ width: '200px' }}
+                style={{ width: '150px' }}
                 value={gridId}
                 onChange={selectGrid}
               >
@@ -635,7 +636,7 @@ export default function PersonManage() {
               </Select>
 
               <Input
-                style={{ width: '200px' }}
+                style={{ width: '150px' }}
                 placeholder="请输入用户名"
                 value={username}
                 onChange={changeUsername}
