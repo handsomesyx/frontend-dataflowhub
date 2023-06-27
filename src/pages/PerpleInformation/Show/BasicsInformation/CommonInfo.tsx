@@ -33,7 +33,7 @@ export type CommonPeopleBasics = {
   currentAddress?: string;
   history?: [{}];
   height?: string;
-  sex?: number;
+  sex?: boolean;
 };
 
 function formatLocalDate(aa: any) {
@@ -128,7 +128,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           <div>
             <span>*</span>性别：
             <span>
-              {peopleData?.sex === 0 ? '男' : peopleData?.sex === 1 ? '女' : ''}
+              {peopleData?.sex === false ? '男' : peopleData?.sex === true ? '女' : ''}
             </span>
           </div>
         </div>

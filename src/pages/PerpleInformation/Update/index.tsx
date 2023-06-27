@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { useQuery } from '@apollo/client';
 import { Form } from 'antd';
 import { type ReactElement, useState } from 'react';

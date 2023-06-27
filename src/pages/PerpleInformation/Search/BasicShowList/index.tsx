@@ -39,7 +39,7 @@ const BasicShowList: React.FC<Props> = ({
         return (
           <div className={styles.BorderBox} key={index}>
             <div className={styles.FirstDiv}>
-              <img src="https://tse2-mm.cn.bing.net/th/id/OIP-C.ZcjidB6ytMyNAjg9clT4PAHaNK?pid=ImgDet&rs=1" />
+              <img src={item?.head_url} />
             </div>
             <div>
               <span>基本信息</span>
