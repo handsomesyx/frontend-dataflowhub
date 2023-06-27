@@ -12,7 +12,7 @@ import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import ExcelJS from 'exceljs';
 import { DateTime } from 'luxon';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import { getUserType } from '../../store/SaveToken';
 
@@ -115,40 +115,22 @@ const GET_AREAS_QUERY = gql`
 
 
 const CheckPerformance: React.FC = () => {
-  const [current, setCurrent] = useState('mail');
+  const [current, setCurrent] = useState('');
 
   const onMenuClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
-    // console.log(e);
-    setMenuState(e.key as unknown as number);
-    setTempAuth(currentAuth);// 这段代码明明是从AntD官网抄的，居然会报错，忽略就行
+    console.log(e);
+    setMenuState(e.key as unknown as number); // 这段代码明明是从AntD官网抄的，居然会报错，忽略就行
     switch (e.key) {
       case 'gridMember':
-        if (tempAuth === 1 || tempAuth === 2 || tempAuth === 5) {
-          setCurrentAuth(3);
-        } else if (tempAuth === 3) {
-          setCurrentAuth(3);
-        } else if (tempAuth === 6) {
-          setCurrentAuth(6);
-        } else if (tempAuth === 4) { 
-          setCurrentAuth(4);
-        }
+        setCurrentAuth(4);
         setIsDefault(true);
         break;
       case 'filmPolice':
-        if (tempAuth === 1) {
-          setCurrentAuth(5);
-        } else if (tempAuth === 5) {
-          setCurrentAuth(5);
-        } else if (tempAuth === 2) {   
-          setCurrentAuth(2);
-        } 
+        setCurrentAuth(2);
         setIsDefault(true);
         break;
-      default:
-        setCurrentAuth(0);
     }
-     // setCurrentAuth(temp);
   };
 
   // 一系列状态Hook，用来存储表单
@@ -157,37 +139,14 @@ const CheckPerformance: React.FC = () => {
   const [city, setCity] = useState(0);
   const [town, setTown] = useState(0);
   const [grid, setGrid] = useState(0);
-  // const [gridID, setGridID] = useState(0);
   const [beginTime, setBeginTime] = useState();
   const [endTime, setEndTime] = useState();
   // 同样是一系列状态Hook，Auth负责管理权限，isDefault负责展示初始表单，isSuperAdmin负责判断是否可以导出数据
-  const [currentAuth, setCurrentAuth] = useState(0);
-  const [tempAuth, setTempAuth] = useState(0);
+  const [currentAuth, setCurrentAuth] = useState(4);
   const [isDefault, setIsDefault] = useState(true);
   const areaID = grid !== 0
   ? grid
   : (town !== 0 ? town : city);
-
-  useEffect(() => {
-  const authMap = {
-    superAdmin: 1,
-    filmPolice: 2,
-    communityDirector: 3,
-    gridMember: 4,
-    Director: 5,
-    gridLength: 6,
-  };
-
-  const authValue = authMap[loginAuth];
-
-  if (authValue !== undefined) {
-    setCurrentAuth(authValue);
-  } else {
-    setCurrentAuth(0); // 默认设置为0或其他适当的默认值
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, []);
-  
 
   // Datetime
   const handleRangeChange = (values: any) => {
@@ -232,7 +191,7 @@ const CheckPerformance: React.FC = () => {
         setIsDefault(false);
         fetchData({
           variables: {
-            role_id: tempAuth,
+            role_id: currentAuth,
             area_id: areaID,
             name: name,
             begin_time: beginTime,
@@ -376,11 +335,11 @@ const CheckPerformance: React.FC = () => {
   };
 
   return (
-      <Layout className="CpLayout">
+    <Layout className="CpLayout">
         {/* 网格员 警员 菜单 */}
       <Menu
         onClick={onMenuClick}
-        selectedKeys={[current]}
+        selectedKeys={current ? [current] : [items[0].key]}
         mode="horizontal"
         items={items}
         className="UpperMenu"
