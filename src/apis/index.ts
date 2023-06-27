@@ -587,8 +587,16 @@ export const getPeopleData = gql`
  */
 
 export const getPeopleDataFilter = gql`
-  query getPeopleDataFilter($content: PeoeleManageInput!, $pagingOption: PagingOption!) {
-    getPeopleDataFilter(content: $content, pagingOption: $pagingOption) {
+  query getPeopleDataFilter(
+    $content: PeoeleManageInput!
+    $pagingOption: PagingOption!
+    $isDelete: Boolean!
+  ) {
+    getPeopleDataFilter(
+      content: $content
+      pagingOption: $pagingOption
+      isDelete: $isDelete
+    ) {
       data {
         age
         certificate_type

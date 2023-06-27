@@ -101,7 +101,7 @@ const HomeSearch = () => {
     setOption((pre: any) => {
       return {
         ...pre,
-        ageup: e.target.value,
+        ageup: Number(e.target.value || ''),
       };
     });
   };
@@ -109,7 +109,7 @@ const HomeSearch = () => {
     setOption((pre: any) => {
       return {
         ...pre,
-        agedown: e.target.value,
+        agedown: Number(e.target.value || ''),
       };
     });
   };
@@ -120,7 +120,7 @@ const HomeSearch = () => {
     setOption((pre: any) => {
       return {
         ...pre,
-        heightup: e.target.value,
+        heightup: Number(e.target.value || ''),
       };
     });
   };
@@ -128,7 +128,7 @@ const HomeSearch = () => {
     setOption((pre: any) => {
       return {
         ...pre,
-        heightdown: e.target.value,
+        heightdown: Number(e.target.value || ''),
       };
     });
   };
