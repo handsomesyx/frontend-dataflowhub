@@ -87,7 +87,7 @@ const App: React.FC = () => {
   const [refuseopen, setRefuseOpen] = useState(false);
   const [showClass, setShowClass] = useState(true);
   const [modalText, setModalText] = useState<DataType>();
-  const { data } = useQuery(QUERY_AUDITS, { client ,onCompleted: () => {
+  const { data,refetch:listrefetch } = useQuery(QUERY_AUDITS, { client ,onCompleted: () => {
     message.destroy();
   }});
   const [dataSource, setDataSource] = useState([]);
@@ -113,6 +113,7 @@ const App: React.FC = () => {
     onCompleted: (data) => {
       console.log(data);
       if (data.updateAudit) message.info('操作成功');
+      listrefetch();
       handleCancel();
     },
     onError: (error) => {
@@ -242,6 +243,7 @@ const App: React.FC = () => {
 
   const handleRefuse = () => {
     setRefuseOpen(true);
+    
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -309,6 +311,7 @@ const App: React.FC = () => {
   };
 
   const handlePass = () => {
+    listrefetch();
     console.log(checkedList);
     const newData = {
       request_data: { class: classabcd, detailClass: checkedList },
