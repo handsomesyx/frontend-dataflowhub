@@ -63,6 +63,20 @@ function Menu() {
       text: '首页',
       path: '/home',
       show: true,
+      children: [
+        {
+          id: '1-1',
+          text: '搜索',
+          path: '/home/index',
+          show: true,
+        },
+        {
+          id: '1-2',
+          text: '可视化',
+          path: '/home/te',
+          show: true,
+        },
+      ],
     },
     {
       id: '2',
@@ -132,12 +146,12 @@ function Menu() {
           path: '/basic-information/policeStation',
           show: true,
         },
-        {
-          id: '4-4',
-          text: '社区管理',
-          path: '/basic-information/community',
-          show: true,
-        },
+        // {
+        //   id: '4-4',
+        //   text: '社区管理',
+        //   path: '/basic-information/community',
+        //   show: true,
+        // },
       ],
     },
     {
@@ -187,6 +201,14 @@ function Menu() {
       text: '系统设置',
       path: '/system-setting',
       show: true,
+      children: [
+        {
+          id: '12-1',
+          text: '退出登入',
+          path: '/system-setting/logout',
+          show: true,
+        },
+      ],
     },
   ];
 

@@ -1,6 +1,5 @@
-
 import { ApolloClient, InMemoryCache, useMutation, useQuery } from '@apollo/client';
-import { Card, message,Modal, Popconfirm, Space, Table } from 'antd';
+import { Card, message, Modal, Popconfirm, Space, Table } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import type { ColumnsType } from 'antd/es/table';
 import React, { useEffect, useState } from 'react';
@@ -37,8 +36,8 @@ const App: React.FC = () => {
   const [isModal2Open, setIsModal2Open] = useState(false);
   const [datashow, setDataShow] = useState<Audi[]>([]);
   const [suggestion, setSuggestion] = useState('未设置处理意见');
-  const { data: re ,refetch:refetch1} = useQuery(QUERY_REFUSE, { client });
-  const { data: ok ,refetch:refetch2} = useQuery(QUERY_OK, { client });
+  const { data: re, refetch: refetch1 } = useQuery(QUERY_REFUSE, { client });
+  const { data: ok, refetch: refetch2 } = useQuery(QUERY_OK, { client });
   const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, { client });
 
   const confirm = async (id: any) => {
@@ -88,7 +87,6 @@ const App: React.FC = () => {
     setSuggestion(e);
     setIsModalOpen(true);
   };
-
 
   const resumit = () => {
     setIsModal2Open(false);

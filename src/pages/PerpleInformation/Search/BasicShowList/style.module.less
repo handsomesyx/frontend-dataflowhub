@@ -6,13 +6,29 @@
   width: 98%;
   display: flex;
   position: relative;
+  height: 150px;
   overflow: hidden;
 
-  img {
+  .FirstDiv {
     width: 180px;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 90px;
+      height: 100%;
+    }
   }
 
   > div {
+    height: auto;
+
+    span {
+      color: #000;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
     > div:not(:nth-child(1)) {
       width: 100%;
       white-space: nowrap;

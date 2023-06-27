@@ -7,22 +7,21 @@ interface Props {
 
 // 全部传入没有传空
 export type WarrantorType = {
-  gridPersonName: string;
+  grid_name: string;
   gridPersonId: string;
   girdPersonPhone: string;
   policeName: string;
   policePhone: string;
 };
 
-// 民政卫健
 const Warrantor: React.FC<Props> = ({ WarrantorData }) => {
   return (
     <div className={styles.HealthInfoBox}>
       <table>
         <tbody>
           <tr>
-            <td>网格员个人姓名</td>
-            <td>{WarrantorData?.gridPersonName}</td>
+            <td>网格员名称</td>
+            <td>{WarrantorData?.grid_name}</td>
             <td>网格员编号</td>
             <td>{WarrantorData?.gridPersonId}</td>
             <td>网格员联系方式</td>

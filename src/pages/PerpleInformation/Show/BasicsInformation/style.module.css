@@ -1,0 +1,139 @@
+/* stylelint-disable no-descending-specificity */
+
+/* index页面 */
+.BorderBox {
+  width: 100%;
+  border: 1px solid #d9d9d9;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 0 1% 1% 0;
+  position: relative;
+}
+
+.BorderBox .Dir {
+  width: 100%;
+  border-top: 1px solid #d9d9d9;
+  margin-top: 1%;
+}
+
+/* 基础信息页面 */
+.CommonBox .TopSelf {
+  width: 100%;
+  display: flex;
+
+  /* 基本信息标签 */
+
+  /* 姓名列 */
+
+  /* 身份证号列 */
+}
+
+.CommonBox .TopSelf > div > div {
+  height: 2.4em;
+  border-bottom: 1.5px dashed #d9d9d9;
+  align-items: center;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.CommonBox .TopSelf > div > div > span:nth-child(1) {
+  color: red;
+  width: 10px;
+}
+
+.CommonBox .TopSelf > div > div > span:nth-child(2) {
+  flex: 1;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  font-weight: bold;
+}
+
+.CommonBox .TopSelf > div:nth-child(1) {
+  width: 20%;
+  margin-top: 10px;
+  font-size: 1em;
+  display: flex;
+  justify-content: center;
+}
+
+.CommonBox .TopSelf > div:nth-child(1) img {
+  height: 13em;
+  width: 9em;
+}
+
+.CommonBox .TopSelf > div:nth-child(2) {
+  flex: 1;
+}
+
+.CommonBox .TopSelf > div:nth-child(3) {
+  flex: 1;
+}
+
+.CommonBox .TopDataLong {
+  margin-left: 20%;
+}
+
+.CommonBox .TopDataLong > div {
+  height: 2.4em;
+  display: flex;
+  align-items: center;
+  border-bottom: 1.5px dashed #d9d9d9;
+}
+
+.CommonBox .TopDataLong > div > span:nth-child(2) {
+  font-weight: bold;
+}
+
+.CommonBox :global .SpanRedColor {
+  color: red;
+  width: 10px;
+}
+
+/* 家庭成员列表页面 */
+.FamilyBox {
+  width: 100%;
+  font-size: 1em;
+}
+
+.FamilyBox > div:nth-last-child(1) {
+  border: none;
+  padding: 0;
+}
+
+.FamilyBox .FamilyBorderBox {
+  display: flex;
+  padding: 0 0 1%;
+  border-bottom: 1px solid #d9d9d9;
+}
+
+.FamilyBox .FamilyBorderBox > div > div {
+  height: 2.4em;
+  border-bottom: 1.5px dashed #d9d9d9;
+  display: flex;
+  align-items: center;
+}
+
+.FamilyBox .FamilyBorderBox > div > div span {
+  font-weight: bold;
+}
+
+.FamilyBox .FamilyBorderBox > div:nth-child(1) {
+  width: 20%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bolder;
+}
+
+.FamilyBox .FamilyBorderBox > div:nth-child(2) {
+  flex: 1;
+}
+
+.FamilyBox .FamilyBorderBox > div:nth-child(3) {
+  flex: 1;
+}
+
+.BottomHistory span {
+  font-weight: bold;
+}

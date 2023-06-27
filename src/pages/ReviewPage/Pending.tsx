@@ -1,7 +1,5 @@
-
 import { ApolloClient, InMemoryCache, useMutation, useQuery } from '@apollo/client';
-import type {
-  RadioChangeEvent} from 'antd';
+import type { RadioChangeEvent } from 'antd';
 import {
   Button,
   Checkbox,
@@ -13,11 +11,12 @@ import {
   Radio,
   Space,
   Table,
-  Typography} from 'antd';
+  Typography,
+} from 'antd';
 import type { CheckboxValueType } from 'antd/es/checkbox/Group';
 import TextArea from 'antd/es/input/TextArea';
 import type { ColumnsType } from 'antd/es/table';
-import type { ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import React, { useEffect, useState } from 'react';
 
 import {
@@ -79,7 +78,7 @@ interface personinfo {
   id_card: String;
 }
 interface dataChange {
-  personal_info: personinfo
+  personal_info: personinfo;
 }
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -141,7 +140,7 @@ const App: React.FC = () => {
       }
     },
   });
- 
+
   const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, { client });
   const [plainOptions, setPlainOptions] = useState<string[]>([]);
   const [comment, setComment] = useState('未填写'); // 拒绝原因

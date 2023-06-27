@@ -14,13 +14,22 @@ const HomePage = React.lazy(() => import('@/pages/HomePage'));
 const InformationShow = React.lazy(() => import('@/pages/PerpleInformation/Show'));
 const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'));
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
-const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
+// const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
+const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
+const PersonManage = React.lazy(() => import('@/pages/UserManage'));
+const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
+const Login = React.lazy(() => import('@/pages/Login/Login'));
+import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
 
-import ReviewPage from '@/pages/ReviewPage';
+const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
+const Visualization = React.lazy(() => import('@/pages/visualization'));
+import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
 import { userType } from '@/store';
+import { getUserType } from '@/store/SaveToken';
 
+import LogOut from './LogOut';
 import type { routerConfigType } from './routerConfigType';
 // ———————— 说明 （1、2级路由正常）————————————
 // 需要全部白色背景的页面在suspend里面加上div即可  不需要全部白色背景的加类名NotContentFFF
@@ -43,26 +52,67 @@ const routeConfig: routerConfigType[] = [
       {
         path: '',
         auth: [1, 9, 8, 7, 'user1'],
-        element: <Navigate to="home" replace></Navigate>,
+        element: <Navigate to="home/index" replace></Navigate>,
       },
       {
         path: 'home',
         auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>首页内容</div>
-          </Suspense>
-        ),
+        children: [
+          {
+            path: '',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: <Navigate to="index" replace></Navigate>,
+          },
+          {
+            path: 'index',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <HomeSearch></HomeSearch>
+                </div>
+              </Suspense>
+            ),
+          },
+          {
+            path: 'te',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <Visualization></Visualization>
+                </div>
+              </Suspense>
+            ),
+          },
+        ],
       },
       {
         path: 'user-manager',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>用户管理</div>
+            <div>
+              {getUserType() === 'superAdmin' ? (
+                <PersonManage />
+              ) : (
+                '无权访问,只有超级管理员可对人员进行管理'
+              )}
+            </div>
           </Suspense>
         ),
       },
+      // getUserType() !== 'superAdmin' ? {
+      //   path: 'user-manager',
+      //   auth: [1, 9, 8, 7, 'user1'],
+      //   element: (
+      //     <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+      //       <div>
+      //         <PersonManage />
+      //       </div>
+      //     </Suspense>
+      //   ),
+      // } : {},
       // 人口管理
       {
         path: 'population-manager/*',
@@ -127,6 +177,18 @@ const routeConfig: routerConfigType[] = [
               </Suspense>
             ),
           },
+          // 修改人员基础信息
+          {
+            path: 'person-management-update/:id',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <InformationUpdate></InformationUpdate>
+                </div>
+              </Suspense>
+            ),
+          },
           // {
           //   path: 'information-push',
           //   auth: [1, 9, 8, 7, 'user1'],
@@ -181,16 +243,18 @@ const routeConfig: routerConfigType[] = [
               </Suspense>
             ),
           },
-          {
-            path: 'community',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                {/* <div>社区管理</div> */}
-                <Community />
-              </Suspense>
-            ),
-          },
+          // {
+          //   path: 'community',
+          //   auth: [1, 9, 8, 7, 'user1'],
+          //   element: (
+          //     <Suspense
+          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
+          //     >
+          //       {/* <div>社区管理</div> */}
+          //       <Community />
+          //     </Suspense>
+          //   ),
+          // },
         ],
       },
       {
@@ -216,18 +280,50 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>绩效查看</div>
+            <div>
+              <CheckPerformance />
+            </div>
+          </Suspense>
+        ),
+      },
+      {
+        path: 'search-info',
+        auth: [1, 9, 8, 7, 'user1'],
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <div>
+              <SearchInfo></SearchInfo>
+            </div>
+          </Suspense>
+        ),
+      },
+      {
+        path: 'search-info',
+        auth: [1, 9, 8, 7, 'user1'],
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <div>
+              <SearchInfo></SearchInfo>
+            </div>
           </Suspense>
         ),
       },
       {
         path: 'system-setting',
         auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>系统设置</div>
-          </Suspense>
-        ),
+        children: [
+          {
+            path: 'logout',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div>
+                  <LogOut></LogOut>
+                </div>
+              </Suspense>
+            ),
+          },
+        ],
       },
     ],
   },
@@ -237,7 +333,11 @@ const routeConfig: routerConfigType[] = [
   },
   {
     path: 'login',
-    element: <>LOGIN</>,
+    element: (
+      <>
+        <Login></Login>
+      </>
+    ),
   },
 ];
 
