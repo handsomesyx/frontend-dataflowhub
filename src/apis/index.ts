@@ -52,6 +52,7 @@ export const QUERY_AUDITS = gql`
         updater_id
         user_info {
           real_name
+          id
         }
       }
     }
@@ -85,6 +86,7 @@ export const QUERY_OK = gql`
         updater_id
         user_info {
           real_name
+          id
         }
       }
     }
@@ -118,6 +120,7 @@ export const QUERY_REFUSE = gql`
         updater_id
         user_info {
           real_name
+          id
         }
       }
     }

@@ -206,6 +206,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
+    console.log('getUserName', getUserName());
     setRole(4);
     console.log('请求完成');
     if (data) {
