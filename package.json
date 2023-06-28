@@ -23,7 +23,6 @@
     "exceljs": "^4.3.0",
     "file-saver": "^2.0.5",
     "graphql": "^16.5.0",
-    "luxon": "^3.3.0",
     "pinyin": "^3.0.0-alpha.5",
     "luxon": "^3.3.0",
     "react": "^18.0.0",
