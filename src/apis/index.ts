@@ -27,7 +27,7 @@ export const GetDemoDashData = gql`
 //  获取待审
 export const QUERY_AUDITS = gql`
   query {
-    findManyAudit(select: { status: 0 }, skip: 0, take: 1000) {
+    findManyAudit(select: { status: 0 }, skip: 0, take: 10000) {
       count
       data {
         action_type
@@ -37,6 +37,7 @@ export const QUERY_AUDITS = gql`
         is_delete
         officer_info {
           real_name
+          username
         }
         priority
         request_data
@@ -52,6 +53,8 @@ export const QUERY_AUDITS = gql`
         updater_id
         user_info {
           real_name
+          id
+          username
         }
       }
     }
@@ -70,6 +73,7 @@ export const QUERY_OK = gql`
         is_delete
         officer_info {
           real_name
+          username
         }
         priority
         request_data
@@ -85,6 +89,8 @@ export const QUERY_OK = gql`
         updater_id
         user_info {
           real_name
+          id
+          username
         }
       }
     }
@@ -102,6 +108,7 @@ export const QUERY_REFUSE = gql`
         id
         is_delete
         officer_info {
+          username
           real_name
         }
         priority
@@ -118,6 +125,8 @@ export const QUERY_REFUSE = gql`
         updater_id
         user_info {
           real_name
+          id
+          username
         }
       }
     }
@@ -135,7 +144,6 @@ export const GET_AUDIT_CHANGE = gql`
     getChangeRecord(rightnow_auditrecords_id: $rightnow_auditrecords_id) {
       audit_records_id
       change_item
-      change_time
       content_after
       content_before
       create_time
