@@ -13,7 +13,7 @@ import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import ExcelJS from 'exceljs';
 // 如果是时间戳格式的DateTime，解锁luxon
-// import { DateTime } from 'luxon';
+import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 
 import { getUserType } from '../../store/SaveToken';
@@ -345,15 +345,13 @@ const CheckPerformance: React.FC = () => {
 
         // 这里的后端代码没有统一，有时间戳格式的，有年月日格式的，非常吊诡
         // 这是默认直接输出
-        worksheet.getCell(`H${index + 2}`).value = item.begin_time;
-        worksheet.getCell(`I${index + 2}`).value = item.end_time;
+        // worksheet.getCell(`H${index + 2}`).value = item.begin_time;
+        // worksheet.getCell(`I${index + 2}`).value = item.end_time;
 
         // 这是时间戳模式的，不要忘记解锁import luxon
         // luxon这小玩意确实有用
-        // worksheet.getCell(`H${index + 2}`).value =
-        // DateTime.fromMillis(item.begin_time).toFormat('yyyy-MM-dd HH:mm:ss');
-        // worksheet.getCell(`I${index + 2}`).value =
-        // DateTime.fromMillis(item.end_time).toFormat('yyyy-MM-dd HH:mm:ss');
+        worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(item.begin_time).toFormat('yyyy-MM-dd HH:mm:ss');
+        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(item.end_time).toFormat('yyyy-MM-dd HH:mm:ss');
         
         // 这是年月日格式的
         // worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
