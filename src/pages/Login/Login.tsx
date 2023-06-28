@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 import { Button, Form, Input, message, Spin } from 'antd';
 
 import { login } from '@/apis';
-import { onLogin, saveUserName, saveUserType } from '@/store/SaveToken';
+import { onLogin, saveUserId, saveUserName, saveUserType } from '@/store/SaveToken';
 
 import toptitle from '../../assets/login/denglu_biaoti@2x.png';
 import topImg from '../../assets/login/denglu_logo@2x.png';
@@ -33,6 +33,7 @@ const Login = () => {
             refreshToken: data?.login?.refreshToken,
           });
 
+          saveUserId(data.login?.user?.id);
           // 存储用户信息
           saveUserType(data.login?.user?.role);
           saveUserName(data.login?.user?.username);

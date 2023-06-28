@@ -893,6 +893,7 @@ export const login = gql`
       user {
         role
         username
+        id
       }
     }
   }

@@ -42,6 +42,16 @@ export const getUserName = () => {
   return window.localStorage.getItem('userName') || '';
 };
 
+// 获取当前用户的id
+export const getUserId = () => {
+  return window.localStorage.getItem('userId') || '';
+};
+
+// 存储用户的id
+export const saveUserId = (user: number) => {
+  window.localStorage.setItem('userId', user?.toString());
+};
+
 // 存储用户的名称
 export const saveUserName = (user: any) => {
   window.localStorage.setItem('userName', user || '');
