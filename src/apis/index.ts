@@ -1003,3 +1003,93 @@ export const GetArea = gql`
     }
   }
 `;
+// 获取所有用户登录日志
+export const GetAllUserLoginLogs = gql`
+  query getAllUserLoginLogs($data: SearchUserLogInput, $skip: Int, $take: Int) {
+    getAllUserLoginLogs(data: $data, skip: $skip, take: $take) {
+      data {
+        id
+        username
+        operation
+        status
+        ip
+        create_time
+        creator_id
+        user_agent
+      }
+      total
+    }
+  }
+`;
+
+// 获取所有用户操作日志
+export const GetAllUserOperateLogs = gql`
+  query getAllUserOperateLogs($data: SearchUserLogOperateInput, $skip: Int, $take: Int) {
+    getAllUserOperateLogs(data: $data, skip: $skip, take: $take) {
+      data {
+        id
+        operation
+        request_query
+        request_type
+        request_params
+        request_time
+        user_agent
+        ip
+        status
+        creator_name
+        create_time
+        creator_id
+        update_time
+        updater_id
+        is_delete
+      }
+      total
+    }
+  }
+`;
+// 获取当前用户的信息
+export const GetCurrentUser = gql`
+  query me {
+    me {
+      id
+    }
+  }
+`;
+
+// 获取所有已处理的事件
+export const GetAllHandledEvents = gql`
+  query getAllHandledEvents($data: SearchMessageInput!) {
+    getAllHandledEvents(data: $data) {
+      create_time
+      creator_id
+      event_type
+      id
+      is_delete
+      link
+      receiver_id
+      sender_id
+      status
+      update_time
+      updater_id
+    }
+  }
+`;
+
+// 获取所有未处理的事件
+export const GetAllUnhandledEvents = gql`
+  query getAllUnhandledEvents($data: SearchMessageInput!) {
+    getAllUnhandledEvents(data: $data) {
+      create_time
+      creator_id
+      event_type
+      id
+      is_delete
+      link
+      receiver_id
+      sender_id
+      status
+      update_time
+      updater_id
+    }
+  }
+`;
