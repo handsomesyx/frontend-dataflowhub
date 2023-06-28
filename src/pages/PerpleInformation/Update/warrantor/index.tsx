@@ -515,16 +515,25 @@ const Warrantor = ({
         onCancel={() => setUrgencyVisible(false)}
       >
         <Form form={porform}>
-          <Form.Item name="priority" label="紧急程度：">
+          <Form.Item
+            name="priority"
+            label="紧急程度："
+            rules={[
+              {
+                required: true,
+                message: '请选择紧急程度！',
+              },
+            ]}
+          >
             <Select placeholder="请选择紧急程度">
               <Option key={1} value={1}>
-                红色
+                紧急
               </Option>
               <Option key={2} value={2}>
-                黄色
+                加急
               </Option>
               <Option key={3} value={3}>
-                蓝色
+                一般
               </Option>
             </Select>
           </Form.Item>
