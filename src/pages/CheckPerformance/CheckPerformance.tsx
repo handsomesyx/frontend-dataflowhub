@@ -185,8 +185,7 @@ const CheckPerformance: React.FC = () => {
       // 查询成功
       const tempMenu = menuState;
       if (tempMenu === 0) {
-        // console.log('no menu selected');
-        alert('请选择网格员或民警');
+        console.log('menu');
       } else {
         setIsDefault(false);
         fetchData({
