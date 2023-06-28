@@ -1,7 +1,7 @@
 import { UploadOutlined } from '@ant-design/icons';
 import { useMutation } from '@apollo/client';
 import type { UploadFile, UploadProps } from 'antd';
-import { Button, Col, Form, Input, message, Modal, Row, Upload } from 'antd';
+import { Button, Col, Form, message, Modal, Row, Select, Upload } from 'antd';
 import { useState } from 'react';
 // import { Form } from 'react-router-dom';
 import { read, utils } from 'xlsx';
@@ -27,6 +27,8 @@ export type familyDataType = {
   phone: string;
   householdId: number;
 };
+
+const { Option } = Select;
 
 const ManyDataUpload = ({
   visible,
@@ -326,11 +328,28 @@ const ManyDataUpload = ({
                             {...familyProps}>
                             <Button icon={<UploadOutlined />}>人员家庭成员信息上传</Button>
                         </Upload> */}
-            <Form form={form}>
-              <Form.Item name="priority" label="紧急程度：">
-                <Input style={{ width: '15vw' }} placeholder="请输入紧急程度,如：1-3" />
-              </Form.Item>
-            </Form>
+            <Form.Item
+              name="priority"
+              label="紧急程度："
+              rules={[
+                {
+                  required: true,
+                  message: '请选择紧急程度！',
+                },
+              ]}
+            >
+              <Select placeholder="请选择紧急程度" style={{ width: '15vw' }}>
+                <Option key={1} value={1}>
+                  紧急
+                </Option>
+                <Option key={2} value={2}>
+                  加急
+                </Option>
+                <Option key={3} value={3}>
+                  一般
+                </Option>
+              </Select>
+            </Form.Item>
           </Col>
         </Row>
       </Modal>
