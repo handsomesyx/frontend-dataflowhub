@@ -1,11 +1,28 @@
-import './index.css';
-
 import { Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
 import React from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
+
+// import AdministrativeRegion from "../pages/BasicInformation/AdministrativeRegion";
+// const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
+// const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
+const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
+const PersonManage = React.lazy(() => import('@/pages/UserManage'));
+const Login = React.lazy(() => import('@/pages/Login/Login'));
+import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
+const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
+const Visualization = React.lazy(() => import('@/pages/visualization'));
+import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
+// import Community from "@/pages/BasicInformation/Community";
+import { LoginLog } from '@/pages/LoginLog';
+import { OperateLog } from '@/pages/OperateLog';
+// const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
+import { userType } from '@/store';
+import { getUserType } from '@/store/SaveToken';
+
+import LogOut from './LogOut';
 // import AdministrativeRegion from "../pages/BasicInformation/AdministrativeRegion";
 const AdministrativeRegion = React.lazy(
   () => import('@/pages/BasicInformation/AdministrativeRegion'),
@@ -17,20 +34,11 @@ const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'))
 // const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
-const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
-const PersonManage = React.lazy(() => import('@/pages/UserManage'));
 const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
-const Login = React.lazy(() => import('@/pages/Login/Login'));
-import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
+import './index.css';
 
-const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
-const Visualization = React.lazy(() => import('@/pages/visualization'));
-import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
-import { userType } from '@/store';
-import { getUserType } from '@/store/SaveToken';
-
-import LogOut from './LogOut';
 import type { routerConfigType } from './routerConfigType';
+
 // ———————— 说明 （1、2级路由正常）————————————
 // 需要全部白色背景的页面在suspend里面加上div即可  不需要全部白色背景的加类名NotContentFFF
 // 需要写哪个页面，就在哪个页面对应的路由下，将文字替换为组件名称 使用懒加载形式引入
@@ -266,14 +274,48 @@ const routeConfig: routerConfigType[] = [
           </Suspense>
         ),
       },
+      // 日志记录
       {
-        path: 'log-record',
+        path: 'log-record/*',
         auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>日志记录</div>
-          </Suspense>
-        ),
+        children: [
+          {
+            path: '',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: <Navigate to="log-record" replace></Navigate>,
+          },
+          {
+            path: 'login-log',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div>
+                  <LoginLog />
+                </div>
+              </Suspense>
+            ),
+          },
+          {
+            path: 'operate-log',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div>
+                  <OperateLog />
+                </div>
+              </Suspense>
+            ),
+          },
+        ],
+        // element: (
+        //   <Suspense
+        //     fallback={<Spin className="SetLazySpinCent" size="large" />}
+        //   >
+        //     <div>
+        //       <LogRecord />
+        //     </div>
+        //   </Suspense>
+        // ),
       },
       {
         path: 'check-performance',
