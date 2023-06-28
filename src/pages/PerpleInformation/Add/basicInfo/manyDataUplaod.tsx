@@ -85,11 +85,12 @@ const ManyDataUpload = ({
   //     accept: '.xlsx,.xls',
   //     maxCount: 1,
   // };
-
   const handleInfoUpload = (file: Blob) => {
     const reader = new FileReader();
 
     reader.onload = (e) => {
+      console.log('1');
+
       const fileData = e.target?.result;
       if (fileData instanceof ArrayBuffer) {
         const data = new Uint8Array(fileData);
@@ -98,142 +99,128 @@ const ManyDataUpload = ({
         const jsonData: string[][] = utils.sheet_to_json(worksheet, { header: 1 });
 
         // 提取表头
-        const headerRow: string[] = jsonData[0];
-        if (
-          headerRow[1] === '本人姓名' &&
-          headerRow[2] === '身份证号（护照）' &&
-          headerRow[3] === '户籍所在地' &&
-          headerRow[4] === '姓名拼音' &&
-          headerRow[5] === '联系方式' &&
-          headerRow[6] === '现住址' &&
-          headerRow[7] === '曾用名' &&
-          headerRow[8] === '绰号' &&
-          headerRow[9] === '何时来本地居住'
-        ) {
-          // 提取数据（去掉表头）
-          const dataRows = jsonData.slice(1);
-          console.log('数据:', dataRows);
-          jsonData.shift();
-          const porData: propertyInfo[] = [];
-          const baiscData: basicInfo[] = [];
-          const disData: disabilityInfo[] = [];
-          const healthData: healthInfo[] = [];
-          const politicalData: politicalInfo[] = [];
-          const ecoData: economicInfo[] = [];
-          // 提取数据
-          jsonData.map((row: string[]) => {
-            let gender;
-            let ss;
-            if (row[7] === '男') {
-              gender = false;
-            } else {
-              gender = true;
-            }
-            if (row[57] === '是') {
-              ss = 1;
-            } else {
-              ss = 0;
-            }
-            baiscData.push({
-              name: row[2],
-              idCard: row[10].toString(),
-              residence: row[12],
-              pinyin: row[6],
-              gender: gender,
-              height: parseFloat(row[8]),
-              age: Number(row[9]),
-              certificateType: parseInt(row[11]),
-              phone: row[11].toString(),
-              currentAddress: row[13],
-              formerName: row[4],
-              nickname: row[3],
-              dateOfResidence: row[5],
-            });
-            healthData.push({
-              childNumber: parseInt(row[14]),
-              specialGroup: row[15],
-              healthInsurance: row[24],
-              pensionInsurance: row[25],
-              vaccinationStatus: row[27],
-              proofContraindication: row[28],
-              marriageStatus: row[26],
-              supervisorName: row[20],
-              otherConditions: row[29],
-              // creatorId:row[1],
-            });
-            politicalData.push({
-              workUnit: row[30],
-              position: row[31],
-              politicalStatus: row[32],
-              party: row[33],
-              religion: row[34],
-              nationality: row[35],
-              education: row[36],
-              militaryService: row[37],
-              school: row[38],
-            });
-            ecoData.push({
-              // plantingBreeding: row[55],
-              plantType: row[39],
-              plantQuantity: parseInt(row[40]),
-              plantArea: parseFloat(row[41]),
-              breedingType: row[42],
-              breedingQuantity: parseInt(row[43]),
-              bussinessInfo: row[44],
-              businessLocation: row[45],
-              licenseNum: row[46],
-              fireEquipmentType: row[47],
-              fireEquipmentQuantity: parseInt(row[48]),
-              surStatus: row[49],
-              surQuantity: parseInt(row[50]),
-            });
-            porData.push({
-              houseInfo: row[51],
-              houseOwner: row[52],
-              houseArea: parseFloat(row[53]),
-              houseCondition: row[55],
-              hobbies: row[56],
-              carModal: row[58],
-              carPlate: row[60],
-              carOwner: row[61],
-              carColor: row[59],
-              houseType: row[54],
-              smokingStatus: ss,
-              // VolunteerStatus: row[67],
-              // SocialWorker: row[67],
-              drivingLicenseType: row[62],
-            });
-            if (row[15] === '残疾人') {
-              disData.push({
-                disabilityId: row[17],
-                disabilitySubsidy: parseFloat(row[21]),
-                servereDisabilitySub: parseFloat(row[22]),
-                disabilityType: row[18],
-                disabilityLevel: Number(row[23]),
-                // disabilityId:row[68],
-              });
-            }
-
-            // householdId: parseInt(row[1]),
-            setbaiscData(baiscData);
-            sethealthData(healthData);
-            setpoliticalData(politicalData);
-            setecoData(ecoData);
-            setporData(porData);
-            setdisData(disData);
+        // const headerRow: string[] = jsonData[0];
+        // 提取数据（去掉表头）
+        // const dataRows = jsonData.slice(2);
+        // console.log('数据:', dataRows);
+        jsonData.shift();
+        const porData: propertyInfo[] = [];
+        const baiscData: basicInfo[] = [];
+        const disData: disabilityInfo[] = [];
+        const healthData: healthInfo[] = [];
+        const politicalData: politicalInfo[] = [];
+        const ecoData: economicInfo[] = [];
+        // 提取数据
+        jsonData.map((row: string[]) => {
+          let gender;
+          let ss;
+          if (row[7] === '男') {
+            gender = false;
+          } else {
+            gender = true;
+          }
+          if (row[57] === '是') {
+            ss = 1;
+          } else {
+            ss = 0;
+          }
+          baiscData.push({
+            name: row[1],
+            idCard: row[9]?.toString(),
+            residence: row[11],
+            pinyin: row[5],
+            gender: gender,
+            height: parseFloat(row[7]),
+            age: Number(row[8]),
+            certificateType: parseInt(row[10]),
+            phone: row[10]?.toString(),
+            currentAddress: row[12],
+            formerName: row[3],
+            nickname: row[2],
+            dateOfResidence: row[4],
           });
-          // 在这里对提取的数据进行处理
-          // console.log(extractedData);
-          // setManyFamilyCreate(extractedData);
-          setOkDisable(false);
-        } else {
-          message.error('请检查文件中是否按规定格式填写');
-          setOkDisable(true);
-        }
+          healthData.push({
+            childNumber: parseInt(row[13]),
+            specialGroup: row[14],
+            healthInsurance: row[23],
+            pensionInsurance: row[24],
+            vaccinationStatus: row[26],
+            proofContraindication: row[27],
+            marriageStatus: row[25],
+            supervisorName: row[19],
+            otherConditions: row[28],
+            // creatorId:row[1],
+          });
+          politicalData.push({
+            workUnit: row[29],
+            position: row[30],
+            politicalStatus: row[31],
+            party: row[32],
+            religion: row[33],
+            nationality: row[34],
+            education: row[35],
+            militaryService: row[36],
+            school: row[37],
+          });
+          ecoData.push({
+            // plantingBreeding: row[55],
+            plantType: row[38],
+            plantQuantity: parseInt(row[39]),
+            plantArea: parseFloat(row[40]),
+            breedingType: row[41],
+            breedingQuantity: parseInt(row[42]),
+            bussinessInfo: row[43],
+            businessLocation: row[44],
+            licenseNum: row[45],
+            fireEquipmentType: row[46],
+            fireEquipmentQuantity: parseInt(row[47]),
+            surStatus: row[48],
+            surQuantity: parseInt(row[49]),
+          });
+          porData.push({
+            houseInfo: row[50],
+            houseOwner: row[51],
+            houseArea: parseFloat(row[52]),
+            houseCondition: row[54],
+            hobbies: row[55],
+            carModal: row[57],
+            carPlate: row[59],
+            carOwner: row[60],
+            carColor: row[58],
+            houseType: row[53],
+            smokingStatus: ss,
+            // VolunteerStatus: row[66],
+            // SocialWorker: row[66],
+            drivingLicenseType: row[61],
+          });
+          if (row[15] === '残疾人') {
+            disData.push({
+              disabilityId: row[16],
+              disabilitySubsidy: parseFloat(row[20]),
+              servereDisabilitySub: parseFloat(row[21]),
+              disabilityType: row[17],
+              disabilityLevel: Number(row[22]),
+              // disabilityId:row[68],
+            });
+          }
+
+          // householdId: parseInt(row[1]),
+          setbaiscData(baiscData);
+          sethealthData(healthData);
+          setpoliticalData(politicalData);
+          setecoData(ecoData);
+          setporData(porData);
+          setdisData(disData);
+        });
+        // 在这里对提取的数据进行处理
+        // console.log(extractedData);
+        // setManyFamilyCreate(extractedData);
+        setOkDisable(false);
       }
 
       reader.readAsArrayBuffer(file);
     };
+    reader.readAsArrayBuffer(file);
   };
 
   // const handleFamilyUpload = (file: Blob) => {

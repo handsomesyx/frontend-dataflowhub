@@ -1,6 +1,6 @@
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { message, Modal, Upload } from 'antd';
-import type { RcFile, UploadFile } from 'antd/es/upload';
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload';
 import { useEffect, useState } from 'react';
 
 type props = {
@@ -15,12 +15,22 @@ const ImageUpload = ({ imgSrc, setImgSrc }: props) => {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState<string>();
   const [previewTitle, setPreviewTitle] = useState('');
+  const [visible, setVisible] = useState<boolean>(false);
 
   useEffect(() => {
-    if (imgSrc) {
+    if (imgSrc && !visible) {
       setPreviewImage(imgSrc);
+      const file: UploadFile[] = [
+        {
+          uid: '-1',
+          name: 'updateData.png',
+          status: 'done',
+          url: imgSrc,
+        },
+      ];
+      setFileList(file);
     }
-  }, [imgSrc]);
+  }, [imgSrc, visible]);
 
   const getBase64 = (img: RcFile, callback: (url: string) => void) => {
     const reader = new FileReader();
@@ -32,10 +42,12 @@ const ImageUpload = ({ imgSrc, setImgSrc }: props) => {
     const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
     if (!isJpgOrPng) {
       message.error('You can only upload JPG/PNG file!');
+      return false;
     }
     const isLt2M = file.size / 1024 / 1024 < 2;
     if (!isLt2M) {
       message.error('Image must smaller than 2MB!');
+      return false;
     }
     setFileList([...fileList, file]);
     handleUpload(file);
@@ -49,6 +61,7 @@ const ImageUpload = ({ imgSrc, setImgSrc }: props) => {
     getBase64(file as RcFile, (url) => {
       setLoading(false);
       setImageUrl(url);
+      setVisible(true);
       setImgSrc(url);
     });
   };
@@ -75,8 +88,10 @@ const ImageUpload = ({ imgSrc, setImgSrc }: props) => {
     const newFileList = fileList.slice();
     newFileList.splice(index, 1);
     setFileList(newFileList);
-    setImgSrc('');
   };
+
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
 
   return (
     <>
@@ -85,11 +100,12 @@ const ImageUpload = ({ imgSrc, setImgSrc }: props) => {
         listType="picture-card"
         className="avatar-uploader"
         // showUploadList={false}
+        fileList={fileList}
         beforeUpload={beforeUpload}
         onPreview={handlePreview}
         onRemove={handleRemove}
         accept=".png,.jpg"
-        // onChange={handleChange}
+        onChange={handleChange}
       >
         {fileList.length >= 1 ? null : uploadButton}
       </Upload>
