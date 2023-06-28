@@ -23,7 +23,7 @@ module.exports = {
     'at-rule-no-unknown': [
       true,
       {
-        ignoreAtRules: ['/^My/', '/^Custom/'],
+        ignoreAtRules: ['/^My/', '/^Custom/', '/@*/'],
       },
     ],
   },

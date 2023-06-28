@@ -34,7 +34,8 @@ const client = new ApolloClient({
 
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [role, setRole] = useState(7);//  1超管2警察4网格员7无权限
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [, setRole] = useState(7); //  1超管2警察4网格员7无权限
   const [isModal2Open, setIsModal2Open] = useState(false);
   const [datashow, setDataShow] = useState<Audi[]>([]);
   const [suggestion, setSuggestion] = useState('未设置处理意见');
@@ -59,24 +60,41 @@ const App: React.FC = () => {
 
   useEffect(() => {
     console.log('getUserType', getUserType());
-    let tmp=7;
-    if (getUserType()==='superAdmin') {setRole(1);tmp=1;}
-    if (getUserType()==='filmPolice') {setRole(2);tmp=2;}
-    if (getUserType()==='gridMember') {setRole(4);tmp=4;}
+    let tmp = 7;
+    if (getUserType() === 'superAdmin') {
+      setRole(1);
+      tmp = 1;
+    }
+    if (getUserType() === 'filmPolice') {
+      setRole(2);
+      tmp = 2;
+    }
+    if (getUserType() === 'gridMember') {
+      setRole(4);
+      tmp = 4;
+    }
     console.log('身份验证完成');
     console.log(re);
     console.log(ok);
     if (re && ok) {
       console.log(re.findManyAudit.data);
       console.log(ok.findManyAudit.data);
-      const username=getUserName();
+      const username = getUserName();
       console.log(username);
       const newArray = re.findManyAudit.data.concat(ok.findManyAudit.data);
       const filtered = newArray.filter((item: any) => {
-        if (item.is_delete === false && tmp === 2 && item?.officer_info?.username === username) {
+        if (
+          item.is_delete === false &&
+          tmp === 2 &&
+          item?.officer_info?.username === username
+        ) {
           return true;
         }
-        if (item.is_delete === false && tmp === 4 && item?.user_info?.username === username) {
+        if (
+          item.is_delete === false &&
+          tmp === 4 &&
+          item?.user_info?.username === username
+        ) {
           return true;
         }
         return false;
@@ -145,7 +163,7 @@ const App: React.FC = () => {
       title: '事件类型',
       dataIndex: 'action_type',
       key: 'action_type',
-      render: (_, text) => {
+      render: (_, text: any) => {
         let content = '编辑';
         switch (text?.action_type) {
           case '1':
@@ -201,9 +219,11 @@ const App: React.FC = () => {
       title: '审核状态',
       key: 'status',
       dataIndex: 'status',
-      render: (_, record: any) => (<a style={{ color: record.status === 1 ? 'green' : 'red' }}>
-      {record.status === 1 ? '审核通过' : '审核未通过'}
-    </a>),
+      render: (_, record: any) => (
+        <a style={{ color: record.status === 1 ? 'green' : 'red' }}>
+          {record.status === 1 ? '审核通过' : '审核未通过'}
+        </a>
+      ),
     },
     {
       title: '操作',
@@ -222,7 +242,6 @@ const App: React.FC = () => {
             <a>删除</a>
           </Popconfirm>
 
-          
           <a onClick={() => showModal(record.review_comments)}>
             {record.status === 1 ? '' : '查看处理意见'}
           </a>
