@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { useQuery } from '@apollo/client';
 import { Form } from 'antd';
-import { type ReactElement, useState } from 'react';
+import { type ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import { getPeopleData } from '@/apis';
@@ -36,7 +36,6 @@ type ItemConfigType = {
 
 function InformationUpdate() {
   const params = useParams();
-  console.log(params);
 
   const [basicForm] = Form.useForm();
   const [healthForm] = Form.useForm();
@@ -51,9 +50,16 @@ function InformationUpdate() {
     fetchPolicy: 'network-only',
     // notifyOnNetworkStatusChange: true,
     variables: {
+      isDelete: false,
       personal_id: parseInt(params?.id ?? ''),
     },
   });
+
+  useEffect(() => {
+    if (data) {
+      setImgSrc(data?.getPeopleData?.peopleData.head_url);
+    }
+  }, [data, data?.getPeopleData?.peopleData.head_url, imgSrc]);
 
   // function formatLocalDate(aa: any) {
   //     if (aa) {

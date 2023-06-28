@@ -588,6 +588,7 @@ export const getPeopleData = gql`
           house_type
           smoking_status
           volunteer_status
+          social_worker
         }
         reportInfoArr {
           classification_basis

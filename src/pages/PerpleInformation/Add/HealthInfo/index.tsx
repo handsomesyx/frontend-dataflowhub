@@ -36,7 +36,8 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
       });
     }
     if (disData) {
-      form.setFieldsValue({
+      setOpenDis(true);
+      disform.setFieldsValue({
         disabilityId: disData.disability_id,
         disabilityType: disData.disability_type,
         disabilitySubsidy: disData.disability_subsidy,
@@ -44,7 +45,7 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
         servereDisabilitySub: disData.severe_disability_subsidy,
       });
     }
-  });
+  }, [healthData, disData, form, disform]);
 
   const openDisability = (e: any) => {
     if (e === '残疾人') {

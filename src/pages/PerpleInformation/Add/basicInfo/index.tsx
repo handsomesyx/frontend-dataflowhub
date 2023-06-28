@@ -486,7 +486,17 @@ const BasicInfo = ({
       >
         <Form form={form}>
           <Form.Item name="priority" label="紧急程度：">
-            <Input placeholder="请输入紧急程度,如：1-3" />
+            <Select placeholder="请选择紧急程度">
+              <Option key={1} value={1}>
+                红色
+              </Option>
+              <Option key={2} value={2}>
+                黄色
+              </Option>
+              <Option key={3} value={3}>
+                蓝色
+              </Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
