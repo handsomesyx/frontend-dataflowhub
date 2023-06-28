@@ -198,6 +198,14 @@ const App: React.FC = () => {
       render: (_, emergency: any) => <div>{whatcolor(emergency.priority)}</div>,
     },
     {
+      title: '审核状态',
+      key: 'status',
+      dataIndex: 'status',
+      render: (_, record: any) => (<a style={{ color: record.status === 1 ? 'green' : 'red' }}>
+      {record.status === 1 ? '审核通过' : '审核未通过'}
+    </a>),
+    },
+    {
       title: '操作',
       key: 'action',
       render: (_, record: any) => (
@@ -214,9 +222,7 @@ const App: React.FC = () => {
             <a>删除</a>
           </Popconfirm>
 
-          <a style={{ color: record.status === 1 ? 'green' : 'red' }}>
-            {record.status === 1 ? '审核通过' : '审核未通过'}
-          </a>
+          
           <a onClick={() => showModal(record.review_comments)}>
             {record.status === 1 ? '' : '查看处理意见'}
           </a>

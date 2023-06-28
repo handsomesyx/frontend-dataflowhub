@@ -466,11 +466,7 @@ const App: React.FC = () => {
           </Button>,
           <Button key="ok1" type="primary" onClick={handlePass}>
             同意
-          </Button></>:<><Button
-            key="ok2"
-            type="primary"
-            onClick={handleCancel}
-          >确认</Button></>,
+          </Button></>:<></>,
         ]}
         onCancel={handleCancel}
       >
