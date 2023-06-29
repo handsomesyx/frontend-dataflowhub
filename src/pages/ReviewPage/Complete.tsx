@@ -79,6 +79,9 @@ const App: React.FC = () => {
         if (item.is_delete === false && tmp === 4 && item?.user_info?.username === username) {
           return true;
         }
+        if (item.is_delete === false && tmp === 1 ) {
+          return true;
+        }
         return false;
       });
       message.info('列表加载完成');
