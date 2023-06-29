@@ -250,6 +250,9 @@ const App: React.FC = () => {
         ) {
           return true;
         }
+        if (item.is_delete === false && tmp === 1 ) {
+          return true;
+        }
         return false;
       });
       message.info('列表加载完成');
