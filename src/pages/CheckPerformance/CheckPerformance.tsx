@@ -7,7 +7,7 @@ import 'dayjs/locale/zh-cn';
 
 import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
-import type { MenuProps, TablePaginationConfig } from 'antd';
+import type { MenuProps, TablePaginationConfig, } from 'antd';
 import { Pagination } from 'antd';
 import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
@@ -79,9 +79,15 @@ const GET_USER_LOG_OPERATIONS = gql`
 
 // 点击menu option后，默认出现的数据
 const GET_DEFAULT_TABLEDATA = gql`
-  query GetUserLogOperations($role_id: Int!, $skip: Int, $take: Int) {
+query GetUserLogOperations(
+    $role_id: Int!
+    $skip: Int
+    $take: Int
+  ) {
     queryUserLogOperationList(
-      getOperationInput: { role_id: $role_id }
+      getOperationInput: {
+        role_id: $role_id
+      }
       skip: $skip
       take: $take
     ) {
@@ -112,6 +118,7 @@ const GET_AREAS_QUERY = gql`
     }
   }
 `;
+
 
 const CheckPerformance: React.FC = () => {
   const [current, setCurrent] = useState('');
@@ -156,12 +163,14 @@ const CheckPerformance: React.FC = () => {
   const [isDefault, setIsDefault] = useState(true);
 
   // 获取准确的area_id
-  const areaID = grid !== 0 ? grid : town !== 0 ? town : city;
-
+  const areaID = grid !== 0
+  ? grid
+    : (town !== 0 ? town : city);
+  
   // 设置分页，获取当前的页码
-  const [pagination, setPagination] = useState<any>({
-    current: 1, // 默认为第一页
-    pageSize: 1, // 测试用的页大小，按需修改
+  const [pagination, setPagination] = useState<TablePaginationConfig>({
+    current: 1,   // 默认为第一页
+    pageSize: 1,  // 测试用的页大小，按需修改
   });
 
   // 处理分页，参考了刘康的分页方法，但最后自己修改了绝大部分
@@ -179,16 +188,16 @@ const CheckPerformance: React.FC = () => {
 
   // Datetime处理函数
   const handleRangeChange = (values: any) => {
-    if (values) {
-      const [start, end] = values;
-      const beginTimeString = start ? start.format('YYYY-MM-DDTHH:mm:ssZ') : undefined;
-      const endTimeString = end ? end.format('YYYY-MM-DDTHH:mm:ssZ') : undefined;
-      setBeginTime(beginTimeString);
-      setEndTime(endTimeString);
-    } else {
-      // Handle the case when values is null
-      setBeginTime(undefined);
-      setEndTime(undefined);
+  if (values) {
+    const [start, end] = values;
+    const beginTimeString = start ? start.format('YYYY-MM-DDTHH:mm:ssZ') : undefined;
+    const endTimeString = end ? end.format('YYYY-MM-DDTHH:mm:ssZ') : undefined;
+    setBeginTime(beginTimeString);
+    setEndTime(endTimeString);
+  } else {
+    // Handle the case when values is null
+    setBeginTime(undefined);
+    setEndTime(undefined);
     }
   };
 
@@ -236,62 +245,58 @@ const CheckPerformance: React.FC = () => {
 
   // 这里的Select级联使用了switch的思想，使用useState得到的city town 进行选择，调取相应的数组
   const getTownOptions = (city: number) => {
-    // Filter level2Areas based on parent_id matching with city
+  // Filter level2Areas based on parent_id matching with city
     const townOptions = level2Areas.filter(
-      (area: { parent_id: number }) => area.parent_id === city,
-    );
-    // Map townOptions to options format with label and value properties
-    return townOptions.map((town: { name: any; id: any }) => ({
-      label: town.name,
-      value: town.id,
-    }));
+      (area: { parent_id: number; }) => area.parent_id === city);
+  // Map townOptions to options format with label and value properties
+  return townOptions.map((town: { name: any; id: any; }) => ({ label: town.name, value: town.id }));
   };
+  
 
   const getGridOptions = (town: number) => {
-    // Filter level3Areas based on parent_id matching with town
+  // Filter level3Areas based on parent_id matching with town
     const gridOptions = level3Areas.filter(
-      (area: { parent_id: number }) => area.parent_id === town,
-    );
+      (area: { parent_id: number; }) => area.parent_id === town); 
     // Map gridOptions to options format with label and value properties
-    return gridOptions.map((grid: { name: any; id: any }) => ({
-      label: grid.name,
-      value: grid.id,
-    }));
+    return gridOptions.map(
+      (grid: { name: any; id: any; }) => ({ label: grid.name, value: grid.id })); 
   };
+  
 
   // 调用GQL语句，向后端查询数据
-  const [fetchData, { error, data: SearchedData }] = useLazyQuery(
+  const [fetchData, { error, data: SearchedData, }] = useLazyQuery(
     GET_USER_LOG_OPERATIONS,
   );
 
   const { data: SearchedOrigin } = useQuery(GET_DEFAULT_TABLEDATA, {
-    variables: {
-      role_id: currentAuth,
-      skip: 0,
-      take: 100000,
-    },
+  variables: {
+    role_id: currentAuth,
+    skip: 0,
+    take: 100000,
+    }
   });
 
   // 利用level 将area分为三类 市 镇 社区
   const { data: AreaData } = useQuery(GET_AREAS_QUERY);
-  const level1Areas: any = [];
-  const level2Areas: any = [];
-  const level3Areas: any = [];
+  const level1Areas:(any) = [];
+  const level2Areas:(any) = [];
+  const level3Areas:(any) = [];
 
   if (AreaData && AreaData.getArea) {
-    AreaData.getArea.forEach((area: { level: number }) => {
-      if (area.level === 1) {
-        level1Areas.push(area);
-      } else if (area.level === 2) {
-        level2Areas.push(area);
-      } else if (area.level === 3) {
-        level3Areas.push(area);
-      }
-    });
+  AreaData.getArea.forEach((area: { level: number; }) => {
+    if (area.level === 1) {
+      level1Areas.push(area);
+    } else if (area.level === 2) {
+      level2Areas.push(area);
+    } else if (area.level === 3) {
+      level3Areas.push(area);
+    }
+  });     
   }
+  
 
   // 抽取接口得到的data，这是我们需要填入Table中的数据
-  const DefaultData =
+  const DefaultData = 
     SearchedOrigin &&
     SearchedOrigin.queryUserLogOperationList &&
     SearchedOrigin.queryUserLogOperationList.data;
@@ -300,38 +305,39 @@ const CheckPerformance: React.FC = () => {
     SearchedData &&
     SearchedData.queryUserLogOperationList &&
     SearchedData.queryUserLogOperationList.data;
-
-  const DefaultDataLength =
+  
+  const DefaultDataLength = 
     SearchedOrigin &&
     SearchedOrigin.queryUserLogOperationList &&
     SearchedOrigin.queryUserLogOperationList.total;
-
+  
   const TableDataLength =
     SearchedData &&
     SearchedData.queryUserLogOperationList &&
     SearchedData.queryUserLogOperationList.total;
-
+  
   const UsedData = isDefault ? DefaultData : TableData;
   const ExcelData = isDefault ? DefaultData : TableData;
   const UsedDataLength = isDefault ? DefaultDataLength : TableDataLength;
-
+  
   // 前端实现导出excel文档的设计，后端的嘛。。。不知道怎么调用
   const handleExport = async () => {
     if (loginAuth === 'superAdmin') {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Sheet 1');
 
-      const headerRow = worksheet.addRow([
-        '编号',
-        '姓名',
-        '登陆次数',
-        '查找次数',
-        '新增群众数',
-        '提交事件数',
-        '群众信息变更数',
-        '开始时间',
-        '结束时间',
-      ]);
+      const headerRow =
+        worksheet.addRow([
+          '编号',
+          '姓名',
+          '登陆次数',
+          '查找次数',
+          '新增群众数',
+          '提交事件数',
+          '群众信息变更数',
+          '开始时间',
+          '结束时间'
+        ]);
       headerRow.font = { bold: true };
       headerRow.alignment = { horizontal: 'center' };
 
@@ -354,13 +360,9 @@ const CheckPerformance: React.FC = () => {
 
         // 这是时间戳模式的，不要忘记解锁import luxon
         // luxon这小玩意确实有用
-        worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
-          item.begin_time,
-        ).toFormat('yyyy-MM-dd HH:mm:ss');
-        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
-          item.end_time,
-        ).toFormat('yyyy-MM-dd HH:mm:ss');
-
+        worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(item.begin_time).toFormat('yyyy-MM-dd HH:mm:ss');
+        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(item.end_time).toFormat('yyyy-MM-dd HH:mm:ss');
+        
         // 这是年月日格式的
         // worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
         //   parseInt(item.begin_time)).toFormat('yyyy-MM-dd HH:mm:ss');
@@ -381,9 +383,8 @@ const CheckPerformance: React.FC = () => {
 
       const buffer = await workbook.xlsx.writeBuffer();
 
-      const blob = new Blob([buffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      });
+      const blob = new Blob([buffer],
+        { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -392,12 +393,13 @@ const CheckPerformance: React.FC = () => {
       link.click();
 
       URL.revokeObjectURL(url);
-    } else {
+    }
+    else { 
       alert('您没有权限导出！');
     }
   };
 
-  // 时间戳转换
+ // 时间戳转换
   const formatTimestamp = (timestamp: any) => {
     const date = new Date(timestamp);
     const year = date.getFullYear();
@@ -412,26 +414,9 @@ const CheckPerformance: React.FC = () => {
 
   return (
     <Layout className="CpLayout">
-      <div>
-        <button
-          onClick={() => {
-            console.log(UsedDataLength);
-          }}
-        >
-          123
-        </button>
-        <button
-          onClick={() => {
-            console.log(UsedData);
-          }}
-        >
-          123
-        </button>
-      </div>
       {/* 网格员 警员 菜单 */}
       <Menu
         onClick={onMenuClick}
-        // @ts-ignore
         selectedKeys={current ? [current] : [items[0].key]}
         mode="horizontal"
         items={items}
@@ -452,15 +437,11 @@ const CheckPerformance: React.FC = () => {
         <Select
           placeholder="请选择城市"
           className="BlockTypeGrid"
-          options={level1Areas.map((area: { name: any; id: any }) => ({
-            label: area.name,
-            value: area.id,
-          }))}
+          options={level1Areas.map(
+            (area: { name: any; id: any; }) => ({ label: area.name, value: area.id }))}
           onSelect={(value) => {
             // Find the selected option based on the value
-            const selectedOption = level1Areas.find(
-              (area: { id: any }) => area.id === value,
-            );
+            const selectedOption = level1Areas.find((area: { id: any; }) => area.id === value);
             if (selectedOption) {
               setCity(selectedOption.id);
               setTown(0);
@@ -475,33 +456,31 @@ const CheckPerformance: React.FC = () => {
           onSelect={(value) => {
             // Find the selected option based on the value
             const selectedOption = getTownOptions(city).find(
-              (option: { value: number }) => option.value === value,
-            );
+              (option: { value: number; }) => option.value === value);
             if (selectedOption) {
               setTown(selectedOption.value);
               setGrid(0);
             }
           }}
           value={town !== 0 ? town : null || null}
-        />
+        /> 
         <Select
-          placeholder="请选择社区"
+          placeholder="请选择社区"  
           className="BlockTypeGrid"
-          options={getGridOptions(town)}
+          options={getGridOptions(town)}   
           onSelect={(value) => {
-            // Find the selected option based on the value
+            // Find the selected option based on the value    
             const selectedOption = getGridOptions(town).find(
-              (option: { value: number }) => option.value === value,
-            );
-            if (selectedOption) {
-              setGrid(selectedOption.value);
-            }
-          }}
-          value={grid !== 0 ? grid : null || null}
+              (              option: { value: number; }) => option.value === value);       
+            if (selectedOption) {      
+              setGrid(selectedOption.value);       
+            }       
+          }}       
+          value={grid !== 0 ? grid : null || null}    
           // Set the value to the first option's value only if grid is not 'default'
           // 当重新选择上一个Select选项后，该选项需要重新选择
         />
-
+        
         <RangePicker
           showTime
           locale={locale}
@@ -527,20 +506,16 @@ const CheckPerformance: React.FC = () => {
       </div>
       <div style={{ backgroundColor: '#fff' }}>
         <Table
-          dataSource={
-            Array.isArray(UsedData)
-              ? UsedData.slice(
-                  (pagination?.current - 1) * pagination?.pageSize,
-                  pagination?.current * pagination?.pageSize,
-                )
-              : []
-          }
+          dataSource={Array.isArray(UsedData) ? UsedData.slice(
+            (pagination.current - 1) *            
+            pagination.pageSize, pagination.current *            
+          pagination.pageSize            
+          ) : []}
           // 怎么可能为未定义？
           // dataSource={UsedData}
           style={{ margin: '0px 0.5vw' }}
           onChange={handleTableChange}
-          pagination={false}
-        >
+          pagination={false}>
           <Column
             title={<div style={{ textAlign: 'center' }}>编号</div>}
             // dataIndex="id"
@@ -602,12 +577,12 @@ const CheckPerformance: React.FC = () => {
         <Pagination
           current={pagination.current}
           pageSize={pagination.pageSize}
-          total={UsedDataLength}
+          total={ UsedDataLength }
           style={{
             float: 'right',
-            margin: '10px auto',
+            margin:'10px auto',
           }}
-          onChange={handlePageChange}
+           onChange={handlePageChange}
         />
       </div>
     </Layout>
