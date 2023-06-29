@@ -79,10 +79,16 @@ function Menu() {
         },
       ],
     },
+    // {
+    //   id: '2',
+    //   text: '用户管理',
+    //   path: '/user-manager',
+    //   show: true,
+    // },
     {
       id: '2',
-      text: '用户管理',
-      path: '/user-manager',
+      text: '事件管理',
+      path: '/event-management',
       show: true,
     },
     {
@@ -173,27 +179,27 @@ function Menu() {
       path: '',
       show: false,
     },
+    // {
+    //   id: '9',
+    //   text: '事件管理',
+    //   path: '/event-management',
+    //   show: true,
+    // },
     {
       id: '9',
-      text: '事件管理',
-      path: '/event-management',
-      show: true,
-    },
-    {
-      id: '10',
       text: '日志记录',
       path: '/log-record',
       show: true,
       children: [
         {
-          id: '10-1',
+          id: '9-1',
           text: '登录日志',
           path: '/log-record/login-log',
           show: true,
         },
 
         {
-          id: '10-2',
+          id: '9-2',
           text: '操作日志',
           path: '/log-record/operate-log',
           show: true,
@@ -201,9 +207,15 @@ function Menu() {
       ],
     },
     {
-      id: '11',
+      id: '10',
       text: '绩效查看',
       path: '/check-performance',
+      show: true,
+    },
+    {
+      id: '11',
+      text: '用户管理',
+      path: '/user-manager',
       show: true,
     },
     {
