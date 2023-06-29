@@ -109,12 +109,6 @@ function Menu() {
           path: '/population-manager/pending',
           show: true,
         },
-        {
-          id: '3-4',
-          text: '展示（暂时）',
-          path: '/population-manager/person-show',
-          show: true,
-        },
         // {
         //   id: '3-5',
         //   text: '人员信息推送',
