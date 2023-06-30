@@ -95,21 +95,7 @@ const routeConfig: routerConfigType[] = [
           },
         ],
       },
-      {
-        path: 'user-manager',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>
-              {getUserType() === 'superAdmin' ? (
-                <PersonManage />
-              ) : (
-                '无权访问,只有超级管理员可对人员进行管理'
-              )}
-            </div>
-          </Suspense>
-        ),
-      },
+
       // getUserType() !== 'superAdmin' ? {
       //   path: 'user-manager',
       //   auth: [1, 9, 8, 7, 'user1'],
@@ -346,6 +332,21 @@ const routeConfig: routerConfigType[] = [
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>
               <SearchInfo></SearchInfo>
+            </div>
+          </Suspense>
+        ),
+      },
+      {
+        path: 'user-manager',
+        auth: [1, 9, 8, 7, 'user1'],
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <div>
+              {getUserType() === 'superAdmin' ? (
+                <PersonManage />
+              ) : (
+                '无权访问,只有超级管理员可对人员进行管理'
+              )}
             </div>
           </Suspense>
         ),

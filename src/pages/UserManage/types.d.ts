@@ -19,6 +19,8 @@ export type DataType = {
   password: string;
   head_url: string;
   mobile: string;
+  grid_id: number | null;
+  police_user_id: number | null;
 };
 
 export type Role_userInputType = {

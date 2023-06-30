@@ -987,7 +987,7 @@ export default function PersonManage() {
 
           {role_id === 4 && (
             <Form.Item
-              name="police"
+              name="police_user_id"
               label="请选择警员"
               labelCol={{ span: 6 }}
               rules={[

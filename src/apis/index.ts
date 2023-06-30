@@ -1022,6 +1022,8 @@ export const GetPerson = gql`
         password
         head_url
         mobile
+        grid_id
+        police_user_id
       }
       total
     }
