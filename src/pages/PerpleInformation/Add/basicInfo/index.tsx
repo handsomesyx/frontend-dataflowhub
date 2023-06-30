@@ -119,7 +119,7 @@ const BasicInfo = ({
       // refetchQueries: ['findFamilyMemberInfo'],
     })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.data.createFamilyInfo) {
           message.success('已为您创建审核记录');
           setAddVisible(false);

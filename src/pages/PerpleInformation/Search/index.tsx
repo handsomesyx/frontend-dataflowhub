@@ -265,7 +265,7 @@ const SearchBasic = () => {
       });
     }
   };
-  console.log('filter', filterData);
+  // console.log('filter', filterData);
   const handleTimeChange = (value: any) => {
     if (value) {
       const timeup = new Date(value[0].$d);
@@ -614,11 +614,11 @@ const SearchBasic = () => {
                 optionFilterProp="children"
                 value={gridSelect}
                 // onSearch={(value) => {
-                //   console.log('sdfdsfs', value);
+                //   //console.log('sdfdsfs', value);
                 //   setGridSelect(value);
                 // }}
                 onChange={(e) => {
-                  console.log('e', e);
+                  // console.log('e', e);
                   setGridSelect(e);
                   handleFliterDataSelect(e, 'grid_id');
                 }}

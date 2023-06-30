@@ -12,7 +12,7 @@ export const getRefreshToken = () => {
 
 // 用户登录，保存window.localStorage
 export const onLogin = (user: any) => {
-  console.log('user', user);
+  // console.log('user', user);
   // sessionStorage.setItem('accessToken', user?.token || '');
   // sessionStorage.setItem('refreshToken', user?.refresh_token || '');
   window.localStorage.setItem('accessToken', user?.accessToken || '');
@@ -70,8 +70,6 @@ export const logout = () => {
 
 // 存储搜索数据
 export const saveSearchData = (data: any) => {
-  console.log('data', data);
   let a = JSON.stringify(data);
-  console.log('a', a);
   window.localStorage.setItem('searchData', a || '');
 };

@@ -449,7 +449,7 @@ const Warrantor = ({
     warform
       .validateFields()
       .then(() => {
-        console.log('w');
+        // console.log('w');
 
         if (userid !== warData.gridPersonId) {
           changeRecord.push({
@@ -459,7 +459,7 @@ const Warrantor = ({
             contentAfter: userid ? userid.toString() : '',
           });
         }
-        console.log(changeRecord);
+        // console.log(changeRecord);
       })
       .catch(() => setErrorVisibile(true));
     if (errorVisible) {

@@ -118,7 +118,7 @@ const CheckPerformance: React.FC = () => {
 
   const onMenuClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
-    console.log(e);
+    // console.log(e);
     setMenuState(e.key as unknown as number); // 这段代码明明是从AntD官网抄的，居然会报错，忽略就行
     switch (e.key) {
       case 'gridMember':
@@ -196,10 +196,10 @@ const CheckPerformance: React.FC = () => {
   // 注意判零思想，如果表单的数据为空，则默认返回所有数据
   // select * from table;
   const handleSearch = () => {
-    // console.log(beginTime, endTime);
+    // //console.log(beginTime, endTime);
     // if (loading) {
     //   // 查询正在进行中
-    //   console.log('Loading...');
+    //   //console.log('Loading...');
     //   // alert('Loading...');
     // } else
     if (error) {
@@ -214,7 +214,7 @@ const CheckPerformance: React.FC = () => {
       // 查询成功
       const tempMenu = menuState;
       if (tempMenu === 0) {
-        // console.log('no menu selected');
+        // //console.log('no menu selected');
         // alert('请选择网格员或民警');
       } else {
         setIsDefault(false);
@@ -229,7 +229,7 @@ const CheckPerformance: React.FC = () => {
             take: 100000,
           },
         });
-        console.log(UsedDataLength);
+        // console.log(UsedDataLength);
       }
     }
   };

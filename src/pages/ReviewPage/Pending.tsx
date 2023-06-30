@@ -113,7 +113,7 @@ const App: React.FC = () => {
   const [updateAudit] = useMutation(UPDATE_AUDIT, {
     client,
     onCompleted: (data) => {
-      console.log(data);
+      // console.log(data);
       if (data.updateAudit) message.info('操作成功');
       listrefetch();
       handleCancel();
@@ -128,7 +128,7 @@ const App: React.FC = () => {
     client,
     variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
     onCompleted: (data) => {
-      console.log(data.getChangeRecord); // 控制台结果
+      // console.log(data.getChangeRecord); // 控制台结果
       setChangesShow(data.getChangeRecord);
       const changewhat = data.getChangeRecord.map((item: ChangeWhat) => ({
         after: item?.content_after,
@@ -137,7 +137,7 @@ const App: React.FC = () => {
         key: item?.id,
       }));
 
-      console.log(changewhat);
+      // console.log(changewhat);
       setChangedata(changewhat);
 
       if (rightnowAuditrecordsId !== 0) {
@@ -162,7 +162,7 @@ const App: React.FC = () => {
   };
 
   const checkonChange = (e: RadioChangeEvent) => {
-    console.log('checked = ', e.target.value);
+    // console.log('checked = ', e.target.value);
     let newPlainOptions: string[] | ((prevState: never[]) => never[]) = [];
 
     switch (e.target.value) {
@@ -216,7 +216,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('getUserType', getUserType());
+    // console.log('getUserType', getUserType());
     let tmp = 7;
     if (getUserType() === 'superAdmin') {
       setRole(1);
@@ -230,10 +230,10 @@ const App: React.FC = () => {
       setRole(4);
       tmp = 4;
     }
-    console.log('身份验证完成');
+    // console.log('身份验证完成');
 
     if (data) {
-      console.log(data);
+      // console.log(data);
       const username = getUserName();
       const filtered = data.findManyAudit.data.filter((item: any) => {
         if (
@@ -250,7 +250,7 @@ const App: React.FC = () => {
         ) {
           return true;
         }
-        if (item.is_delete === false && tmp === 1 ) {
+        if (item.is_delete === false && tmp === 1) {
           return true;
         }
         return false;
@@ -265,7 +265,7 @@ const App: React.FC = () => {
           create_time: formattedDate,
         };
       });
-      console.log(formattedData);
+      // console.log(formattedData);
       setDataSource(formattedData);
     }
   }, [data]);
@@ -275,7 +275,7 @@ const App: React.FC = () => {
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log('Change:', e.target.value);
+    // console.log('Change:', e.target.value);
     setComment(e.target.value);
   };
 
@@ -343,7 +343,7 @@ const App: React.FC = () => {
   };
 
   const handlePass = () => {
-    console.log(checkedList);
+    // console.log(checkedList);
     const newData = {
       request_data: { class: classabcd, detailClass: checkedList },
       review_comments: '审核通过',

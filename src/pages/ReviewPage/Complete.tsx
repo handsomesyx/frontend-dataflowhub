@@ -59,7 +59,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('getUserType', getUserType());
+    // console.log('getUserType', getUserType());
     let tmp = 7;
     if (getUserType() === 'superAdmin') {
       setRole(1);
@@ -73,14 +73,14 @@ const App: React.FC = () => {
       setRole(4);
       tmp = 4;
     }
-    console.log('身份验证完成');
-    console.log(re);
-    console.log(ok);
+    // console.log('身份验证完成');
+    // console.log(re);
+    // console.log(ok);
     if (re && ok) {
-      console.log(re.findManyAudit.data);
-      console.log(ok.findManyAudit.data);
+      // console.log(re.findManyAudit.data);
+      // console.log(ok.findManyAudit.data);
       const username = getUserName();
-      console.log(username);
+      // console.log(username);
       const newArray = re.findManyAudit.data.concat(ok.findManyAudit.data);
       const filtered = newArray.filter((item: any) => {
         if (
@@ -97,7 +97,7 @@ const App: React.FC = () => {
         ) {
           return true;
         }
-        if (item.is_delete === false && tmp === 1 ) {
+        if (item.is_delete === false && tmp === 1) {
           return true;
         }
         return false;
@@ -115,7 +115,7 @@ const App: React.FC = () => {
         };
       });
       setDataShow(formattedData);
-      console.log(formattedData);
+      // console.log(formattedData);
     }
   }, [re, ok]);
 

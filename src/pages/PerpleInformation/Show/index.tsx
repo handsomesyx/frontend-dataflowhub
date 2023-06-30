@@ -53,7 +53,7 @@ function InformationShow() {
   }
   const dataAll = data?.getPeopleData?.peopleData;
 
-  // console.log('allData', dataAll);
+  // //console.log('allData', dataAll);
 
   // 基础信息配置
   const peopleData: CommonPeopleBasics = {

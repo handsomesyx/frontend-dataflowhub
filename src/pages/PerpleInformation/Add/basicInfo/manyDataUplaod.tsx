@@ -91,7 +91,7 @@ const ManyDataUpload = ({
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      console.log('1');
+      // console.log('1');
 
       const fileData = e.target?.result;
       if (fileData instanceof ArrayBuffer) {
@@ -104,7 +104,7 @@ const ManyDataUpload = ({
         // const headerRow: string[] = jsonData[0];
         // 提取数据（去掉表头）
         // const dataRows = jsonData.slice(2);
-        // console.log('数据:', dataRows);
+        // //console.log('数据:', dataRows);
         jsonData.shift();
         const porData: propertyInfo[] = [];
         const baiscData: basicInfo[] = [];
@@ -215,7 +215,7 @@ const ManyDataUpload = ({
           setdisData(disData);
         });
         // 在这里对提取的数据进行处理
-        // console.log(extractedData);
+        // //console.log(extractedData);
         // setManyFamilyCreate(extractedData);
         setOkDisable(false);
       }
@@ -242,7 +242,7 @@ const ManyDataUpload = ({
   //             ) {
   //                 // 提取数据（去掉表头）
   //                 const dataRows = jsonData.slice(1);
-  //                 console.log('数据:', dataRows);
+  //                 //console.log('数据:', dataRows);
   //                 jsonData.shift();
   //                 // 提取数据
   //                 const extractedData = jsonData.map((row: string[]) => ({
@@ -253,7 +253,7 @@ const ManyDataUpload = ({
   //                     householdId: parseInt(row[1]),
   //                 }));
   //                 // 在这里对提取的数据进行处理
-  //                 // console.log(extractedData);
+  //                 // //console.log(extractedData);
   //                 setManyFamilyCreate(extractedData);
   //                 setOkDisable(false);
   //             } else {
@@ -262,7 +262,7 @@ const ManyDataUpload = ({
   //             }
 
   //             // 在这里可以对表头和数据进行进一步处理或发送到后端
-  //             console.log('表头:', headerRow);
+  //             //console.log('表头:', headerRow);
 
   //         }
 

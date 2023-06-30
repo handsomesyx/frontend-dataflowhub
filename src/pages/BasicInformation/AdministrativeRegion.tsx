@@ -877,7 +877,7 @@ const AdministrativeRegion: React.FC = () => {
           //   awaitRefetchQueries: true,
           //   refetchQueries: ['findManyArea'],
           // });
-          // console.log('areadata', areadata);
+          // //console.log('areadata', areadata);
           addArea({
             variables: {
               data: {

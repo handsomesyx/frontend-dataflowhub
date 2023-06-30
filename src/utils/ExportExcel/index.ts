@@ -28,7 +28,7 @@ export function generateHeaders(columns: any[]) {
       width: col.width / 5 || DEFAULT_COLUMN_WIDTH,
     };
 
-    // console.log(obj);
+    // //console.log(obj);
     return obj;
     // if (col.children) {
     //     obj.children = col.children?.map((item: any) => ({
@@ -38,7 +38,7 @@ export function generateHeaders(columns: any[]) {
     //         parentKey: col.dataIndex,
     //     }));
     // }
-    // console.log(columns);
+    // //console.log(columns);
   });
 }
 

@@ -238,7 +238,7 @@ export default function PersonManage() {
   // 将行政区域划分为镇和社区
   useEffect(() => {
     if (area) {
-      // console.log('行政区域长度', area?.getArea);
+      // //console.log('行政区域长度', area?.getArea);
       const areaData = area?.getArea.filter((item: Area) => {
         return item.level === 2;
       });
@@ -247,15 +247,15 @@ export default function PersonManage() {
       });
       setAdministrationAreaList(areaData);
       setCommunityList(communityData);
-      // console.log('行政区域',areaData);
-      // console.log('社区',communityData);
+      // //console.log('行政区域',areaData);
+      // //console.log('社区',communityData);
     }
   }, [area]);
 
   // 点击添加用户弹窗的确定按钮之后，提交数据的处理函数
   const handleOkAdd = () => {
     form.validateFields().then((value) => {
-      // console.log(value.userName);
+      // //console.log(value.userName);
       let ipt2 = {};
       if (value.role_id === 4) {
         ipt2 = {
@@ -351,12 +351,12 @@ export default function PersonManage() {
 
   // 点击修改用户弹窗的确定按钮之后，提交数据的处理函数
   const handleOkUpd = () => {
-    // console.log('record_id',record?.id);
-    // console.log('record的值',record);
+    // //console.log('record_id',record?.id);
+    // //console.log('record的值',record);
     form2.validateFields().then(() => {
       // form.setFieldsValue(record);
       const newRecord: any = form2.getFieldsValue();
-      // console.log('newRecord的值', newRecord);
+      // //console.log('newRecord的值', newRecord);
       let ipt2 = {};
       if (newRecord.role_id === 4) {
         ipt2 = {
@@ -463,8 +463,8 @@ export default function PersonManage() {
   // 获取输入的username
   const changeUsername = (e: any) => {
     setUsername(e.target.value);
-    // console.log('e.target.value', e.target.value);
-    // console.log('usernameInput', username);
+    // //console.log('e.target.value', e.target.value);
+    // //console.log('usernameInput', username);
   };
 
   // 记录筛选按钮的点击状态
@@ -535,7 +535,7 @@ export default function PersonManage() {
       // 保存编码
       if (reader.result) {
         setImageUrl(reader.result.toString());
-        // console.log(imageUrl);
+        // //console.log(imageUrl);
       }
     };
   };
