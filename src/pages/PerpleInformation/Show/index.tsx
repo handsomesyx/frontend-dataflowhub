@@ -144,16 +144,16 @@ function InformationShow() {
       planting_breeding: '', // 种植养殖情况
       plant_type: item?.plant_type, // 种植种类
       plant_quantity: item?.plant_quantity, // 种植数量
-      plant_area: item?.plant_quantity, // 种植面积
+      plant_area: item?.planting_area, // 种植面积
       breeding_type: item?.breeding_type, // 养殖种类
       breeding_quantity: item?.breeding_quantity, // 养殖数量
       business_info: item?.business_info, // 营商情况(商户名称)
       business_location: item?.business_location, // 门面位置
-      license_number: item?.plant_type, // 营业执照编号
-      fire_equipment_type: item?.plant_type, // 门面消防设备类型
-      fire_equipment_quantity: item?.plant_type, // 门面消防设备数量
-      surveillance_status: item?.plant_type, // 门面电子监控状态
-      surveillance_quantity: item?.plant_type, // 门面电子监控数量
+      license_number: item?.license_number, // 营业执照编号
+      fire_equipment_type: item?.fire_equipment_type, // 门面消防设备类型
+      fire_equipment_quantity: item?.fire_equipment_quantity, // 门面消防设备数量
+      surveillance_status: item?.surveillance_status, // 门面电子监控状态
+      surveillance_quantity: item?.surveillance_quantity, // 门面电子监控数量
     };
   });
 
@@ -170,7 +170,8 @@ function InformationShow() {
       house_type: item?.house_type, // 房屋类型
       house_condition: item?.house_condition, // 危房等级
       smoking_status: item?.smoking_status, // 吸烟是否  必选
-      volunteer_status: item?.volunteer_status, // 志愿者{ } json里边写字符数组，来记录志愿者
+      volunteer_status: JSON.stringify(item?.volunteer_status) ?? '[{}]',
+      // 志愿者{ } json里边写字符数组，来记录志愿者
       social_worker: {}, // 社工{ }  json里边写字符数组，来记录社工
       driving_license_type: item?.driving_license_type, // 驾驶证类型（可选）
     };

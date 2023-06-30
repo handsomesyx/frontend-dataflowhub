@@ -222,11 +222,11 @@ export const FindManyCommunity = gql`
 `;
 
 export const FindManyGrid = gql`
-query findManyGrid($select:gridWhereInput,$skip:Int,$take:Int) {
-  findManyGrid(select:$select,skip:$skip,take:$take) {
+  query findManyGrid($select: gridWhereInput, $skip: Int, $take: Int) {
+    findManyGrid(select: $select, skip: $skip, take: $take) {
       count
-      data{
-        area_leader_info{
+      data {
+        area_leader_info {
           gender
           head_url
           id
@@ -246,7 +246,7 @@ query findManyGrid($select:gridWhereInput,$skip:Int,$take:Int) {
         is_delete
         updater_id
         name
-        grid_leader_info{
+        grid_leader_info {
           gender
           head_url
           id
@@ -259,23 +259,23 @@ query findManyGrid($select:gridWhereInput,$skip:Int,$take:Int) {
           status
           username
         }
-        area_info{
+        area_info {
           create_time
           creator_id
           id
           is_delete
-          leader{
+          leader {
             gender
-          head_url
-          id
-          id_card
-          is_delete
-          mobile
-          real_name
-          role
-          role_id
-          status
-          username
+            head_url
+            id
+            id_card
+            is_delete
+            mobile
+            real_name
+            role
+            role_id
+            status
+            username
           }
           level
           name
@@ -289,10 +289,10 @@ query findManyGrid($select:gridWhereInput,$skip:Int,$take:Int) {
 `;
 
 export const FindManyPolicestation = gql`
-query findManyPolicestation($select:pstationWhereInput,$skip:Int,$take:Int) {
-  findManyPolicestation(select:$select,skip:$skip,take:$take) {
+  query findManyPolicestation($select: pstationWhereInput, $skip: Int, $take: Int) {
+    findManyPolicestation(select: $select, skip: $skip, take: $take) {
       count
-      data{
+      data {
         area
         id
         creator_id
@@ -375,7 +375,7 @@ export const CreateGrid = gql`
       creator_id
       area_info {
         create_time
-        creator_id 
+        creator_id
         id
         is_delete
         leader {
@@ -692,7 +692,7 @@ export const getPeopleData = gql`
           grid_name
           grid_phone
           grid_user_name
-          # police_name
+          police_name
           police_phone
         }
         disableData {
@@ -946,7 +946,6 @@ export const visualLargeScreenInterface = gql`
     }
   }
 `;
-
 
 /**
  * @description 登录接口

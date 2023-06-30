@@ -39,7 +39,7 @@ const OtherInfo = ({ OtherInfoData }: any) => {
               </td>
               <td>志愿者</td>
               {/* proof_contraindication */}
-              <td>{}</td>
+              <td>{item?.volunteer_status}</td>
               <td>车辆所有人</td>
               <td>{item?.car_owner}</td>
             </tr>
