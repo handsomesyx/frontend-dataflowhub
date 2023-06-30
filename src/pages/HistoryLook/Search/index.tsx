@@ -166,14 +166,13 @@ const SearchBasic = () => {
       };
     });
   };
-  const [getFilterPeopleData, { data: peopleData, loading, error }] =
+  const [getFilterPeopleData, { data: peopleData, loading }] =
     useLazyQuery(getPeopleDataFilter);
 
-  // 首次加载
+  // 首次加载首次
   useEffect(() => {
     getFilterPeopleData({
       variables: {
-        isDelete: false,
         content: {},
         pagingOption: {
           skip: skip,
@@ -195,7 +194,7 @@ const SearchBasic = () => {
   useEffect(() => {
     getFilterPeopleData({
       variables: {
-        isDelete: false,
+        isDelete: true,
         content: { ...filterDataOld },
         pagingOption: {
           skip: skip,
@@ -265,50 +264,6 @@ const SearchBasic = () => {
       });
     }
   };
-  // console.log('filter', filterData);
-  const handleTimeChange = (value: any) => {
-    if (value) {
-      const timeup = new Date(value[0].$d);
-      const timedown = new Date(value[1].$d);
-      setFilterData((pre) => {
-        return {
-          ...pre,
-          updatetimeup: timeup.getTime(),
-          updatetimedown: timedown.getTime(),
-        };
-      });
-    } else {
-      setFilterData((pre) => {
-        return {
-          ...pre,
-          updatetimeup: undefined,
-          updatetimedown: undefined,
-        };
-      });
-    }
-  };
-
-  const handleinTimeChange = (value: any) => {
-    if (value) {
-      const timeup = new Date(value[0].$d);
-      const timedown = new Date(value[1].$d);
-      setFilterData((pre) => {
-        return {
-          ...pre,
-          createtimeup: timeup.getTime(),
-          createtimedown: timedown.getTime(),
-        };
-      });
-    } else {
-      setFilterData((pre) => {
-        return {
-          ...pre,
-          createtimeup: undefined,
-          createtimedown: undefined,
-        };
-      });
-    }
-  };
 
   // 籍贯筛选
   const filter: any = (inputValue: any, path: any) => {
@@ -324,7 +279,6 @@ const SearchBasic = () => {
           skip: skip,
           take: take,
         },
-        isDelete: false,
       },
     }).then(({ data }) => {
       setPagination((pre) => {
@@ -434,7 +388,7 @@ const SearchBasic = () => {
             <div>
               <span>录入日期：</span>
               <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleinTimeChange} />
+                <RangePicker style={{ width: '60%' }} />
               </ConfigProvider>
             </div>
           </div>
@@ -492,7 +446,7 @@ const SearchBasic = () => {
             <div>
               <span>修改日期</span>：
               <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleTimeChange} />
+                <RangePicker style={{ width: '60%' }} />
               </ConfigProvider>
             </div>
           </div>
@@ -614,11 +568,11 @@ const SearchBasic = () => {
                 optionFilterProp="children"
                 value={gridSelect}
                 // onSearch={(value) => {
-                //   //console.log('sdfdsfs', value);
+                //   console.log('sdfdsfs', value);
                 //   setGridSelect(value);
                 // }}
                 onChange={(e) => {
-                  // console.log('e', e);
+                  console.log('e', e);
                   setGridSelect(e);
                   handleFliterDataSelect(e, 'grid_id');
                 }}
@@ -654,7 +608,7 @@ const SearchBasic = () => {
       {/* 具体内容区域 */}
       <div className={styles.BottomShowList}>
         <Spin size={'large'} delay={50} spinning={loading}>
-          {pagination?.total === 0 || error ? (
+          {pagination?.total === 0 ? (
             <div
               style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             >

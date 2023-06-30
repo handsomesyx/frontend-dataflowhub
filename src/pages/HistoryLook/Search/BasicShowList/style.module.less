@@ -1,0 +1,84 @@
+/* stylelint-disable no-descending-specificity */
+.BorderBox {
+  padding: 20px;
+  border: 1px solid #e2e2e2;
+  border-radius: 10px;
+  width: 98%;
+  display: flex;
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+
+  .FirstDiv {
+    width: 180px;
+    display: flex;
+    justify-content: center;
+
+    img {
+      width: 90px;
+      height: 100%;
+    }
+  }
+
+  > div {
+    height: auto;
+
+    span {
+      color: #000;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    > div:not(:nth-child(1)) {
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 10px;
+    }
+  }
+
+  > div:nth-child(2) {
+    width: 120px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    overflow: hidden;
+    font-weight: bolder;
+  }
+
+  > div:nth-child(3) {
+    flex: 1;
+  }
+
+  > div:nth-child(4) {
+    flex: 1;
+  }
+
+  > div:nth-child(5) {
+    width: 20%;
+  }
+
+  > div:nth-child(6) {
+    width: 100px;
+    align-self: flex-end;
+  }
+
+  .BoxLeftIcon {
+    padding: 5px;
+    box-sizing: border-box;
+    width: 40px;
+    text-align: center;
+    background: linear-gradient(to right, #91b2ef, #8b99c7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 10px 0;
+    font-weight: bolder;
+    color: #fff;
+  }
+}
+
+.BorderBox:not(:nth-child(1)) {
+  margin-top: 10px;
+}
