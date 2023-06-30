@@ -30,7 +30,7 @@ function returnTokenDependingOnOperation(operation: GraphQLRequest) {
 }
 
 const httpLink = createHttpLink({
-  uri: `http://${window.location.hostname}:7000/graphql`,
+  uri: `http://${window.location.hostname}:7001/graphql`,
 });
 
 const authLink = setContext((operation, { headers }) => {

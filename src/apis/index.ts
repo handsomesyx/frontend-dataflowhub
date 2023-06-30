@@ -175,8 +175,7 @@ export const UPDATE_AUDIT = gql`
   }
 `;
 
-// FindManyArea随便取的名字，（&data:data）前一个data和接口参数名一致，后一个data代表类型，
-// 第二个findManyArea是接口的名字，（data:$data）第一个data是接口参数名，第二个是上一行的$data{}是返回的数据
+// 基础信息的行政管理区域、警局管理
 export const FindManyArea = gql`
   query findManyArea($skip: Int!, $take: Int!) {
     findManyArea(skip: $skip, take: $take) {
@@ -223,31 +222,89 @@ export const FindManyCommunity = gql`
 `;
 
 export const FindManyGrid = gql`
-  query findManyGrid($skip: Int!, $take: Int!) {
-    findManyGrid(skip: $skip, take: $take) {
-      area_id
-      id
-      creator_id
-      update_time
-      create_time
-      is_delete
-      updater_id
-      user_id
+query findManyGrid($select:gridWhereInput,$skip:Int,$take:Int) {
+  findManyGrid(select:$select,skip:$skip,take:$take) {
+      count
+      data{
+        area_leader_info{
+          gender
+          head_url
+          id
+          id_card
+          is_delete
+          mobile
+          real_name
+          role
+          role_id
+          status
+          username
+        }
+        id
+        creator_id
+        update_time
+        create_time
+        is_delete
+        updater_id
+        name
+        grid_leader_info{
+          gender
+          head_url
+          id
+          id_card
+          is_delete
+          mobile
+          real_name
+          role
+          role_id
+          status
+          username
+        }
+        area_info{
+          create_time
+          creator_id
+          id
+          is_delete
+          leader{
+            gender
+          head_url
+          id
+          id_card
+          is_delete
+          mobile
+          real_name
+          role
+          role_id
+          status
+          username
+          }
+          level
+          name
+          parent_id
+          update_time
+          updater_id
+        }
+      }
     }
   }
 `;
 
 export const FindManyPolicestation = gql`
-  query findManyPolicestation($skip: Int!, $take: Int!) {
-    findManyPolicestation(skip: $skip, take: $take) {
-      id
-      creator_id
-      update_time
-      name
-      create_time
-      is_delete
-      updater_id
-      user_id
+query findManyPolicestation($select:pstationWhereInput,$skip:Int,$take:Int) {
+  findManyPolicestation(select:$select,skip:$skip,take:$take) {
+      count
+      data{
+        area
+        id
+        creator_id
+        update_time
+        name
+        create_time
+        is_delete
+        updater_id
+        user_id
+        police_count
+        policeleader_name
+      }
     }
   }
 `;
@@ -315,11 +372,10 @@ export const CreateGrid = gql`
       }
       create_time
       id
-      area_id
       creator_id
       area_info {
         create_time
-        creator_id
+        creator_id 
         id
         is_delete
         leader {
@@ -356,6 +412,127 @@ export const CreatePolicestation = gql`
       updater_id
       user_id
     }
+  }
+`;
+export const DeletePolicestation = gql`
+  mutation deletePolicestation($id: Int!) {
+    deletePolicestation(id: $id)
+  }
+`;
+
+export const DeleteArea = gql`
+  mutation deleteArea($id: Int!) {
+    deleteArea(id: $id)
+  }
+`;
+
+export const DeleteGrid = gql`
+  mutation deleteGrid($id: Int!) {
+    deleteGrid(id: $id)
+  }
+`;
+
+export const DeleteCommunity = gql`
+  mutation deleteCommunity($id: Int!) {
+    deleteCommunity(id: $id)
+  }
+`;
+
+export const UpdateArea = gql`
+  mutation updateArea(
+    $new_data: administrativeareaCreateInput!
+    $rightnow_area_id: Int!
+    $rightnow_policestation_id: Int
+  ) {
+    updateArea(
+      new_data: $new_data
+      rightnow_area_id: $rightnow_area_id
+      rightnow_policestation_id: $rightnow_policestation_id
+    )
+  }
+`;
+
+export const UpdateCommunity = gql`
+  mutation updateCommunity(
+    $new_data: communityCreateInput!
+    $rightnow_community_id: Int!
+    $rightnow_grid_id: Int
+    $rightnow_policestation_id: Int
+  ) {
+    updateCommunity(
+      new_data: $new_data
+      rightnow_community_id: $rightnow_community_id
+      rightnow_grid_id: $rightnow_grid_id
+      rightnow_policestation_id: $rightnow_policestation_id
+    )
+  }
+`;
+
+export const UpdateGrid = gql`
+  mutation updateGrid($new_data: gridCreateInput!, $rightnow_grid_id: Int!) {
+    updateGrid(new_data: $new_data, rightnow_grid_id: $rightnow_grid_id)
+  }
+`;
+
+export const UpdatePolicestation = gql`
+  mutation updatePolicestation(
+    $new_data: policestationCreateInput!
+    $rightnow_pstation_id: Int!
+  ) {
+    updatePolicestation(new_data: $new_data, rightnow_pstation_id: $rightnow_pstation_id)
+  }
+`;
+
+export const FindUser = gql`
+  query findUser($name: String!, $role: String!) {
+    findUser(name: $name, role: $role) {
+      gender
+      head_url
+      id
+      id_card
+      is_delete
+      mobile
+      real_name
+      role
+      role_id
+      status
+      username
+    }
+  }
+`;
+
+export const GetPoliceInfo = gql`
+  query getPoliceInfo($rightnow_policestation_id: Int!, $role: Int) {
+    getPoliceInfo(rightnow_policestation_id: $rightnow_policestation_id, role: $role) {
+      gender
+      head_url
+      id
+      id_card
+      is_delete
+      mobile
+      real_name
+      role
+      status
+      username
+    }
+  }
+`;
+
+export const CountGrid = gql`
+  query countGrid {
+    countGrid
+  }
+`;
+
+export const AddPolice = gql`
+  mutation addPolice($rightnow_policestation_id: Int!, $user_id: Int!) {
+    addPolice(rightnow_policestation_id: $rightnow_policestation_id, user_id: $user_id)
+  }
+`;
+
+export const DeletePolice = gql`
+  mutation deletePolice($user_id: Int!) {
+    deletePolice(user_id: $user_id)
   }
 `;
 
@@ -770,127 +947,7 @@ export const visualLargeScreenInterface = gql`
   }
 `;
 
-export const DeletePolicestation = gql`
-  mutation deletePolicestation($id: Int!) {
-    deletePolicestation(id: $id)
-  }
-`;
 
-export const DeleteArea = gql`
-  mutation deleteArea($id: Int!) {
-    deleteArea(id: $id)
-  }
-`;
-
-export const DeleteGrid = gql`
-  mutation deleteGrid($id: Int!) {
-    deleteGrid(id: $id)
-  }
-`;
-
-export const DeleteCommunity = gql`
-  mutation deleteCommunity($id: Int!) {
-    deleteCommunity(id: $id)
-  }
-`;
-
-export const UpdateArea = gql`
-  mutation updateArea(
-    $new_data: administrativeareaCreateInput!
-    $rightnow_area_id: Int!
-    $rightnow_policestation_id: Int
-  ) {
-    updateArea(
-      new_data: $new_data
-      rightnow_area_id: $rightnow_area_id
-      rightnow_policestation_id: $rightnow_policestation_id
-    )
-  }
-`;
-
-export const UpdateCommunity = gql`
-  mutation updateCommunity(
-    $new_data: communityCreateInput!
-    $rightnow_community_id: Int!
-    $rightnow_grid_id: Int
-    $rightnow_policestation_id: Int
-  ) {
-    updateCommunity(
-      new_data: $new_data
-      rightnow_community_id: $rightnow_community_id
-      rightnow_grid_id: $rightnow_grid_id
-      rightnow_policestation_id: $rightnow_policestation_id
-    )
-  }
-`;
-
-export const UpdateGrid = gql`
-  mutation updateGrid($new_data: gridCreateInput!, $rightnow_grid_id: Int!) {
-    updateGrid(new_data: $new_data, rightnow_grid_id: $rightnow_grid_id)
-  }
-`;
-
-export const UpdatePolicestation = gql`
-  mutation updatePolicestation(
-    $new_data: policestationCreateInput!
-    $rightnow_pstation_id: Int!
-  ) {
-    updatePolicestation(new_data: $new_data, rightnow_pstation_id: $rightnow_pstation_id)
-  }
-`;
-
-export const FindUser = gql`
-  query findUser($name: String!, $role: String!) {
-    findUser(name: $name, role: $role) {
-      gender
-      head_url
-      id
-      id_card
-      is_delete
-      mobile
-      real_name
-      role
-      role_id
-      status
-      username
-    }
-  }
-`;
-
-export const GetPoliceInfo = gql`
-  query getPoliceInfo($rightnow_policestation_id: Int!, $role: Int) {
-    getPoliceInfo(rightnow_policestation_id: $rightnow_policestation_id, role: $role) {
-      gender
-      head_url
-      id
-      id_card
-      is_delete
-      mobile
-      real_name
-      role
-      status
-      username
-    }
-  }
-`;
-
-export const CountGrid = gql`
-  query countGrid {
-    countGrid
-  }
-`;
-
-export const AddPolice = gql`
-  mutation addPolice($rightnow_policestation_id: Int!, $user_id: Int!) {
-    addPolice(rightnow_policestation_id: $rightnow_policestation_id, user_id: $user_id)
-  }
-`;
-
-export const DeletePolice = gql`
-  mutation deletePolice($user_id: Int!) {
-    deletePolice(user_id: $user_id)
-  }
-`;
 /**
  * @description 登录接口
  */

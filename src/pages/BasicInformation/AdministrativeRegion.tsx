@@ -49,33 +49,6 @@ export interface Params {
   pagination?: TablePaginationConfig;
   total?: number;
 }
-// const data: DataType[] = [
-//   {
-//     key: '1',
-//     name: 'John Brown',
-//     age: '小赵',
-//     address: '李华',
-//     commit: '小文',
-//     police: '小王',
-//   },
-//   {
-//     key: '2',
-//     name: 'Jim Green',
-//     age: '李三',
-//     address: '王涛',
-//     commit: '小文',
-//     police: '小王',
-//   },
-//   {
-//     key: '3',
-//     name: 'Joe Black',
-//     age: '王武',
-//     address: '李丽',
-//     commit: '小文',
-//     police: '小王',
-//   },
-// ];
-
 const AdministrativeRegion: React.FC = () => {
   // const { Option } = Select;
   // 添加网格抽屉
@@ -114,8 +87,10 @@ const AdministrativeRegion: React.FC = () => {
   const [searchRole, setSearchRole] = useState('');
   // 网格长信息
   const [gridleader, setGridleader] = useState(false);
+  const [gridleaderloading, setGridleaderloading] = useState(true);
   // 社区主任信息
   const [communityleader, setCommunityleader] = useState(false);
+  const [communityleaderloading, setCommunityleaderloading] = useState(true);
   // 搜索的用户信息
   const [informationRole, setInformationRole] = useState();
   // 右键时添加区域的父ID，是当前所选的ID
@@ -327,8 +302,13 @@ const AdministrativeRegion: React.FC = () => {
   useEffect(() => {
     if (searchNamedata) {
       setInformationRole(searchNamedata.findUser);
+      if (searchRole === '网格长') {
+        setGridleaderloading(false);
+      } else {
+        setCommunityleaderloading(false);
+      }
     }
-  }, [searchNamedata]);
+  }, [searchNamedata, searchRole]);
 
   useEffect(() => {
     if (gridName) {
@@ -1179,6 +1159,7 @@ const AdministrativeRegion: React.FC = () => {
         <Table
           // style={{ overflow: 'hidden' }}
           columns={columnsRole}
+          loading={gridleaderloading}
           dataSource={informationRole}
         />
       </Modal>
@@ -1195,6 +1176,7 @@ const AdministrativeRegion: React.FC = () => {
         <Table
           style={{ overflow: 'hidden' }}
           columns={columnsRole}
+          loading={communityleaderloading}
           dataSource={informationRole}
         />
       </Modal>

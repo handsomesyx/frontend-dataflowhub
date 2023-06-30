@@ -135,6 +135,7 @@ export default function PoliceStation() {
   const [visitInfo, setVisitInfo] = useState(false);
   // 增加警员
   const [addPolice, setAddPolice] = useState(false);
+  // const [, setAddPoliceloading] = useState(false);
   // 删除警员
   const [deletePoliceInfo, setDeletePoliceInfo] = useState(false);
   // 增加警局
@@ -167,7 +168,8 @@ export default function PoliceStation() {
   const [policeStationId, setPoliceStationId] = useState<number>();
   // 警员信息
   const [policeDetail, setPoliceDetail] = useState();
-  const [loading, setLoading] = useState(true);
+  const [policeStationloading, setPoliceStationLoading] = useState(true);
+  const [policeDetailloading, setPoliceDetailloading] = useState(true);
   const [updateLoading, setupdateLoading] = useState(false);
   const { SHOW_CHILD } = Cascader;
   // 总数
@@ -211,7 +213,7 @@ export default function PoliceStation() {
     variables: selectObject,
   });
   // 查询所长、警员等用户信息
-  const { data: searchNamedata } = useQuery(FindUser, {
+  const { data: searchNamedata, loading } = useQuery(FindUser, {
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
     variables: {
@@ -243,6 +245,7 @@ export default function PoliceStation() {
   useEffect(() => {
     if (policeDetailData) {
       setPoliceDetail(policeDetailData.getPoliceInfo);
+      setPoliceDetailloading(false);
     }
   }, [policeDetailData]);
 
@@ -251,7 +254,7 @@ export default function PoliceStation() {
       setPoliceStation(Policestationdata.findManyPolicestation.data);
       setTotal(Policestationdata.findManyPolicestation.count);
       if (!updateLoading) {
-        setLoading(false);
+        setPoliceStationLoading(false);
       }
     }
   }, [Policestationdata, updateLoading]);
@@ -292,6 +295,8 @@ export default function PoliceStation() {
   // 增加警员
   const AddPolice_handleOk = () => {
     setAddPolice(false);
+    setPoliceStationLoading(true);
+    setupdateLoading(true);
     addPoliceInfo({
       variables: {
         rightnow_policestation_id: policeStationId,
@@ -313,10 +318,22 @@ export default function PoliceStation() {
     }).then((r) => {
       if (r.data.addPolice === 1) {
         formAddPolice.resetFields();
-        message.success('添加成功');
+        message.success(
+          '添加成功',
+          (onclose = () => {
+            setPoliceStationLoading(false);
+            setupdateLoading(false);
+          }),
+        );
       } else {
         formAddPolice.resetFields();
-        message.success('添加失败');
+        message.success(
+          '添加失败',
+          (onclose = () => {
+            setPoliceStationLoading(false);
+            setupdateLoading(false);
+          }),
+        );
       }
     });
   };
@@ -662,7 +679,7 @@ export default function PoliceStation() {
           + 添加派出所
         </Button>
       </div>
-      <Spin spinning={loading}>
+      <Spin spinning={policeStationloading}>
         {policeStation.length !== 0 ? (
           <>
             <Row style={{ marginLeft: '0.5vw' }} gutter={16}>
@@ -695,6 +712,7 @@ export default function PoliceStation() {
         <Table
           style={{ paddingTop: '1vh' }}
           columns={columns}
+          loading={policeDetailloading}
           dataSource={policeDetail}
         />
       </Modal>
@@ -808,7 +826,7 @@ export default function PoliceStation() {
                   multiple
                   showCheckedStrategy={SHOW_CHILD}
                   placeholder="请选择所属行政区域"
-                  // changeOnSelect
+                // changeOnSelect
                 />
               </Form.Item>
             </Col>
@@ -824,7 +842,7 @@ export default function PoliceStation() {
         }}
         footer={null}
       >
-        <Table columns={columnsRole} dataSource={policeInfo} />
+        <Table columns={columnsRole} loading={loading} dataSource={policeInfo} />
       </Modal>
       <Modal
         title={'所长信息'}
@@ -838,6 +856,7 @@ export default function PoliceStation() {
         <Table
           style={{ overflow: 'hidden' }}
           columns={columnsRole}
+          loading={loading}
           dataSource={policeInfo}
         />
       </Modal>
@@ -846,7 +865,7 @@ export default function PoliceStation() {
         open={updateState}
         getContainer={false}
         onOk={async () => {
-          setLoading(true);
+          setPoliceStationLoading(true);
           setupdateLoading(true);
           setUpdateState(false);
           let administrative_area_idArr = formupdatePoliceStation.getFieldValue('area');
@@ -872,7 +891,7 @@ export default function PoliceStation() {
             message.success(
               '修改成功',
               (onclose = () => {
-                setLoading(false);
+                setPoliceStationLoading(false);
                 setupdateLoading(false);
               }),
             );
@@ -881,7 +900,7 @@ export default function PoliceStation() {
             message.success(
               '修改失败',
               (onclose = () => {
-                setLoading(false);
+                setPoliceStationLoading(false);
                 setupdateLoading(false);
               }),
             );
@@ -945,7 +964,7 @@ export default function PoliceStation() {
               multiple
               showCheckedStrategy={SHOW_CHILD}
               placeholder="请选择所属行政区域"
-              // changeOnSelect
+            // changeOnSelect
             />
           </Form.Item>
         </Form>
