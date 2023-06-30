@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { GetAllHandledEvents, GetAllUnhandledEvents, GetCurrentUser } from '@/apis';
-import { getRefreshToken, logout } from '@/store/SaveToken';
+import { getRefreshToken, getUserName, logout } from '@/store/SaveToken';
 
 import TopIcon from '../../assets/top.svg';
 import styles from './HomePage.module.less';
@@ -265,7 +265,7 @@ function HomePage() {
             <img src={TopIcon} className={styles.TopIcon} />
             <div className={styles.TopBox}>
               <div>
-                <span>欢迎你 ! 超级管理员</span>
+                <span>欢迎您，{getUserName()}</span>
                 <Time></Time>
               </div>
               <div style={{ color: '#fff' }}>
