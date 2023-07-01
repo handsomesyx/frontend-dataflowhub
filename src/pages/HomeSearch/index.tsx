@@ -169,8 +169,8 @@ const HomeSearch = () => {
             <div className={styles.TimeBox}>
               <div className={styles.Timetitle}>时间筛选</div>
               <ConfigProvider locale={zhCN}>
-                <DatePicker className={styles.TimeOne} onChange={TimeonChangeUp} />
-                <DatePicker className={styles.TimeTwo} onChange={TimeonChangeDown} />
+                <DatePicker className={styles.TimeOne} onChange={TimeonChangeDown} />
+                <DatePicker className={styles.TimeTwo} onChange={TimeonChangeUp} />
               </ConfigProvider>
             </div>
           </>
@@ -202,13 +202,13 @@ const HomeSearch = () => {
                   placeholder="输入最小年龄"
                   style={{ color: '#000' }}
                   className={styles.TimeOne}
-                  onChange={ageonChangeUp}
+                  onChange={ageonChangeDown}
                 />
                 <Input
                   placeholder="输入最大年龄"
                   style={{ color: '#000' }}
                   className={styles.TimeTwo}
-                  onChange={ageonChangeDown}
+                  onChange={ageonChangeUp}
                 />
               </ConfigProvider>
             </div>
@@ -256,14 +256,14 @@ const HomeSearch = () => {
                 <Input
                   placeholder="输入身高最小值"
                   style={{ color: '#000' }}
+                  onChange={heightonChangeDown}
                   className={styles.TimeOne}
-                  onChange={heightonChangeUp}
                 />
                 <Input
                   placeholder="输入身高最大值"
                   style={{ color: '#000' }}
                   className={styles.TimeTwo}
-                  onChange={heightonChangeDown}
+                  onChange={heightonChangeUp}
                 />
               </ConfigProvider>
             </div>
