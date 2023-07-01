@@ -87,6 +87,29 @@ const SearchInfo = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination?.current, pagination?.pageSize]);
 
+  const wrapContent = (content: any) => {
+    const regex = /(.*)<em>(.*?)<\/em>(.*)/;
+    const match = content.match(regex);
+
+    if (match) {
+      const before = match[1];
+      const innerContent = match[2];
+      const after = match[3];
+
+      return (
+        <span>
+          {wrapContent(before)}
+          <span className="LightRed">
+            {innerContent?.replace(/<em>(.*?)<\/em>/g, '$1')}
+          </span>
+          {wrapContent(after)}
+        </span>
+      );
+    }
+
+    return content;
+  };
+
   const [flitdata, setFlitData] = useState<any>();
   useEffect(() => {
     if (searchData) {
@@ -96,30 +119,32 @@ const SearchInfo = () => {
         for (let key in item) {
           if (typeof item[key] === 'string' && item[key].includes('<em>')) {
             // 使用正则表达式将<em></em>标签包裹起来，并应用加粗样式
-            const regex = /(.*)<em>(.*?)<\/em>(.*)/;
-            const match = item[key].match(regex);
+            // console.log('item[key]', item[key]);
+            // const regex = /(.*)<em>(.*?)<\/em>(.*)/;
+            // const match = item[key].match(regex);
+            // if (match) {
+            //   const before = match[1];
+            //   const content = match[2];
+            //   const after = match[3];
 
-            if (match) {
-              const before = match[1];
-              const content = match[2];
-              const after = match[3];
-
-              strongRed[key] = (
-                <span>
-                  {before}
-                  <span className="LightRed">
-                    {content?.replace(/<em>(.*?)<\/em>/g, '$1')}
-                  </span>
-                  {after}
-                </span>
-              );
-            }
+            //   strongRed[key] = (
+            //     <span>
+            //       {before}
+            //       <span className="LightRed">
+            //         {content?.replace(/<em>(.*?)<\/em>/g, '$1')}
+            //       </span>
+            //       {after}
+            //     </span>
+            //   );
+            // }
+            strongRed[key] = wrapContent(item[key]);
           }
         }
         return { ...item, ...strongRed };
       });
       setFlitData(data);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchData]);
 
   const navigate = useNavigate();
@@ -181,7 +206,7 @@ const SearchInfo = () => {
                   民族：<span>{item?.nationality}</span>
                 </div>
                 <div>
-                  身高：<span>{item?.height ? `${item?.height}+cm` : '--'}</span>
+                  身高：<span>{item?.height ? `${item?.height}cm` : '--'}</span>
                 </div>
                 <div>
                   户籍所在地：<span>{item?.residence}</span>

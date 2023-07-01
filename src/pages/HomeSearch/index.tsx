@@ -320,7 +320,10 @@ const HomeSearch = () => {
   };
   const navigate = useNavigate();
   const handleSearch = () => {
-    if (inputvalue) {
+    // 判断是否都是空格
+    const isAllSpacesRegex = /^\s*$/;
+    const flag = isAllSpacesRegex.test(inputvalue);
+    if (!flag && inputvalue) {
       const option = {
         content: inputvalue,
         option: optiondata,
