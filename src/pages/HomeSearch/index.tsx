@@ -1,7 +1,7 @@
 import 'dayjs/locale/zh-cn';
 
 import { useQuery } from '@apollo/client';
-import { Input, Radio, type RadioChangeEvent, Select } from 'antd';
+import { Input, message, Radio, type RadioChangeEvent, Select } from 'antd';
 import { ConfigProvider } from 'antd';
 import DatePicker from 'antd/es/date-picker';
 import zhCN from 'antd/locale/zh_CN';
@@ -320,15 +320,19 @@ const HomeSearch = () => {
   };
   const navigate = useNavigate();
   const handleSearch = () => {
-    const option = {
-      content: inputvalue,
-      option: optiondata,
-    };
-    saveSearchData(option);
+    if (inputvalue) {
+      const option = {
+        content: inputvalue,
+        option: optiondata,
+      };
+      saveSearchData(option);
 
-    setTimeout(() => {
-      navigate('/search-info');
-    }, 200);
+      setTimeout(() => {
+        navigate('/search-info');
+      }, 200);
+    } else {
+      message.warning('搜索内容不能为空');
+    }
   };
 
   return (
