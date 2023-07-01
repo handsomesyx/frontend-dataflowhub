@@ -36,7 +36,7 @@ function InformationShow() {
   const id = window.localStorage.getItem('userIdNum');
   const { data, loading, error } = useQuery(getPeopleData, {
     variables: {
-      isDelete: true,
+      isDelete: false,
       personal_id: Number(id),
     },
   });
