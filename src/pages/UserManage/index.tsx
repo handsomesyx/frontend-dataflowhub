@@ -39,6 +39,8 @@ export default function PersonManage() {
 
   const [role_id, setRole_id] = useState<number>();
 
+  const [loading, setLoading] = useState(false);
+
   // 增加记录的弹窗,visibleAdd记录是否显示弹窗modal
   const [visibleAdd, setVisibleAdd] = useState(false);
   // 删除记录的弹窗,
@@ -55,7 +57,7 @@ export default function PersonManage() {
   // 设置分页，获取当前的页码
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 2,
+    pageSize: 10,
   });
   // 每次点击标签页进行的改变，主要是改变了页码数
   const handleTableChange = (newPagination: TablePaginationConfig) => {
@@ -86,7 +88,7 @@ export default function PersonManage() {
   const [username, setUsername] = useState<string>('');
 
   // 筛选条件
-  const [selectObject, setSelectObject] = useState<SelectObject>({});
+  const [selectObject, setSelectObject] = useState<SelectObject>();
 
   // 记录表格中的一行数据，方便修改和删除当前记录
   const [record, setRecord] = useState<DataType>();
@@ -163,17 +165,25 @@ export default function PersonManage() {
 
   // 打开或者关闭删除弹窗
   const showDeleteModal = (_text: any, record: DataType) => {
-    setVisibleDel(true);
-    setRecord(record);
+    if (record.role_id === 1) {
+      message.error('不能删除超级管理员的信息');
+    } else {
+      setVisibleDel(true);
+      setRecord(record);
+    }
   };
 
   // 打开或者关闭修改弹窗
   const showUpdataModal = (_text: any, record: DataType) => {
-    setRecord(record);
-    form2.setFieldsValue(record);
-    setImageUrl(record.head_url);
-    setRole_id(record.role_id);
-    setVisibleUpd(true);
+    if (record.role_id === 1) {
+      message.error('不能修改超级管理员的信息');
+    } else {
+      setRecord(record);
+      form2.setFieldsValue(record);
+      setImageUrl(record.head_url);
+      setRole_id(record.role_id);
+      setVisibleUpd(true);
+    }
   };
 
   // 点击添加用户信息按钮后的处理函数，显示添加弹窗
@@ -202,7 +212,10 @@ export default function PersonManage() {
     variables: {
       skip: skip,
       take: take,
-      selectOption: selectObject,
+      selectOption: {},
+    },
+    onCompleted: () => {
+      setLoading(false);
     },
   });
 
@@ -218,6 +231,8 @@ export default function PersonManage() {
           total: db?.getPerson.total,
         };
       });
+    } else {
+      setLoading(true);
     }
   }, [db]);
 
@@ -427,6 +442,7 @@ export default function PersonManage() {
   const [administrionAreaId, setAdministrionAreaId] = useState<number>();
   // 选择行政区域
   const selectAdministrionArea = (value: number) => {
+    setGridId(undefined);
     // 将administrionAreaId设置为下拉菜单选择的内容
     setAdministrionAreaId(value);
     // setP(value);
@@ -448,6 +464,7 @@ export default function PersonManage() {
 
   // 设置社区id
   const selectCommunity = (value: number) => {
+    setGridId(undefined);
     setFirstCommunity(value);
     const newGridList = grid?.getGrid.filter((item: any) => {
       return item.area_id === value || item.area_id === administrionAreaId;
@@ -471,6 +488,9 @@ export default function PersonManage() {
   const [isSelected, setIsSelected] = useState(false);
   // 点击筛选按钮之后的处理函数
   const selectClick = () => {
+    console.log('username', username);
+    console.log('gridid', gridId);
+    console.log('communityid', firstCommunity);
     // 取消状态screenDataState的值为true,点击取消,重新查询
     if (isSelected) {
       setGridId(undefined);
@@ -478,46 +498,55 @@ export default function PersonManage() {
       setPagination(() => {
         return {
           current: 1,
-          pageSize: 2,
+          pageSize: 10,
         };
       });
       refetch({
         skip: 0,
-        take: 2,
+        take: 10,
         selectOption: {},
-      });
-    } else if (selectObject) {
-      setIsSelected(!isSelected);
-      setPagination(() => {
-        return {
-          current: 1,
-          pageSize: 2,
-        };
-      });
-      setSelectObject({
-        username: username,
-        area_id: administrionAreaId,
-        grid_id: gridId,
-        community_id: firstCommunity,
-      });
-      refetch({
-        skip: 0,
-        take: 2,
-        selectOption: selectObject,
       });
     } else {
-      setIsSelected(!isSelected);
-      setPagination(() => {
-        return {
-          current: 1,
-          pageSize: 2,
-        };
-      });
-      refetch({
-        skip: 0,
-        take: 2,
-        selectOption: {},
-      });
+      if (username !== '' || gridId || administrionAreaId || firstCommunity) {
+        console.log('执行了');
+        setIsSelected(!isSelected);
+        setPagination(() => {
+          return {
+            current: 1,
+            pageSize: 10,
+          };
+        });
+        setSelectObject({
+          username: username,
+          area_id: administrionAreaId,
+          grid_id: gridId,
+          community_id: firstCommunity,
+        });
+        refetch({
+          skip: 0,
+          take: 10,
+          selectOption: {
+            username: username,
+            area_id: administrionAreaId,
+            grid_id: gridId,
+            community_id: firstCommunity,
+          },
+        });
+      } else {
+        // setIsSelected(!isSelected);
+        // setPagination(() => {
+        //   return {
+        //     current: 1,
+        //     pageSize: 2,
+        //   };
+        // });
+        // refetch({
+        //   skip: 0,
+        //   take: 2,
+        //   selectOption: {},
+        // });
+        message.error('没有筛选条件！');
+      }
     }
   };
 
@@ -1053,11 +1082,11 @@ export default function PersonManage() {
       <Table
         columns={columns}
         rowKey={(record) => record.id}
-        // dataSource={data?.sensitiveRules.data}
         dataSource={db?.getPerson.data}
         pagination={pagination}
-        // loading={loading}
+        loading={loading}
         onChange={handleTableChange}
+        scroll={{ y: 200 }}
       ></Table>
     </div>
   );
