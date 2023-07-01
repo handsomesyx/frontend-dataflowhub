@@ -324,7 +324,7 @@ const SearchBasic = () => {
           skip: skip,
           take: take,
         },
-        isDelete: false,
+        isDelete: true,
       },
     }).then(({ data }) => {
       setPagination((pre) => {
