@@ -178,7 +178,7 @@ const HomeSearch = () => {
       case 2:
         return (
           <div className={styles.TimeBox}>
-            <div className={styles.Agetitle}>姓名首字母筛选</div>
+            <div className={styles.Agetitle}>是否按照姓名首字母排序</div>
             <div className={styles.ContentName}>
               <Radio.Group
                 defaultValue={0}
