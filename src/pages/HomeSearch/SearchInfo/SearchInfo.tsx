@@ -181,7 +181,7 @@ const SearchInfo = () => {
                   民族：<span>{item?.nationality}</span>
                 </div>
                 <div>
-                  身高<span>{item?.height}</span>
+                  身高：<span>{item?.height ? `${item?.height}+cm` : '--'}</span>
                 </div>
                 <div>
                   户籍所在地：<span>{item?.residence}</span>
