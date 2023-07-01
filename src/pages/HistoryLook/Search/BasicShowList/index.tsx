@@ -39,7 +39,7 @@ const BasicShowList: React.FC<Props> = ({
         return (
           <div className={styles.BorderBox} key={index}>
             <div className={styles.FirstDiv}>
-              <img src="https://tse2-mm.cn.bing.net/th/id/OIP-C.ZcjidB6ytMyNAjg9clT4PAHaNK?pid=ImgDet&rs=1" />
+              <img src={item?.head_url} />
             </div>
             <div>
               <span>基本信息</span>
@@ -81,7 +81,7 @@ const BasicShowList: React.FC<Props> = ({
             <div>
               <a
                 onClick={() => {
-                  navigate('/population-manager/person-show', {
+                  navigate('/population-manager/person-show-history', {
                     state: { id: item?.id },
                   });
                   window.localStorage.setItem('userIdNum', item?.id?.toString());

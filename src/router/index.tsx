@@ -36,6 +36,9 @@ const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'))
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
+const InformationShowHistory = React.lazy(
+  () => import('@/pages/HistoryLook/Show/InformationShowHistory'),
+);
 import './index.css';
 
 import type { routerConfigType } from './routerConfigType';
@@ -136,6 +139,17 @@ const routeConfig: routerConfigType[] = [
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <div className="NotContentFFF">
                   <InformationShow />
+                </div>
+              </Suspense>
+            ),
+          },
+          {
+            path: 'person-show-history',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <InformationShowHistory />
                 </div>
               </Suspense>
             ),

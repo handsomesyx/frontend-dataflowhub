@@ -36,8 +36,8 @@ const Production = ({ ProductionData }: any) => {
               <td>种植面积</td>
             </tr>
             <tr>
-              <td>{item?.planting_breeding}</td>
               <td>{item?.plant_type || '- -'}</td>
+              <td>{item?.plant_quantity}</td>
               <td>{item?.plant_area || '- -'}</td>
             </tr>
             <tr>
