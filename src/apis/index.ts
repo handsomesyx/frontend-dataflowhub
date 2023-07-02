@@ -46,8 +46,9 @@ export const QUERY_AUDITS = gql`
         review_time
         status
         person_info {
-          real_name
-          id
+          name
+          grid_user_id
+          person_classification
         }
         update_time
         updater_id
@@ -81,8 +82,9 @@ export const QUERY_OK = gql`
         review_comments
         review_time
         person_info {
-          real_name
-          id
+          name
+          grid_user_id
+          person_classification
         }
         status
         update_time
@@ -119,8 +121,9 @@ export const QUERY_REFUSE = gql`
         status
         update_time
         person_info {
-          real_name
-          id
+          name
+          grid_user_id
+          person_classification
         }
         updater_id
         user_info {
@@ -151,17 +154,13 @@ export const GET_AUDIT_CHANGE = gql`
       id
       is_delete
       personal_info {
+        name
+        grid_user_id
         gender
         head_url
-        id
         id_card
-        is_delete
-        mobile
-        real_name
-        role
-        role_id
-        status
-        username
+        name
+
       }
       update_time
       updater_id
