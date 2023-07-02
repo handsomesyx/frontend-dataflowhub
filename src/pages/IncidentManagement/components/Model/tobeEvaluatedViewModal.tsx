@@ -12,6 +12,7 @@ function TobeEvaluatedViewModal(Props: {
   id: number;
   disable: boolean;
   setVisible: (visible: boolean) => void;
+  updata: Function;
 }) {
   const [form] = Form.useForm();
   const [visableappraise, setVisableAppraise] = useState(false);

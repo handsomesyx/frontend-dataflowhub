@@ -1,5 +1,5 @@
 import { useMount } from 'ahooks';
-import { Button, Popconfirm, Space } from 'antd';
+import { Button, ColorPicker, message, Popconfirm, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 
@@ -11,14 +11,27 @@ import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 import IncidentsAreReportedModal from '../components/Model/incidentsAreReportedModal';
 
 /* 已上报表格信息 */
-function Reported(Props: { role: number }) {
+function Reported(Props: { role: number; updata: Function }) {
   const [visible, setVisible] = useState(false);
   const [id, setId] = useState<number>(-1);
   const [disable, setdisable] = useState<boolean>(false);
-  const { role } = Props; // 这个用来判断是民警还是网格员
+  const [ModelData, setModelData] = useState<eventData>();
+  const [reloading, setReloading] = useState<boolean>(false);
+  const { role, updata } = Props; // 这个用来判断是民警还是网格员
   useMount(() => {});
+  // const [modifyReportInfo] = useMutation(modifyTheEventInformation, {
+  //   onCompleted: (data) => {
+  //     console.log(data);
+  //     setReloading(!reloading); // 重新加载数据
+  //     message.success('删除成功');
+  //   },
+  //   onError: (error) => {
+  //     console.log(error);
+  //     message.error('删除失败');
+  //   }
+  // });
 
-  function ReturnAction(role: number, id: number) {
+  function ReturnAction(role: number, id: number, record: eventData) {
     switch (role) {
       case 1:
         return (
@@ -26,6 +39,7 @@ function Reported(Props: { role: number }) {
             <Button
               type="link"
               onClick={() => {
+                setModelData(record);
                 setId(id);
                 setdisable(true);
                 setVisible(true);
@@ -41,6 +55,7 @@ function Reported(Props: { role: number }) {
             <Button
               type="link"
               onClick={() => {
+                setModelData(record);
                 setId(id);
                 setdisable(true);
                 setVisible(true);
@@ -50,12 +65,35 @@ function Reported(Props: { role: number }) {
             </Button>
             <Popconfirm
               title="取消本次上报"
-              description="确定需要本次上报吗？"
+              description="确定取消本次上报吗？"
               onConfirm={() => {
-                console.log('删除id', id);
+                // modifyReportInfo({
+                //   variables: {
+                //     ModifyReportInput:{
+                //       id: id,
+                //       is_delete: true
+                //     }
+                //   }
+                // });
+                updata({
+                  variables: {
+                    ModifyReportInput: {
+                      id: id,
+                      is_delete: true,
+                    },
+                  },
+                })
+                  .then(() => {
+                    setReloading(!reloading); // 重新加载数据
+                    message.success('删除成功');
+                  })
+                  .catch((error: any) => {
+                    console.log(error);
+                    message.error('删除失败');
+                  });
               }}
-              okText="取消"
-              cancelText="确认"
+              okText="确认"
+              cancelText="取消"
             >
               <Button type="link" danger>
                 确认删除
@@ -80,8 +118,23 @@ function Reported(Props: { role: number }) {
     },
     {
       title: '紧急状态',
-      dataIndex: 'emergency',
-      key: 'emergency',
+      dataIndex: 'priority',
+      key: 'priority',
+      render: (priority: number) => {
+        let color = '';
+        switch (priority) {
+          case 1:
+            color = 'red';
+            break;
+          case 2:
+            color = 'yellow';
+            break;
+          case 3:
+            color = 'blue';
+            break;
+        }
+        return <ColorPicker defaultValue={color} disabled={true} />;
+      },
     },
     {
       title: '上报地点',
@@ -97,7 +150,7 @@ function Reported(Props: { role: number }) {
     {
       title: '操作',
       key: 'action',
-      render: (_, record) => ReturnAction(role, record.id),
+      render: (_, record) => ReturnAction(role, record.id, record),
     },
   ];
   return (
@@ -120,7 +173,6 @@ function Reported(Props: { role: number }) {
             onClick={() => {
               setdisable(false);
               setVisible(true);
-              console.log('事件上报');
             }}
           >
             事件上报
@@ -134,8 +186,12 @@ function Reported(Props: { role: number }) {
         visible={visible}
         setVisible={setVisible}
         level={1}
+        data={ModelData}
+        reloading={reloading}
+        setReloading={setReloading}
+        updata={updata}
       />
-      <CaseRating columns={columns} level={1} />
+      <CaseRating columns={columns} level={1} reloading={reloading} />
     </div>
   );
 }

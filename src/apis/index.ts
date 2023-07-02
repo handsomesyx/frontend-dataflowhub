@@ -1038,3 +1038,23 @@ export const eventManagementGetsAListOfEvents = gql`
     }
   }
 `;
+
+export const addAnEventGridMember = gql`
+  mutation addReportInfo($addReportInput: AddReportInput!) {
+    addReportInfo(addReportInput: $addReportInput) {
+      id
+      classification_basis
+      create_time
+      creator_id
+      image_url
+    }
+  }
+`;
+
+export const modifyTheEventInformation = gql`
+  mutation modifyReportInfo($ModifyReportInput: ModifyReportInput!) {
+    modifyReportInfo(modifyReportInput: $ModifyReportInput) {
+      id
+    }
+  }
+`;

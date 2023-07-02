@@ -1,5 +1,5 @@
 /* 事件处理model 民警用 */
-import { Button, Form, Modal, Space } from 'antd';
+import { Button, Form, message, Modal, Space } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 
 function HandlingOpinionsModal(Props: {
@@ -9,9 +9,10 @@ function HandlingOpinionsModal(Props: {
   id: number;
   disable: boolean;
   setVisible: (visible: boolean) => void;
+  updata?: Function;
 }) {
   const [form] = Form.useForm();
-  const { id, visible, disable, role } = Props;
+  const { id, visible, disable, role, updata } = Props;
   console.log(id);
   return (
     <div>
@@ -34,7 +35,22 @@ function HandlingOpinionsModal(Props: {
               <Button
                 type={'primary'}
                 onClick={() => {
-                  console.log(id, '这里应该插入处理结果id');
+                  if (updata) {
+                    updata({
+                      modifyReportInput: {
+                        id: id,
+                        processing_status: '待评价',
+                        police_opinion: form.getFieldValue('processTheResults'),
+                      },
+                    })
+                      .then(() => {
+                        Props.setVisible(false);
+                        message.success('修改成功');
+                      })
+                      .catch(() => {
+                        message.error('修改失败');
+                      });
+                  }
                 }}
               >
                 提交

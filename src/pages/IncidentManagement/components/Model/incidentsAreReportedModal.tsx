@@ -1,9 +1,13 @@
 /* 事件上报添加model 网格员用 */
-import { Form, Input, Modal, Select } from 'antd';
+import { useMutation } from '@apollo/client';
+import { Form, Input, message, Modal, Radio, Select } from 'antd';
 import type { UploadFile } from 'antd/es/upload';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { addAnEventGridMember } from '@/apis';
 import MyUpload from '@/pages/IncidentManagement/components/myUpload';
+import type { eventData } from '@/pages/IncidentManagement/type';
+import { dealEventData } from '@/utils/commonFunctions/dealEventData';
 
 import HandlingOpinionsModal from '../Model/handlingOpinionsModal';
 
@@ -13,15 +17,20 @@ function IncidentsAreReportedModal(Props: {
   visible: boolean;
   id: number;
   disable: boolean;
+  reloading: boolean;
   setVisible: (visible: boolean) => void;
+  setReloading: (reloading: boolean) => void;
+  data: eventData | undefined;
+  updata: Function;
 }) {
   // level 1 已上报，2：处理中，3：待评价，4：已完结
   // role : 1表示民警或者超级管理员 2表示网格员
   // role表示当前角色，如果是民警的话，只能查看，根据level来判断 如果是已上报拥有：已知晓，去处理, 如果是处理中，拥有：去处理，如果是待评价或者已完结，即只能查看，无操作
   // 如果是网格员，就只能进行查看，不能进行修改，除非是添加的时候才能看到
   const [form] = Form.useForm();
-  const { id, visible, disable, role } = Props;
+  const { id, visible, disable, role, setReloading, updata, reloading } = Props;
   const [visableResult, setVisableResult] = useState(false);
+  const [visableHandlingOpinions, setVisableHandlingOpinions] = useState(false);
   const List: UploadFile[] = [
     {
       uid: '-1',
@@ -30,18 +39,43 @@ function IncidentsAreReportedModal(Props: {
       url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
     },
   ];
-  console.log(id);
+  const [addReportInfo] = useMutation(addAnEventGridMember, {
+    onCompleted(data) {
+      console.log(data, '添加成功');
+      message.success('添加成功');
+      setReloading(!reloading);
+      Props.setVisible(false);
+    },
+    onError(error) {
+      console.log(error, '添加失败');
+      message.error('添加失败');
+    },
+  });
+  useEffect(() => {
+    if (Props.data) {
+      const tempData = dealEventData(Props.data);
+      form.setFieldsValue(tempData);
+    }
+    if (Props.data?.issue_level === 'C') {
+      setVisableHandlingOpinions(true);
+    } else {
+      setVisableHandlingOpinions(false);
+    }
+  }, [setVisableHandlingOpinions, Props, form]);
+
   function handleSubmit() {
     if (role === 1) {
       Props.setVisible(false);
       setVisableResult(true);
-      console.log('这里应该弹出处理的窗口');
     } else {
       form
         .validateFields()
         .then((values) => {
-          console.log(values);
-          Props.setVisible(false);
+          addReportInfo({
+            variables: {
+              addReportInput: values,
+            },
+          });
         })
         .catch(() => {
           console.log('error');
@@ -50,7 +84,21 @@ function IncidentsAreReportedModal(Props: {
   }
   function handleCancel() {
     if (role === 1) {
-      console.log('该民警已经知晓');
+      updata({
+        variables: {
+          modifyReportInput: {
+            id: id,
+            processing_status: '已知晓',
+          },
+        },
+      })
+        .then(() => {
+          setReloading(!reloading);
+          message.success('修改成功');
+        })
+        .catch(() => {
+          message.error('修改失败');
+        });
       Props.setVisible(false);
     } else {
       Props.setVisible(false);
@@ -69,36 +117,83 @@ function IncidentsAreReportedModal(Props: {
         <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 16 }}>
           <Form.Item
             label="内容"
-            name="content"
+            name="classification_basis"
             rules={[{ required: true, message: '请填写内容' }]}
           >
             <Input disabled={disable} />
           </Form.Item>
-          <Form.Item label="图片" name="picture">
+          <Form.Item label="图片" name="image_url">
             <MyUpload disable={false} List={List} />
           </Form.Item>
-          <Form.Item label="事件分类级别" name="eventClassificationLevel">
-            <Input disabled={disable} />
+          <Form.Item
+            label="事件分类级别"
+            name="issue_level"
+            initialValue="NEIGHBORHOOD_DISPUTE"
+          >
+            <Radio.Group disabled={disable}>
+              <Radio
+                value="NEIGHBORHOOD_DISPUTE"
+                onClick={() => {
+                  setVisableHandlingOpinions(false);
+                }}
+              >
+                A
+              </Radio>
+              <Radio
+                value="PETITION"
+                onClick={() => {
+                  setVisableHandlingOpinions(false);
+                }}
+              >
+                B
+              </Radio>
+              <Radio
+                value="NORMAL_DEMAND"
+                onClick={() => {
+                  setVisableHandlingOpinions(true);
+                }}
+              >
+                C
+              </Radio>
+            </Radio.Group>
           </Form.Item>
-          <Form.Item label="紧急程度" name="emergencyLevel" initialValue={3}>
+          {visableHandlingOpinions ? (
+            <Form.Item
+              label="群众需求"
+              name="public_demand"
+              rules={[{ required: true, message: '请填写群众需求' }]}
+            >
+              <Input disabled={disable} />
+            </Form.Item>
+          ) : null}
+          {visableHandlingOpinions ? (
+            <Form.Item
+              label="群众建议"
+              name="public_opinion"
+              rules={[{ required: true, message: '请填写群众建议' }]}
+            >
+              <Input disabled={disable} />
+            </Form.Item>
+          ) : null}
+          <Form.Item label="紧急程度" name="priority" initialValue="NORMAL">
             <Select
               style={{ width: 120 }}
-              allowClear
               disabled={disable}
               options={[
-                { value: 1, label: '紧急' },
-                { value: 2, label: '加急' },
-                { value: 3, label: '一般' },
+                { value: 'CRITICAL', label: '紧急' },
+                { value: 'URGENT', label: '加急' },
+                { value: 'NORMAL', label: '一般' },
               ]}
             />
           </Form.Item>
-          <Form.Item label="上报地点" name="reportLocation">
+          <Form.Item label="上报地点" name="report_address">
             <Input disabled={disable} />
           </Form.Item>
         </Form>
       </Modal>
       <HandlingOpinionsModal
         role={role}
+        updata={updata}
         id={id}
         visible={visableResult}
         setVisible={setVisableResult}

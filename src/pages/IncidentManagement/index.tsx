@@ -1,6 +1,8 @@
+import { useMutation } from '@apollo/client';
 import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
 
+import { modifyTheEventInformation } from '@/apis';
 import Finished from '@/pages/IncidentManagement/components/finished';
 import Processing from '@/pages/IncidentManagement/components/processing';
 import Reported from '@/pages/IncidentManagement/components/reported';
@@ -9,7 +11,9 @@ import { getUserType } from '@/store/SaveToken';
 
 function IncidentManagement() {
   console.log(getUserType(), 'getUserType(');
-  const role = 1; // 1表示民警，2表示网格员
+  const role = 2; // 1表示民警，2表示网格员
+
+  const [modifyReportInfo] = useMutation(modifyTheEventInformation);
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -18,7 +22,7 @@ function IncidentManagement() {
     {
       key: '1',
       label: '已上报',
-      children: <Reported role={role} />,
+      children: <Reported role={role} updata={modifyReportInfo} />,
     },
     {
       key: '2',
@@ -28,7 +32,7 @@ function IncidentManagement() {
     {
       key: '3',
       label: '待评价',
-      children: <ToBeEvaluated role={role} />,
+      children: <ToBeEvaluated role={role} updata={modifyReportInfo} />,
     },
     {
       key: '4',

@@ -1,10 +1,11 @@
-import { Button, Space } from 'antd';
+import { Button, ColorPicker, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 
 import CaseRating from '@/pages/IncidentManagement/components/caseRating';
 import FinishModal from '@/pages/IncidentManagement/components/Model/finishModal';
-import type { eventData } from '@/pages/IncidentManagement/type';
+import type { eventData, user } from '@/pages/IncidentManagement/type';
+import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 
 function Finished(Props: { role: number }) {
   const [visible, setVisible] = useState(false);
@@ -14,33 +15,51 @@ function Finished(Props: { role: number }) {
   const columns: ColumnsType<eventData> = [
     {
       title: '事件信息',
-      dataIndex: 'eventInformation',
-      key: 'eventInformation',
+      dataIndex: 'classification_basis',
+      key: 'classification_basis',
     },
     {
       title: '网格员',
-      dataIndex: 'gridMan',
-      key: 'gridMan',
+      dataIndex: 'report_user',
+      key: 'report_user',
+      render: (user: user) => <span>{user.real_name}</span>,
     },
     {
       title: '紧急状态',
-      dataIndex: 'emergency',
-      key: 'emergency',
+      dataIndex: 'priority',
+      key: 'priority',
+      render: (priority: number) => {
+        let color = '';
+        switch (priority) {
+          case 1:
+            color = 'red';
+            break;
+          case 2:
+            color = 'yellow';
+            break;
+          case 3:
+            color = 'blue';
+            break;
+        }
+        return <ColorPicker defaultValue={color} disabled={true} />;
+      },
     },
     {
       title: '上报地点',
-      dataIndex: 'placeOfEscalation',
-      key: 'placeOfEscalation',
+      dataIndex: 'report_address',
+      key: 'report_address',
     },
     {
       title: '上报时间',
-      dataIndex: 'reportingTime',
-      key: 'reportingTime',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (time: number) => <span>{timestampToTime(time)}</span>,
     },
     {
       title: '处理时间',
-      dataIndex: 'processingTime',
-      key: 'processingTime',
+      dataIndex: 'report_time',
+      key: 'report_time',
+      render: (time: number) => <span>{timestampToTime(time)}</span>,
     },
     {
       title: 'Action',

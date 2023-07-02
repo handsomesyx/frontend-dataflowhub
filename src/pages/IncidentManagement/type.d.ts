@@ -36,7 +36,7 @@ interface eventData {
   issue_level: string | null;
   police_id: number | null;
   police_opinion: string | null;
-  priority: number | null;
+  priority: number | null | string;
   processing_status: string | null;
   processing_time: date | null;
   public_demand: string | null;

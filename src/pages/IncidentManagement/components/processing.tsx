@@ -1,41 +1,60 @@
-import { Button, Space } from 'antd';
+import { Button, ColorPicker, Space } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 
 import CaseRating from '@/pages/IncidentManagement/components/caseRating';
 import ProcessingModal from '@/pages/IncidentManagement/components/Model/ProcessingModal';
-import type { eventData } from '@/pages/IncidentManagement/type';
+import type { eventData, user } from '@/pages/IncidentManagement/type';
+import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 
 /* 处理中 */
 function Processing(Props: { role: number }) {
   const [visible, setVisible] = useState(false);
   const { role } = Props; // 这个用来判断是民警还是网格员
   const [id, setId] = useState<number>(-1);
+  const [ModelData, SetModelData] = useState<eventData>();
   const columns: ColumnsType<eventData> = [
     {
       title: '事件信息',
-      dataIndex: 'eventInformation',
-      key: 'eventInformation',
+      dataIndex: 'classification_basis',
+      key: 'classification_basis',
     },
     {
       title: '网格员',
-      dataIndex: 'gridMan',
-      key: 'gridMan',
+      dataIndex: 'report_user',
+      key: 'report_user',
+      render: (user: user) => <span>{user.real_name}</span>,
     },
     {
       title: '紧急状态',
-      dataIndex: 'emergency',
-      key: 'emergency',
+      dataIndex: 'priority',
+      key: 'priority',
+      render: (priority: number) => {
+        let color = '';
+        switch (priority) {
+          case 1:
+            color = 'red';
+            break;
+          case 2:
+            color = 'yellow';
+            break;
+          case 3:
+            color = 'blue';
+            break;
+        }
+        return <ColorPicker defaultValue={color} disabled={true} />;
+      },
     },
     {
       title: '上报地点',
-      dataIndex: 'placeOfEscalation',
-      key: 'placeOfEscalation',
+      dataIndex: 'report_address',
+      key: 'report_address',
     },
     {
       title: '上报时间',
-      dataIndex: 'reportingTime',
-      key: 'reportingTime',
+      dataIndex: 'create_time',
+      key: 'create_time',
+      render: (time: number) => <span>{timestampToTime(time)}</span>,
     },
     {
       title: '操作',
@@ -45,6 +64,7 @@ function Processing(Props: { role: number }) {
           <Button
             type="link"
             onClick={() => {
+              SetModelData(record);
               setId(record.id);
               setVisible(true);
               console.log('查看详情', record.id);
@@ -65,6 +85,7 @@ function Processing(Props: { role: number }) {
         visible={visible}
         setVisible={setVisible}
         level={2}
+        data={ModelData}
       />
       <CaseRating columns={columns} level={2} />
     </div>
