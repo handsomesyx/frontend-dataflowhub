@@ -391,7 +391,7 @@ const App: React.FC = () => {
         }
         return (
           <a onClick={showModal}>
-            {content}姓名为&quot;{text?.person_info?.real_name}&quot;的群众信息
+            {content}姓名为&quot;{text?.person_info?.name}&quot;的群众信息
           </a>
         );
       },
@@ -428,7 +428,7 @@ const App: React.FC = () => {
       title: '所属群众',
       dataIndex: 'belong',
       key: 'belong',
-      render: (_, text) => <div>{text?.person_info?.id}</div>,
+      render: (_, text) => <div>{text?.person_info?.person_classification}</div>,
     },
     {
       title: '所属网格员',
