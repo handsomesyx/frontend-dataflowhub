@@ -998,10 +998,7 @@ export const DeletePerson = gql`
 // 修改人员信息
 export const UpdatePerson = gql`
   mutation update($id: Int!, $input: personCreateInput!, $input2: role_userCreateInput!) {
-    updatePerson(id: $id, input: $input, input2: $input2) {
-      id
-      username
-    }
+    updatePerson(id: $id, input: $input, input2: $input2)
   }
 `;
 

@@ -239,7 +239,7 @@ export default function PersonManage() {
   // 获取角色表的信息
   const { data: role } = useQuery(GetRole);
   // 获取警员信息
-  const { data: police } = useQuery(GetPolice);
+  const { data: police, refetch: refetch2 } = useQuery(GetPolice);
   // 获取网格信息
   const { data: grid } = useQuery(GetGrid);
   useEffect(() => {
@@ -297,11 +297,20 @@ export default function PersonManage() {
         },
         //   插入完数据后，重新调用查询接口，获取最新数据
         onCompleted: () => {
+          console.log('执行了完成插入函数');
+          console.log('skip的值', skip, 'take的值', take);
+          console.log('select的值', selectObject);
           refetch({
             skip: skip,
             take: take,
-            selectOption: selectObject,
+            selectOption: {
+              username: username,
+              area_id: administrionAreaId,
+              grid_id: gridId,
+              community_id: firstCommunity,
+            },
           });
+          refetch2();
           form.resetFields();
           setImageUrl('');
           // setFirstCommunity(undefined);
@@ -312,9 +321,9 @@ export default function PersonManage() {
           message.success('添加成功');
           form.resetFields();
         })
-        .catch((error) => {
-          message.error('重复添加', error.message);
-          // form.resetFields();
+        .catch(() => {
+          message.error('重复添加');
+          form.resetFields();
         });
     });
   };
@@ -333,30 +342,35 @@ export default function PersonManage() {
     deletePerson({
       variables: { id: record?.id },
       onCompleted: () => {
+        console.log('执行了成功删除');
+        console.log('skip的值', skip, 'take的值', take);
+        console.log('select的值', selectObject);
         if (pagination.total === skip + 1) {
           skip = skip - pageSize;
         }
         refetch({
           skip: skip,
           take: take,
-          selectOption: selectObject,
+          selectOption: {
+            username: username,
+            area_id: administrionAreaId,
+            grid_id: gridId,
+            community_id: firstCommunity,
+          },
         });
+        refetch2();
       },
     })
       .then(() => {
-        setTimeout(() => {
-          setVisibleDel(false);
-          setConfirmLoading(false);
-          message.success('删除成功');
-        }, 500);
+        message.success('删除成功');
       })
-      .catch((res) => {
-        setTimeout(() => {
-          setVisibleDel(false);
-          setConfirmLoading(false);
-          message.error('' + res);
-        }, 500);
+      .catch(() => {
+        message.error('删除失败');
       });
+    setTimeout(() => {
+      setVisibleDel(false);
+      setConfirmLoading(false);
+    }, 500);
   };
 
   // 点击删除用户弹窗的取消按钮之后，关闭弹窗
@@ -401,8 +415,14 @@ export default function PersonManage() {
           refetch({
             skip: skip,
             take: take,
-            selectOption: selectObject,
+            selectOption: {
+              username: username,
+              area_id: administrionAreaId,
+              grid_id: gridId,
+              community_id: firstCommunity,
+            },
           });
+          refetch2();
           setImageUrl('');
           form2.resetFields();
         },
@@ -494,6 +514,9 @@ export default function PersonManage() {
     // 取消状态screenDataState的值为true,点击取消,重新查询
     if (isSelected) {
       setGridId(undefined);
+      setFirstCommunity(undefined);
+      setAdministrionAreaId(undefined);
+      setUsername('');
       setIsSelected(!isSelected);
       setPagination(() => {
         return {
@@ -508,7 +531,7 @@ export default function PersonManage() {
       });
     } else {
       if (username !== '' || gridId || administrionAreaId || firstCommunity) {
-        console.log('执行了');
+        console.log('执行了筛选');
         setIsSelected(!isSelected);
         setPagination(() => {
           return {
@@ -532,6 +555,7 @@ export default function PersonManage() {
             community_id: firstCommunity,
           },
         });
+        console.log('查询的数据', db?.getPerson.data);
       } else {
         // setIsSelected(!isSelected);
         // setPagination(() => {
@@ -630,6 +654,7 @@ export default function PersonManage() {
                 placeholder="请选择行政区域"
                 style={{ width: '150px' }}
                 onChange={selectAdministrionArea}
+                value={administrionAreaId}
               >
                 {administrationAreaList?.map((item: any) => (
                   <Option key={item.id} value={item.id}>
@@ -1086,7 +1111,7 @@ export default function PersonManage() {
         pagination={pagination}
         loading={loading}
         onChange={handleTableChange}
-        scroll={{ y: 200 }}
+        // scroll={{ y: 200 }}
       ></Table>
     </div>
   );
