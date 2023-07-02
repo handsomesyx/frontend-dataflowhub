@@ -180,6 +180,7 @@ export default function PersonManage() {
     } else {
       setRecord(record);
       form2.setFieldsValue(record);
+      form2.setFieldValue('password', undefined);
       setImageUrl(record.head_url);
       setRole_id(record.role_id);
       setVisibleUpd(true);
@@ -406,7 +407,7 @@ export default function PersonManage() {
             // head_url: 'http',
             id_card: newRecord.id_card,
             mobile: newRecord.mobile,
-            password: newRecord.password,
+            password: newRecord.password ? newRecord.password : record?.password,
             username: newRecord.username,
           },
           input2: ipt2,
@@ -985,7 +986,7 @@ export default function PersonManage() {
             labelCol={{ span: 6 }}
             rules={[
               {
-                required: true,
+                // required: true,
                 // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
                 min: 6,
                 message: '密码长度不少于6位',
