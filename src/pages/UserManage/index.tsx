@@ -1111,7 +1111,7 @@ export default function PersonManage() {
         pagination={pagination}
         loading={loading}
         onChange={handleTableChange}
-        scroll={{ y: 200 }}
+        // scroll={{ y: 200 }}
       ></Table>
     </div>
   );
