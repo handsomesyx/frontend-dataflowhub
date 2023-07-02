@@ -1004,3 +1004,37 @@ export const GetArea = gql`
     }
   }
 `;
+
+export const eventManagementGetsAListOfEvents = gql`
+  query queryReportInfoList($processing_status: String, $skip: Int, $take: Int) {
+    queryReportInfoList(processing_status: $processing_status, skip: $skip, take: $take) {
+      data {
+        id
+        classification_basis
+        create_time
+        creator_id
+        image_url
+        is_delete
+        issue_level
+        police_id
+        police_opinion
+        priority
+        processing_status
+        processing_time
+        public_demand
+        public_opinion
+        report_address
+        report_time
+        report_user {
+          real_name
+        }
+        reporter_evaluate
+        reporter_id
+        reporter_star_rating
+        update_time
+        updater_id
+      }
+      total
+    }
+  }
+`;

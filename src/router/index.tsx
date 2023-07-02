@@ -26,6 +26,7 @@ import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
 const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
 const Visualization = React.lazy(() => import('@/pages/visualization'));
 import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
+import IncidentManagement from '@/pages/IncidentManagement';
 import { userType } from '@/store';
 import { getUserType } from '@/store/SaveToken';
 
@@ -262,7 +263,9 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>事件管理</div>
+            <div>
+              <IncidentManagement />
+            </div>
           </Suspense>
         ),
       },
