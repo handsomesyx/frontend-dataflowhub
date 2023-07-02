@@ -4,9 +4,11 @@ import type { ColumnsType } from 'antd/es/table';
 import { useState } from 'react';
 
 import CaseRating from '@/pages/IncidentManagement/components/caseRating';
-import IncidentsAreReportedModal from '@/pages/IncidentManagement/components/Model/incidentsAreReportedModal';
 import type { eventData, user } from '@/pages/IncidentManagement/type';
 import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
+
+// @ts-ignore
+import IncidentsAreReportedModal from '../components/Model/incidentsAreReportedModal';
 
 /* 已上报表格信息 */
 function Reported(Props: { role: number }) {

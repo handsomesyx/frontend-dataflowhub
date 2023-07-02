@@ -3,8 +3,9 @@ import { Form, Input, Modal, Select } from 'antd';
 import type { UploadFile } from 'antd/es/upload';
 import { useState } from 'react';
 
-import HandlingOpinionsModal from '@/pages/IncidentManagement/components/Model/handlingOpinionsModal';
 import MyUpload from '@/pages/IncidentManagement/components/myUpload';
+
+import HandlingOpinionsModal from '../Model/handlingOpinionsModal';
 
 function IncidentsAreReportedModal(Props: {
   role: number;
