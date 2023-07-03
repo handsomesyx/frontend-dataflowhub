@@ -36,7 +36,8 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
       });
     }
     if (disData) {
-      form.setFieldsValue({
+      setOpenDis(true);
+      disform.setFieldsValue({
         disabilityId: disData.disability_id,
         disabilityType: disData.disability_type,
         disabilitySubsidy: disData.disability_subsidy,
@@ -44,7 +45,7 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
         servereDisabilitySub: disData.severe_disability_subsidy,
       });
     }
-  });
+  }, [healthData, disData, form, disform]);
 
   const openDisability = (e: any) => {
     if (e === '残疾人') {
@@ -68,7 +69,16 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
           <Form labelCol={{ span: 8 }} labelWrap={true} form={form}>
             <Row>
               <Col span={6}>
-                <Form.Item name="marriageStatus" label="婚姻状态:" required>
+                <Form.Item
+                  name="marriageStatus"
+                  label="婚姻状态:"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择婚姻状态！',
+                    },
+                  ]}
+                >
                   <Select style={{ width: '11vw' }}>
                     <Option key={1} value="未婚">
                       未婚
@@ -131,7 +141,16 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
           <Form labelCol={{ span: 4 }} form={form}>
             <Row>
               <Col span={12}>
-                <Form.Item name="vaccinationStatus" label="疫苗接种情况:" required>
+                <Form.Item
+                  name="vaccinationStatus"
+                  label="疫苗接种情况:"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择疫苗接种情况！',
+                    },
+                  ]}
+                >
                   <Input placeholder="请输入" style={{ width: '29vw' }} />
                 </Form.Item>
               </Col>

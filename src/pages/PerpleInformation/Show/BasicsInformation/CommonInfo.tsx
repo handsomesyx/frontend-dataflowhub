@@ -1,5 +1,5 @@
 import { useMutation } from '@apollo/client';
-import { Button, Form, Input, message, Modal } from 'antd';
+import { Button, Form, message, Modal, Select } from 'antd';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import styles from './style.module.less';
 interface Props {
   peopleData: CommonPeopleBasics;
 }
+const { Option } = Select;
 
 /**
  * @description 基础信息接口
@@ -66,6 +67,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
       .then(() => {
         message.success('已为您创建审核记录');
         setDeleteVisible(false);
+        navigate('/population-manager/person-search');
       })
       .catch(() => {
         message.error('创建审核记录失败');
@@ -91,7 +93,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span></span>曾用名：<span>{peopleData?.formerName}</span>
           </div>
           <div>
-            <span>*</span>人员分级类别：<span>{peopleData?.level}</span>
+            <span>*</span>身高<span>{peopleData?.height}</span>
           </div>
           <div style={{ width: '100%' }}>
             <span>*</span>所属派出所：
@@ -101,7 +103,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span>*</span> 所属网格：<span>{peopleData?.gridding}</span>
           </div>
           <div>
-            <span>*</span>身高<span>{peopleData?.height}</span>
+            <span>*</span>人员分级类别：<span>{peopleData?.level}</span>
           </div>
         </div>
         <div>
@@ -117,10 +119,6 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           </div>
           <div>
             <span></span> 何时来本地居住：<span>{peopleData?.liveComeTime}</span>
-          </div>
-          <div>
-            <span>*</span>所属社区：
-            <span>{peopleData?.community}</span>
           </div>
           <div>
             <span>*</span>户籍所在地：<span>{peopleData?.placeDomicile}</span>
@@ -179,8 +177,27 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           onCancel={() => setDeleteVisible(false)}
         >
           <Form form={form}>
-            <Form.Item name="priority" label="紧急程度：">
-              <Input placeholder="请输入紧急程度,如：1-3" />
+            <Form.Item
+              name="priority"
+              label="紧急程度："
+              rules={[
+                {
+                  required: true,
+                  message: '请选择紧急程度！',
+                },
+              ]}
+            >
+              <Select placeholder="请选择紧急程度">
+                <Option key={1} value={1}>
+                  紧急
+                </Option>
+                <Option key={2} value={2}>
+                  加急
+                </Option>
+                <Option key={3} value={3}>
+                  一般
+                </Option>
+              </Select>
             </Form.Item>
           </Form>
         </Modal>

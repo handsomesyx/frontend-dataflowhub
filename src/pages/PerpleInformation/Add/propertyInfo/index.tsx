@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import type { FormInstance } from 'antd';
 import { Button, Col, Form, Input, message, Modal, Row, Select, Switch } from 'antd';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { CreatePeopleInfo } from '@/apis';
 
@@ -45,10 +46,11 @@ const PorpertyInfo = ({
 }: props) => {
   const [socialWorkOn, setSocialWorkOn] = useState<boolean>(false);
   const [volunteerOn, setVolunteerOn] = useState<boolean>(false);
-  const [errorVisible, setErrorVisibile] = useState<Boolean>(false);
   const [volunteerStatus, setVolunteerStatus] = useState<any[]>();
   const [socialWorker, setSocialWorker] = useState<any[]>();
   const [urgencyVisible, setUrgencyVisible] = useState<boolean>();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (porData) {
@@ -92,19 +94,6 @@ const PorpertyInfo = ({
         setSocialWorker(resultSocial);
         setSocialWorkOn(true);
       }
-    } else {
-      const jsonObjsocial = JSON.parse('[{"1":"asjdkfjaksd"},{"2":"xxxxx"}]');
-      const socailArr: string[] = Object.values(jsonObjsocial);
-      const resultSocial = socailArr.map((item, index) => {
-        return {
-          SocialWorker: item[index + 1],
-        };
-      });
-
-      if (socailArr.length !== 0) {
-        setSocialWorker(resultSocial);
-        setSocialWorkOn(true);
-      }
     }
   }, [porData, porform]);
 
@@ -117,6 +106,7 @@ const PorpertyInfo = ({
     const healthData: healthInfo[] = [];
     const politicalData: politicalInfo[] = [];
     const ecoData: economicInfo[] = [];
+    let errVisible: boolean = false;
     setUrgencyVisible(false);
     porform
       ?.validateFields()
@@ -124,12 +114,12 @@ const PorpertyInfo = ({
         const data: any = porform.getFieldsValue();
         let volunter: { [x: number]: string }[] = [];
         let social: { [x: number]: string }[] = [];
-        data.Social.map((item: any, index: number) => {
+        data.Social?.map((item: any, index: number) => {
           social.push({
             [index + 1]: item.SocialWorker,
           });
         });
-        data.Volunteer.map((item: any, index: number) => {
+        data.Volunteer?.map((item: any, index: number) => {
           volunter.push({
             [index + 1]: item.VolunteerStatus,
           });
@@ -139,7 +129,7 @@ const PorpertyInfo = ({
           houseInfo: data?.houseInfo,
           personalId: data?.personalId,
           houseOwner: data?.houseOwner,
-          houseArea: parseInt(data?.houseArea.toString()),
+          houseArea: parseInt(data?.houseArea?.toString()),
           houseCondition: data?.houseCondition,
           hobbies: data?.hobbies,
           carModal: data?.carModal,
@@ -153,7 +143,9 @@ const PorpertyInfo = ({
           drivingLicenseType: data?.drivingLicenseType,
         });
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
     ecomomicform
       ?.validateFields()
       .then(() => {
@@ -161,20 +153,22 @@ const PorpertyInfo = ({
         ecoData.push({
           plantingBreeding: data?.plantingBreeding,
           plantType: data?.plantType,
-          plantQuantity: parseInt(data?.plantQuantity.toString()),
-          plantArea: parseFloat(data?.plantArea.toString()),
+          plantQuantity: parseInt(data?.plantQuantity?.toString()),
+          plantArea: parseFloat(data?.plantArea?.toString()),
           breedingType: data?.breedingType,
-          breedingQuantity: parseInt(data?.breedingQuantity.toString()),
+          breedingQuantity: parseInt(data?.breedingQuantity?.toString()),
           bussinessInfo: data?.businessLocation,
           businessLocation: data?.businessLocation,
           licenseNum: data?.licenseNum,
           fireEquipmentType: data?.fireEquipmentType,
-          fireEquipmentQuantity: parseInt(data?.fireEquipmentQuantity.toString()),
+          fireEquipmentQuantity: parseInt(data?.fireEquipmentQuantity?.toString()),
           surStatus: data?.surStatus,
-          surQuantity: parseInt(data?.surQuantity.toString()),
+          surQuantity: parseInt(data?.surQuantity?.toString()),
         });
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
     basicform
       ?.validateFields()
       .then(() => {
@@ -191,13 +185,15 @@ const PorpertyInfo = ({
           nickname: data?.nickname, //
           formerName: data?.formerName,
           dateOfResidence: new Date(data?.dateOfResidence), //
-          height: parseFloat(data?.height.toString()),
-          age: parseInt(data?.age.toString()),
+          height: parseFloat(data?.height?.toString()),
+          age: parseInt(data?.age?.toString()),
           gender: data?.gender,
           headUrl: imgSrc ?? '', //
         });
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
     healthform
       ?.validateFields()
       .then(() => {
@@ -226,7 +222,9 @@ const PorpertyInfo = ({
           });
         }
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
 
     eduform
       .validateFields()
@@ -244,42 +242,49 @@ const PorpertyInfo = ({
           school: data?.school,
         });
 
-        createPeopleInfo({
-          variables: {
-            createBasicInfoInput: {
-              CreateManyBasicInfoDto: baiscData,
+        if (errVisible) {
+          message.error('您有未完成填写的必填项');
+        } else {
+          createPeopleInfo({
+            variables: {
+              createBasicInfoInput: {
+                CreateManyBasicInfoDto: baiscData,
+              },
+              createDisabilityInfoInput: {
+                CreateManDisabilityInfoDto: disData,
+              },
+              createEconomicInfoInput: {
+                CreateManyEconomicInfoDto: ecoData,
+              },
+              createHealthInfoInput: {
+                CreateManyHealthInfoDto: healthData,
+              },
+              createPoliticalInfoInput: {
+                CreateManyPoliticalInfoDto: politicalData,
+              },
+              createPropertyInfoInput: {
+                CreateManyPropertyInfoDto: porData,
+              },
+              priority: parseInt(porform.getFieldsValue().priority),
             },
-            createDisabilityInfoInput: {
-              CreateManDisabilityInfoDto: disData,
+            onCompleted: () => {
+              message.success('已为您创建审核记录');
+              // 跳回上一页面
+              navigate('/population-manager/person-search');
             },
-            createEconomicInfoInput: {
-              CreateManyEconomicInfoDto: ecoData,
+            onError: () => {
+              message.error('创建审核记录失败');
             },
-            createHealthInfoInput: {
-              CreateManyHealthInfoDto: healthData,
-            },
-            createPoliticalInfoInput: {
-              CreateManyPoliticalInfoDto: politicalData,
-            },
-            createPropertyInfoInput: {
-              CreateManyPropertyInfoDto: porData,
-            },
-            priority: parseInt(porform.getFieldsValue().priority),
-          },
-          onCompleted: () => {
-            message.success('已为您创建审核记录');
-            // 跳回上一页面
-          },
-          onError: () => {
-            message.error('创建审核记录失败');
-          },
-        });
+          });
+        }
       })
-      .catch(() => setErrorVisibile(true));
-    if (errorVisible) {
-      message.error('您有未完成填写的必填项');
-    }
-    // console.log(porData);
+      .catch(() => {
+        errVisible = true;
+        if (errVisible) {
+          message.error('您有未完成填写的必填项');
+        }
+      });
+    // //console.log(porData);
   };
 
   return (
@@ -471,8 +476,27 @@ const PorpertyInfo = ({
         onCancel={() => setUrgencyVisible(false)}
       >
         <Form form={porform}>
-          <Form.Item name="priority" label="紧急程度：">
-            <Input placeholder="请输入紧急程度,如：1-3" />
+          <Form.Item
+            name="priority"
+            label="紧急程度："
+            rules={[
+              {
+                required: true,
+                message: '请选择紧急程度！',
+              },
+            ]}
+          >
+            <Select placeholder="请选择紧急程度">
+              <Option key={1} value={1}>
+                紧急
+              </Option>
+              <Option key={2} value={2}>
+                加急
+              </Option>
+              <Option key={3} value={3}>
+                一般
+              </Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

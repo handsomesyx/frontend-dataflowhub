@@ -25,6 +25,7 @@ import {
   QUERY_AUDITS,
   UPDATE_AUDIT,
 } from '@/apis';
+import { getUserName, getUserType } from '@/store/SaveToken';
 
 const client = new ApolloClient({
   uri: 'http://127.0.0.1:7000/graphql',
@@ -32,6 +33,7 @@ const client = new ApolloClient({
 });
 const { Title } = Typography;
 interface ChangeWhat {
+  id: any;
   change_item: string;
   content_before: string;
   content_after: string;
@@ -56,22 +58,8 @@ const options = [
   },
 ];
 
-const changecolumns: ColumnsType<ChangeWhat> = [
-  {
-    title: '变更属性',
-    dataIndex: 'value',
-  },
-  {
-    title: '变更前',
-    dataIndex: 'before',
-  },
-  {
-    title: '变更后',
-    dataIndex: 'after',
-  },
-];
-
 interface DataType {
+  action_type: ReactNode;
   id: any;
   priority: Number;
   user_info: any;
@@ -94,22 +82,45 @@ interface dataChange {
 }
 const App: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [role, setRole] = useState(7); //  1超管2警察4网格员7无权限
   const [refuseopen, setRefuseOpen] = useState(false);
+  const [showClass, setShowClass] = useState(true);
   const [modalText, setModalText] = useState<DataType>();
-  const { data } = useQuery(QUERY_AUDITS, { client });
+  const { data, refetch: listrefetch } = useQuery(QUERY_AUDITS, {
+    client,
+    onCompleted: () => {
+      message.destroy();
+    },
+  });
   const [dataSource, setDataSource] = useState([]);
+  const [changecolumns, setChangecolumns] = useState<ColumnsType<ChangeWhat>>([
+    {
+      title: '变更属性',
+      dataIndex: 'value',
+    },
+    {
+      title: '变更前',
+      dataIndex: 'before',
+    },
+    {
+      title: '变更后',
+      dataIndex: 'after',
+    },
+  ]);
   const [changesShow, setChangesShow] = useState<dataChange[]>([]);
   const [changedata, setChangedata] = useState<ChangeWhat[]>([]);
   const [rightnowAuditrecordsId, setrightnowAuditrecordsId] = useState(0);
   const [updateAudit] = useMutation(UPDATE_AUDIT, {
     client,
     onCompleted: (data) => {
-      console.log(data);
+      // console.log(data);
       if (data.updateAudit) message.info('操作成功');
+      listrefetch();
       handleCancel();
     },
     onError: (error) => {
       console.error(error);
+      listrefetch();
       message.info('操作失败');
     },
   });
@@ -117,34 +128,41 @@ const App: React.FC = () => {
     client,
     variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
     onCompleted: (data) => {
-      console.log(data.getChangeRecord); // 控制台结果
+      // console.log(data.getChangeRecord); // 控制台结果
       setChangesShow(data.getChangeRecord);
       const changewhat = data.getChangeRecord.map((item: ChangeWhat) => ({
-        after: item.content_after,
-        before: item.content_before,
-        value: item.change_item,
+        after: item?.content_after,
+        before: item?.content_before,
+        value: item?.change_item,
+        key: item?.id,
       }));
 
-      console.log(changewhat);
+      // console.log(changewhat);
       setChangedata(changewhat);
 
       if (rightnowAuditrecordsId !== 0) {
+        message.destroy();
         message.info('信息加载完成');
       }
     },
   });
 
-  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, { client });
+  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, {
+    client,
+    onCompleted: () => {
+      listrefetch();
+    },
+  });
   const [plainOptions, setPlainOptions] = useState<string[]>([]);
   const [comment, setComment] = useState('未填写'); // 拒绝原因
   const [classabcd, setClassabcd] = useState('未分类'); // 人员ABCD分类
-  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>([]);
+  const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(['未选择']);
   const onsubChange = (list: CheckboxValueType[]) => {
     setCheckedList(list);
   };
 
   const checkonChange = (e: RadioChangeEvent) => {
-    console.log('checked = ', e.target.value);
+    // console.log('checked = ', e.target.value);
     let newPlainOptions: string[] | ((prevState: never[]) => never[]) = [];
 
     switch (e.target.value) {
@@ -198,21 +216,56 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('请求完成');
+    // console.log('getUserType', getUserType());
+    let tmp = 7;
+    if (getUserType() === 'superAdmin') {
+      setRole(1);
+      tmp = 1;
+    }
+    if (getUserType() === 'filmPolice') {
+      setRole(2);
+      tmp = 2;
+    }
+    if (getUserType() === 'gridMember') {
+      setRole(4);
+      tmp = 4;
+    }
+    // console.log('身份验证完成');
+
     if (data) {
-      console.log(data);
-      const filtered = data.findManyAudit.data.filter(
-        (item: any) => item.is_delete === false,
-      );
+      // console.log(data);
+      const username = getUserName();
+      const filtered = data.findManyAudit.data.filter((item: any) => {
+        if (
+          item.is_delete === false &&
+          tmp === 2 &&
+          item?.officer_info?.username === username
+        ) {
+          return true;
+        }
+        if (
+          item.is_delete === false &&
+          tmp === 4 &&
+          item?.user_info?.username === username
+        ) {
+          return true;
+        }
+        if (item.is_delete === false && tmp === 1) {
+          return true;
+        }
+        return false;
+      });
+      message.info('列表加载完成');
       const formattedData = filtered.map((item: any) => {
         const date = new Date(item.create_time);
         const formattedDate = date.toLocaleString();
         return {
           ...item,
+          key: item.id,
           create_time: formattedDate,
         };
       });
-      console.log(formattedData);
+      // console.log(formattedData);
       setDataSource(formattedData);
     }
   }, [data]);
@@ -222,7 +275,7 @@ const App: React.FC = () => {
   };
 
   const onChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    console.log('Change:', e.target.value);
+    // console.log('Change:', e.target.value);
     setComment(e.target.value);
   };
 
@@ -240,20 +293,57 @@ const App: React.FC = () => {
   };
 
   const showModal = (e: any) => {
+    if (e.action_type === '1') {
+      setShowClass(true);
+      setChangecolumns([
+        {
+          key: 'new',
+          title: '新增属性',
+          dataIndex: 'value',
+        },
+        {
+          key: 'con',
+          title: '内容',
+          dataIndex: 'after',
+        },
+      ]);
+    } else {
+      setShowClass(false);
+      setChangecolumns([
+        {
+          key: 'cvalue',
+          title: '变更属性',
+          dataIndex: 'value',
+        },
+        {
+          key: 'cvalueb',
+          title: '变更前',
+          dataIndex: 'before',
+        },
+        {
+          title: '变更后',
+          key: 'cvaluea',
+          dataIndex: 'after',
+        },
+      ]);
+    }
+
     const tmp = parseInt(e.id);
     setrightnowAuditrecordsId(tmp);
     refetch();
-    message.loading('加载中...', 1);
+    message.loading('加载中...', 1000);
     setModalText(e);
     setOpen(true);
   };
 
   const handleCancel = () => {
     setOpen(false);
+    setChangedata([]);
+    setChangesShow([]);
   };
 
   const handlePass = () => {
-    console.log(checkedList);
+    // console.log(checkedList);
     const newData = {
       request_data: { class: classabcd, detailClass: checkedList },
       review_comments: '审核通过',
@@ -283,23 +373,62 @@ const App: React.FC = () => {
     {
       title: '详情描述',
       dataIndex: 'action_type',
-      key: 'action_type',
-      render: (_, text) => (
-        <a onClick={showModal}>
-          {text?.__typename}姓名为&quot;{text?.person_info.real_name}&quot;的群众信息
-        </a>
-      ),
+      key: 'action_type1',
+      render: (_, text) => {
+        let content = '编辑';
+        switch (text?.action_type) {
+          case '1':
+            content = '新增';
+            break;
+          case '2':
+            content = '删除';
+            break;
+          case '3':
+            content = '修改';
+            break;
+          default:
+            break;
+        }
+        return (
+          <a onClick={showModal}>
+            {content}姓名为&quot;{text?.person_info?.name}&quot;的群众信息
+          </a>
+        );
+      },
     },
     {
       title: '事件类型',
       dataIndex: 'action_type',
       key: 'action_type',
+      render: (_, text) => {
+        let content = '编辑';
+        switch (text?.action_type) {
+          case '1':
+            content = '新增信息';
+            break;
+          case '2':
+            content = '删除信息';
+            break;
+          case '3':
+            content = '修改信息';
+            break;
+          case '4':
+            content = '添加家庭关系';
+            break;
+          case '5':
+            content = '删除家庭关系';
+            break;
+          default:
+            break;
+        }
+        return <div>{content}</div>;
+      },
     },
     {
       title: '所属群众',
-      dataIndex: 'action_type',
-      key: ' action_type',
-      render: (_, text) => <div>{text?.person_info?.id}</div>,
+      dataIndex: 'belong',
+      key: 'belong',
+      render: (_, text) => <div>{text?.person_info?.person_classification}</div>,
     },
     {
       title: '所属网格员',
@@ -351,16 +480,23 @@ const App: React.FC = () => {
           <Button key="cancel" onClick={handleCancel}>
             取消
           </Button>,
-          <Button
-            key="refuse"
-            onClick={handleRefuse}
-            style={{ backgroundColor: 'red', color: 'white' }}
-          >
-            拒绝
-          </Button>,
-          <Button key="ok" type="primary" onClick={handlePass}>
-            同意
-          </Button>,
+          role === 1 || role === 2 ? (
+            <>
+              <Button
+                key="refuse"
+                onClick={handleRefuse}
+                style={{ backgroundColor: 'red', color: 'white' }}
+              >
+                拒绝
+              </Button>
+              ,
+              <Button key="ok1" type="primary" onClick={handlePass}>
+                同意
+              </Button>
+            </>
+          ) : (
+            <></>
+          ),
         ]}
         onCancel={handleCancel}
       >
@@ -385,17 +521,24 @@ const App: React.FC = () => {
           size="middle"
         />
         <Divider />
-        <Title level={5}>人员分级类别</Title>
-        <Radio.Group
-          style={{ marginTop: 10, marginBottom: 10 }}
-          options={options}
-          onChange={checkonChange}
-        />
-        <Checkbox.Group
-          options={plainOptions}
-          value={checkedList}
-          onChange={onsubChange}
-        />
+
+        {showClass && (role === 1 || role === 2) ? (
+          <>
+            <Title level={5}>人员分级类别</Title>
+            <Radio.Group
+              style={{ marginTop: 10, marginBottom: 10 }}
+              options={options}
+              onChange={checkonChange}
+            />
+            <Checkbox.Group
+              options={plainOptions}
+              value={checkedList}
+              onChange={onsubChange}
+            />
+          </>
+        ) : (
+          <></>
+        )}
       </Modal>
       <Modal
         okText="确认"

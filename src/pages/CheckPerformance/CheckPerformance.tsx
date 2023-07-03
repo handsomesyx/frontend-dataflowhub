@@ -7,23 +7,25 @@ import 'dayjs/locale/zh-cn';
 
 import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
-import type { MenuProps } from 'antd';
+import type { MenuProps, TablePaginationConfig } from 'antd';
+import { Pagination } from 'antd';
 import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
 import locale from 'antd/es/date-picker/locale/zh_CN';
 import ExcelJS from 'exceljs';
+// 如果是时间戳格式的DateTime，解锁luxon
+import { DateTime } from 'luxon';
 import React, { useState } from 'react';
+
+import { getUserType } from '../../store/SaveToken';
 
 const { Column } = Table;
 
 const { RangePicker } = DatePicker;
 
-// // 解码JWT令牌，获取载荷中的角色信息
-// const decodedToken = jwt_decode(token);
-// const userRoles = decodedToken.roles;
+// 获取当前登录用户的role
+const loginAuth = getUserType();
 
-// // 检查用户角色是否包含superAdmin
-// const isSuperAdmin = userRoles.includes('superAdmin');
-
+// 菜单选项
 const items: MenuProps['items'] = [
   {
     label: '网格员',
@@ -37,124 +39,7 @@ const items: MenuProps['items'] = [
   },
 ];
 
-// 一系列城市-镇-网格的数据，后面肯定需要修改，才能实现后端说的递归查询
-// 应该是每个label的value都是一个Int，这样方便GQL查询，到时候需要修改，并且修改状态
-const cityOptionData = [
-  {
-    label: '漠河市',
-    value: 'MoHeCity',
-  },
-];
-
-const townOptionData = [
-  {
-    label: '西林吉镇',
-    value: 'XiLinJi',
-  },
-  {
-    label: '古莲镇',
-    value: 'GuLian',
-  },
-  {
-    label: '图强镇',
-    value: 'TuQiang',
-  },
-  {
-    label: '阿木尔镇',
-    value: 'AMuEr',
-  },
-  {
-    label: '北极镇',
-    value: 'BeiJi',
-  },
-  {
-    label: '兴安镇',
-    value: 'XingAn',
-  },
-];
-
-// area_id
-const xiLinJiOptionData = [
-  {
-    label: '名苑社区',
-    value: 1,
-  },
-  {
-    label: '其他等等社区',
-    value: 2,
-  },
-];
-
-const guLianOptionsData = [
-  {
-    label: '古莲社区',
-    value: 3,
-  },
-  {
-    label: '其他等等社区',
-    value: 4,
-  },
-];
-
-const tuQiangOptionsData = [
-  {
-    label: '图强社区',
-    value: 5,
-  },
-  {
-    label: '其他等等社区',
-    value: 6,
-  },
-];
-
-const aMuErOptionsData = [
-  {
-    label: '阿尔姆社区',
-    value: 7,
-  },
-  {
-    label: '其他等等社区',
-    value: 8,
-  },
-];
-
-const beiJiOptionsData = [
-  {
-    label: '北极村',
-    value: 9,
-  },
-  {
-    label: '洛古河村',
-    value: 10,
-  },
-  {
-    label: '北红村',
-    value: 11,
-  },
-];
-
-const xingAnOptionsData = [
-  {
-    label: '兴安社区',
-    value: 12,
-  },
-  {
-    label: '其他等等社区',
-    value: 13,
-  },
-];
-
-// 当前权限
-// const Auth = {
-//   superAdmin: 1,
-//   filmPolice: 2,
-//   communityDirector: 3,
-//   gridMember: 4,
-//   Director: 5,
-//   gridLength: 6,
-// };
-
-// Query查询
+// Query查找查询
 const GET_USER_LOG_OPERATIONS = gql`
   query GetUserLogOperations(
     $role_id: Int!
@@ -192,6 +77,7 @@ const GET_USER_LOG_OPERATIONS = gql`
   }
 `;
 
+// 点击menu option后，默认出现的数据
 const GET_DEFAULT_TABLEDATA = gql`
   query GetUserLogOperations($role_id: Int!, $skip: Int, $take: Int) {
     queryUserLogOperationList(
@@ -215,44 +101,83 @@ const GET_DEFAULT_TABLEDATA = gql`
   }
 `;
 
+// 查询所有的area
+const GET_AREAS_QUERY = gql`
+  query GetAreas {
+    getArea {
+      id
+      level
+      name
+      parent_id
+    }
+  }
+`;
+
 const CheckPerformance: React.FC = () => {
-  const [current, setCurrent] = useState('mail');
+  const [current, setCurrent] = useState('');
 
   const onMenuClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
-    console.log(e);
+    // console.log(e);
     setMenuState(e.key as unknown as number); // 这段代码明明是从AntD官网抄的，居然会报错，忽略就行
     switch (e.key) {
       case 'gridMember':
         setCurrentAuth(4);
         setIsDefault(true);
-        setIsSuperAdmin(true);
         break;
       case 'filmPolice':
         setCurrentAuth(2);
         setIsDefault(true);
-        setIsSuperAdmin(true);
         break;
-      default:
-        setCurrentAuth(0);
     }
   };
 
   // 一系列状态Hook，用来存储表单
   const [menuState, setMenuState] = useState(0);
+
+  // name:String
   const [name, setName] = useState('');
-  const [city, setCity] = useState('default');
-  const [town, setTown] = useState('default');
-  const [grid, setGrid] = useState('default');
-  // const [gridID, setGridID] = useState(0);
+
+  // 存储city的area_id
+  const [city, setCity] = useState(0);
+
+  // 存储town的area_id
+  const [town, setTown] = useState(0);
+
+  // 存储grid的area_id
+  const [grid, setGrid] = useState(0);
+
+  // 存储开始与结束时间
   const [beginTime, setBeginTime] = useState();
   const [endTime, setEndTime] = useState();
-  // 同样是一系列状态Hook，Auth负责管理权限，isDefault负责展示初始表单，isSuperAdmin负责判断是否可以导出数据
-  const [currentAuth, setCurrentAuth] = useState(0);
-  const [isDefault, setIsDefault] = useState(true);
-  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
 
-  // Datetime
+  // 同样是一系列状态Hook，Auth负责管理点击菜单所确定的role_id，isDefault负责展示初始表单，
+  const [currentAuth, setCurrentAuth] = useState(4);
+  const [isDefault, setIsDefault] = useState(true);
+
+  // 获取准确的area_id
+  const areaID = grid !== 0 ? grid : town !== 0 ? town : city;
+
+  // 设置分页，获取当前的页码
+  const [pagination, setPagination] = useState<any>({
+    current: 1, // 默认为第一页
+    pageSize: 1, // 测试用的页大小，按需修改
+  });
+
+  // 处理分页，参考了刘康的分页方法，但最后自己修改了绝大部分
+  // 因为由于导出的特殊性，导出就得导出所有数据，不可能只导出当前页面的数据
+  // 所以无法让后端排队按skip take送数据，只能一次全拿出来
+  // 所以这里采用的是前端的slice方式，分割显示
+  const handlePageChange = (page: number, pageSize?: number) => {
+    setPagination({ current: page, pageSize: pageSize || 1 });
+  };
+
+  // 每次点击标签页进行的改变，主要是改变了页码数
+  const handleTableChange = (newPagination: TablePaginationConfig) => {
+    setPagination(newPagination);
+  };
+
+  // Datetime处理函数
   const handleRangeChange = (values: any) => {
     if (values) {
       const [start, end] = values;
@@ -271,10 +196,10 @@ const CheckPerformance: React.FC = () => {
   // 注意判零思想，如果表单的数据为空，则默认返回所有数据
   // select * from table;
   const handleSearch = () => {
-    // console.log(beginTime, endTime);
+    // //console.log(beginTime, endTime);
     // if (loading) {
     //   // 查询正在进行中
-    //   console.log('Loading...');
+    //   //console.log('Loading...');
     //   // alert('Loading...');
     // } else
     if (error) {
@@ -289,53 +214,49 @@ const CheckPerformance: React.FC = () => {
       // 查询成功
       const tempMenu = menuState;
       if (tempMenu === 0) {
-        // console.log('no menu selected');
-        alert('请选择网格员或民警');
+        // //console.log('no menu selected');
+        // alert('请选择网格员或民警');
       } else {
         setIsDefault(false);
         fetchData({
           variables: {
             role_id: currentAuth,
-            area_id: 0 | parseInt(grid, 10),
+            area_id: areaID,
             name: name,
             begin_time: beginTime,
             end_time: endTime,
-            skip: 1,
-            take: 10,
+            skip: 0,
+            take: 100000,
           },
         });
+        // console.log(UsedDataLength);
       }
     }
   };
 
   // 这里的Select级联使用了switch的思想，使用useState得到的city town 进行选择，调取相应的数组
-  // 如果想要加入新的区划，直接const创建新数组，然后再switch加入新条件即可
-  const getTownOptions = (city: string) => {
-    switch (city) {
-      case 'MoHeCity':
-        return townOptionData;
-      default:
-        return [];
-    }
+  const getTownOptions = (city: number) => {
+    // Filter level2Areas based on parent_id matching with city
+    const townOptions = level2Areas.filter(
+      (area: { parent_id: number }) => area.parent_id === city,
+    );
+    // Map townOptions to options format with label and value properties
+    return townOptions.map((town: { name: any; id: any }) => ({
+      label: town.name,
+      value: town.id,
+    }));
   };
 
-  const getGridOptions = (town: string) => {
-    switch (town) {
-      case 'XiLinJi':
-        return xiLinJiOptionData;
-      case 'GuLian':
-        return guLianOptionsData;
-      case 'TuQiang':
-        return tuQiangOptionsData;
-      case 'AMuEr':
-        return aMuErOptionsData;
-      case 'BeiJi':
-        return beiJiOptionsData;
-      case 'XingAn':
-        return xingAnOptionsData;
-      default:
-        return [];
-    }
+  const getGridOptions = (town: number) => {
+    // Filter level3Areas based on parent_id matching with town
+    const gridOptions = level3Areas.filter(
+      (area: { parent_id: number }) => area.parent_id === town,
+    );
+    // Map gridOptions to options format with label and value properties
+    return gridOptions.map((grid: { name: any; id: any }) => ({
+      label: grid.name,
+      value: grid.id,
+    }));
   };
 
   // 调用GQL语句，向后端查询数据
@@ -346,12 +267,30 @@ const CheckPerformance: React.FC = () => {
   const { data: SearchedOrigin } = useQuery(GET_DEFAULT_TABLEDATA, {
     variables: {
       role_id: currentAuth,
-      skip: 1,
-      take: 10,
+      skip: 0,
+      take: 100000,
     },
   });
 
-  // 抽取接口得到的data，这是我们需要填入表单中的数据
+  // 利用level 将area分为三类 市 镇 社区
+  const { data: AreaData } = useQuery(GET_AREAS_QUERY);
+  const level1Areas: any = [];
+  const level2Areas: any = [];
+  const level3Areas: any = [];
+
+  if (AreaData && AreaData.getArea) {
+    AreaData.getArea.forEach((area: { level: number }) => {
+      if (area.level === 1) {
+        level1Areas.push(area);
+      } else if (area.level === 2) {
+        level2Areas.push(area);
+      } else if (area.level === 3) {
+        level3Areas.push(area);
+      }
+    });
+  }
+
+  // 抽取接口得到的data，这是我们需要填入Table中的数据
   const DefaultData =
     SearchedOrigin &&
     SearchedOrigin.queryUserLogOperationList &&
@@ -362,11 +301,23 @@ const CheckPerformance: React.FC = () => {
     SearchedData.queryUserLogOperationList &&
     SearchedData.queryUserLogOperationList.data;
 
+  const DefaultDataLength =
+    SearchedOrigin &&
+    SearchedOrigin.queryUserLogOperationList &&
+    SearchedOrigin.queryUserLogOperationList.total;
+
+  const TableDataLength =
+    SearchedData &&
+    SearchedData.queryUserLogOperationList &&
+    SearchedData.queryUserLogOperationList.total;
+
   const UsedData = isDefault ? DefaultData : TableData;
+  const ExcelData = isDefault ? DefaultData : TableData;
+  const UsedDataLength = isDefault ? DefaultDataLength : TableDataLength;
 
   // 前端实现导出excel文档的设计，后端的嘛。。。不知道怎么调用
   const handleExport = async () => {
-    if (isSuperAdmin) {
+    if (loginAuth === 'superAdmin') {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Sheet 1');
 
@@ -385,28 +336,36 @@ const CheckPerformance: React.FC = () => {
       headerRow.alignment = { horizontal: 'center' };
 
       // 假设您的数据存储在一个数组中
-      const data = UsedData;
+      const data = ExcelData;
 
       data.forEach((item: any, index: any) => {
-        worksheet.getCell(`A${index + 2}`).value = item.id;
+        worksheet.getCell(`A${index + 2}`).value = index + 1;
         worksheet.getCell(`B${index + 2}`).value = item.name;
-        worksheet.getCell(`C${index + 2}`).value = item.login_times;
+        worksheet.getCell(`C${index + 2}`).value = item.login_count;
         worksheet.getCell(`D${index + 2}`).value = item.query_count;
         worksheet.getCell(`E${index + 2}`).value = item.add_person_count;
         worksheet.getCell(`F${index + 2}`).value = item.submit_event_count;
         worksheet.getCell(`G${index + 2}`).value = item.modify_person_count;
-        worksheet.getCell(`H${index + 2}`).value = item.beginTime;
-        worksheet.getCell(`I${index + 2}`).value = item.endTime;
-        // 设置其他单元格...
-        // id
-        // name
-        // login_count
-        // modify_person_count = infoChanged
-        // query_count = searchTimes
-        // submit_event_count
-        // add_person_count = newPeople
-        // begin_time
-        // end_time
+
+        // 这里的后端代码没有统一，有时间戳格式的，有年月日格式的，非常吊诡
+        // 这是默认直接输出
+        // worksheet.getCell(`H${index + 2}`).value = item.begin_time;
+        // worksheet.getCell(`I${index + 2}`).value = item.end_time;
+
+        // 这是时间戳模式的，不要忘记解锁import luxon
+        // luxon这小玩意确实有用
+        worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
+          item.begin_time,
+        ).toFormat('yyyy-MM-dd HH:mm:ss');
+        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
+          item.end_time,
+        ).toFormat('yyyy-MM-dd HH:mm:ss');
+
+        // 这是年月日格式的
+        // worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
+        //   parseInt(item.begin_time)).toFormat('yyyy-MM-dd HH:mm:ss');
+        // worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
+        //   parseInt(item.end_time)).toFormat('yyyy-MM-dd HH:mm:ss');
       });
 
       worksheet.getColumn(1).width = 10;
@@ -438,44 +397,26 @@ const CheckPerformance: React.FC = () => {
     }
   };
 
+  // 时间戳转换
+  const formatTimestamp = (timestamp: any) => {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
   return (
     <Layout className="CpLayout">
-      {/* Serial Experiments
-      <div>
-        权限管理：
-        <Button onClick={() => {
-            // setCurrentAuth(Auth.superAdmin);
-            setIsSuperAdmin(true);
-        }}>超级管理员</Button>
-        <Button onClick={() => setCurrentAuth(Auth.Director)}>所长</Button>
-        <Button onClick={() => setCurrentAuth(Auth.filmPolice)}>民警</Button>
-        <Button onClick={() => setCurrentAuth(Auth.communityDirector)}>社区主任</Button>
-        <Button onClick={() => setCurrentAuth(Auth.gridLength)}>网格长</Button>
-        <Button onClick={() => setCurrentAuth(Auth.gridMember)}>网格员</Button>
-        <Button
-          onClick={() => {
-            console.log(currentAuth);
-          }}
-        >
-          Console.log权限
-        </Button>
-        <Button onClick={() => { 
-          console.log(DefaultData);
-        }}>Default Test</Button>
-        <Button onClick={() => { 
-          console.log(TableData);
-          console.log(SearchedOrigin);
-          console.log(SearchedData);
-        }}>Data Test</Button>
-        <Button onClick={() => {
-          console.log(client);
-          console.log(accessToken);
-          }}>header</Button>
-      </div> */}
       {/* 网格员 警员 菜单 */}
       <Menu
         onClick={onMenuClick}
-        selectedKeys={[current]}
+        // @ts-ignore
+        selectedKeys={current ? [current] : [items[0].key]}
         mode="horizontal"
         items={items}
         className="UpperMenu"
@@ -492,20 +433,22 @@ const CheckPerformance: React.FC = () => {
             setName(event.target.value);
           }}
         />
-        {/* <Input placeholder="城市占位" className="BlockType" /> */}
         <Select
           placeholder="请选择城市"
           className="BlockTypeGrid"
-          options={cityOptionData}
+          options={level1Areas.map((area: { name: any; id: any }) => ({
+            label: area.name,
+            value: area.id,
+          }))}
           onSelect={(value) => {
             // Find the selected option based on the value
-            const selectedOption = cityOptionData.find(
-              (option) => option.value === value,
+            const selectedOption = level1Areas.find(
+              (area: { id: any }) => area.id === value,
             );
             if (selectedOption) {
-              setCity(selectedOption.value);
-              setTown('default');
-              setGrid('default');
+              setCity(selectedOption.id);
+              setTown(0);
+              setGrid(0);
             }
           }}
         />
@@ -516,48 +459,33 @@ const CheckPerformance: React.FC = () => {
           onSelect={(value) => {
             // Find the selected option based on the value
             const selectedOption = getTownOptions(city).find(
-              (option) => option.value === value,
+              (option: { value: number }) => option.value === value,
             );
             if (selectedOption) {
               setTown(selectedOption.value);
-              setGrid('default');
+              setGrid(0);
             }
           }}
-          value={town !== 'default' ? town : null || null}
+          value={town !== 0 ? town : null || null}
         />
-        {/* 这里有warning，但是不要随便修改 */}
         <Select
-          placeholder="请选择网格"
+          placeholder="请选择社区"
           className="BlockTypeGrid"
           options={getGridOptions(town)}
           onSelect={(value) => {
             // Find the selected option based on the value
             const selectedOption = getGridOptions(town).find(
-              (option) => option.value?.toString() === value,
+              (option: { value: number }) => option.value === value,
             );
             if (selectedOption) {
-              // @ts-ignore
               setGrid(selectedOption.value);
             }
           }}
-          value={grid !== 'default' ? grid : null || null}
+          value={grid !== 0 ? grid : null || null}
           // Set the value to the first option's value only if grid is not 'default'
           // 当重新选择上一个Select选项后，该选项需要重新选择
         />
-        {/*
-        // 备选的时间选择模块，但由于需要判断开始时间时候比结束时间晚，所以用了AntD中省事的RangePicker
-         <DatePicker
-          format="YYYY-MM-DD HH:mm:ss"
-          showTime={{ defaultValue: dayjs('00:00:00', 'HH:mm:ss') }}
-          placeholder="开始时间"
-          className="DateBlockType"
-        />
-        <DatePicker
-          format="YYYY-MM-DD HH:mm:ss"
-          showTime={{ defaultValue: dayjs('00:00:00', 'HH:mm:ss') }}
-          placeholder="结束时间"
-          className="DateBlockType"
-        /> */}
+
         <RangePicker
           showTime
           locale={locale}
@@ -582,12 +510,27 @@ const CheckPerformance: React.FC = () => {
         </Button>
       </div>
       <div style={{ backgroundColor: '#fff' }}>
-        <Table dataSource={UsedData} style={{ margin: '0px 0.5vw' }}>
+        <Table
+          dataSource={
+            Array.isArray(UsedData)
+              ? UsedData.slice(
+                  (pagination.current - 1) * pagination.pageSize,
+                  pagination.current * pagination.pageSize,
+                )
+              : []
+          }
+          // 怎么可能为未定义？
+          // dataSource={UsedData}
+          style={{ margin: '0px 0.5vw' }}
+          onChange={handleTableChange}
+          pagination={false}
+        >
           <Column
             title={<div style={{ textAlign: 'center' }}>编号</div>}
-            dataIndex="id"
-            key="id"
+            // dataIndex="id"
+            // key="id"
             align="center"
+            render={(_text, _record, index) => index + 1}
           />
           <Column
             title={<div style={{ textAlign: 'center' }}>姓名</div>}
@@ -627,17 +570,29 @@ const CheckPerformance: React.FC = () => {
           />
           <Column
             title={<div style={{ textAlign: 'center' }}>开始时间</div>}
-            dataIndex="begin_Time"
+            dataIndex="begin_time"
             key="begin_Time"
             align="center"
+            render={(text) => formatTimestamp(text)}
           />
           <Column
             title={<div style={{ textAlign: 'center' }}>结束时间</div>}
-            dataIndex="end_Time"
+            dataIndex="end_time"
             key="end_Time"
             align="center"
+            render={(text) => formatTimestamp(text)}
           />
         </Table>
+        <Pagination
+          current={pagination.current}
+          pageSize={pagination.pageSize}
+          total={UsedDataLength}
+          style={{
+            float: 'right',
+            margin: '10px auto',
+          }}
+          onChange={handlePageChange}
+        />
       </div>
     </Layout>
   );

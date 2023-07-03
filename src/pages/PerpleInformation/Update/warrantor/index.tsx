@@ -1,8 +1,20 @@
-import { useMutation } from '@apollo/client';
-import { Button, Col, Form, type FormInstance, Input, message, Modal, Row } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { useMutation, useQuery } from '@apollo/client';
+import {
+  Button,
+  Form,
+  type FormInstance,
+  Input,
+  message,
+  Modal,
+  Select,
+  Space,
+  Table,
+} from 'antd';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { UpdatePeopleInfo } from '@/apis';
+import { FindUser, UpdatePeopleInfo } from '@/apis';
 
 import styles from '../../Add/basicInfo/styles.module.less';
 import type {
@@ -34,8 +46,6 @@ import {
   politicalName,
   proItem,
   proName,
-  warItem,
-  warName,
 } from './objectName';
 
 type props = {
@@ -54,6 +64,8 @@ type props = {
   disform: FormInstance;
   disUpdateData: getdisabilityInfo;
 };
+
+const { Option } = Select;
 
 const Warrantor = ({
   porform,
@@ -77,6 +89,64 @@ const Warrantor = ({
   const [updatePeopleInfo] = useMutation(UpdatePeopleInfo);
   const [urgencyVisible, setUrgencyVisible] = useState<boolean>();
 
+  // 网格员信息
+  const [gridperson, setGridperson] = useState(false);
+  // 用户名字
+  const [searchName, setSearchName] = useState('');
+  // 用户角色
+  const [searchRole, setSearchRole] = useState('');
+  // 用户ID
+  const [userid, setUserID] = useState<number>();
+  // 搜索的用户信息
+  const [informationRole, setInformationRole] = useState();
+
+  const navigate = useNavigate();
+
+  const columnsRole: any = [
+    {
+      title: '姓名',
+      dataIndex: 'real_name',
+      key: 'real_name',
+    },
+    {
+      title: '联系方式',
+      dataIndex: 'mobile',
+      key: 'mobile',
+    },
+    {
+      title: '身份证号',
+      dataIndex: 'id_card',
+      key: 'id_card',
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (value: any) => (
+        <Space size="middle">
+          <Button
+            onClick={() => {
+              setSearchName('');
+              setUserID(value.id);
+              setGridperson(false);
+            }}
+          >
+            选择
+          </Button>
+        </Space>
+      ),
+    },
+  ];
+
+  // 用户数据
+  const { data: searchNamedata } = useQuery(FindUser, {
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      name: searchName,
+      role: searchRole,
+    },
+  });
+
   useEffect(() => {
     if (warData) {
       warform.setFieldsValue({
@@ -89,24 +159,47 @@ const Warrantor = ({
         gridPersonName: warData?.gridPersonName,
         police: warData?.police,
       });
+      if (warData.gridPersonId) {
+        setUserID(Number(warData.gridPersonId));
+      }
     }
-  });
+  }, [warData, warform]);
+
+  useEffect(() => {
+    if (searchNamedata) {
+      setInformationRole(searchNamedata.findUser);
+    }
+  }, [searchNamedata]);
 
   const handleSubmit = () => {
-    console.log(porform);
     const porData: propertyInfo[] = [];
     const baiscData: basicInfo[] = [];
     const disData: disabilityInfo[] = [];
     const healthData: healthInfo[] = [];
     const politicalData: politicalInfo[] = [];
     const ecoData: economicInfo[] = [];
-    const warrantorData: WarrantorType[] = [];
+    // const warrantorData: WarrantorType[] = [];
     const changeRecord: changeInfo[] = [];
+    setErrorVisibile(false);
     setUrgencyVisible(false);
     porform
       ?.validateFields()
       .then(() => {
         const data: propertyInfo = porform.getFieldsValue();
+
+        let volunter: { [x: number]: string }[] = [];
+        let social: { [x: number]: string }[] = [];
+        data?.Social?.map((item: any, index: number) => {
+          social.push({
+            [index + 1]: item.SocialWorker,
+          });
+        });
+        data.Volunteer?.map((item: any, index: number) => {
+          volunter.push({
+            [index + 1]: item.VolunteerStatus,
+          });
+        });
+
         porData.push({
           houseInfo: data?.houseInfo,
           personalId: data?.personalId, // 改
@@ -120,8 +213,8 @@ const Warrantor = ({
           carColor: data?.carOwner,
           houseType: data?.houseType,
           smokingStatus: data?.smokingStatus,
-          VolunteerStatus: data?.VolunteerStatus,
-          SocialWorker: data?.SocialWorker,
+          VolunteerStatus: JSON.parse(JSON.stringify(volunter)),
+          SocialWorker: JSON.parse(JSON.stringify(social)),
           drivingLicenseType: data?.drivingLicenseType,
           creatorId: data?.creatorId,
         });
@@ -129,24 +222,41 @@ const Warrantor = ({
         let afterData = Object.values(data);
         let beforeData = Object.values(OtherInfoData);
 
-        afterData.map((item, index) => {
-          if (item !== beforeData[index]) {
-            changeRecord.push({
-              changeItem: proName[index],
-              ItemName: proItem[index],
-              contentBefore: beforeData[index].toString(),
-              contentAfter: item.toString(),
-            });
+        beforeData.map((item, index) => {
+          if (item !== afterData[index]) {
+            if (index < 11) {
+              changeRecord.push({
+                changeItem: proName[index],
+                ItemName: proItem[index],
+                contentBefore: afterData[index].toString(),
+                contentAfter: item.toString(),
+              });
+            }
+
+            if (index === 11 && item !== JSON.stringify(volunter)) {
+              changeRecord.push({
+                changeItem: proName[index],
+                ItemName: proItem[index],
+                contentBefore: item.toString(),
+                contentAfter: JSON.stringify(volunter),
+              });
+            }
+            if (index === 12 && item !== JSON.stringify(social)) {
+              changeRecord.push({
+                changeItem: proName[index],
+                ItemName: proItem[index],
+                contentBefore: item.toString(),
+                contentAfter: JSON.stringify(social),
+              });
+            }
           }
         });
-        console.log('p');
       })
       .catch(() => setErrorVisibile(true));
 
     ecomomicform
       ?.validateFields()
       .then(() => {
-        console.log('e');
         const data: economicInfo = ecomomicform.getFieldsValue();
         ecoData.push({
           personalId: data?.personalId,
@@ -184,9 +294,7 @@ const Warrantor = ({
     basicform
       ?.validateFields()
       .then(() => {
-        console.log('b');
         const data: basicInfo = basicform.getFieldsValue();
-        console.log(data);
 
         baiscData.push({
           name: data?.name,
@@ -207,10 +315,8 @@ const Warrantor = ({
 
         let afterData = Object.values(data);
         let beforeData = Object.values(basicData);
-        console.log(beforeData);
-
         afterData.map((item, index) => {
-          if (item !== beforeData[index + 2]) {
+          if (item.toString() !== beforeData[index + 2].toString()) {
             changeRecord.push({
               changeItem: baiscName[index],
               ItemName: baiscItem[index],
@@ -225,7 +331,6 @@ const Warrantor = ({
     healthform
       ?.validateFields()
       .then(() => {
-        console.log('h');
         const data: healthInfo = healthform.getFieldsValue();
         healthData.push({
           personalId: data?.personalId,
@@ -240,6 +345,7 @@ const Warrantor = ({
           otherConditions: data?.otherConditions,
           creatorId: data?.creatorId,
         });
+
         if (data?.specialGroup === '残疾人') {
           const disaility: disabilityInfo = disform.getFieldsValue();
           disData.push({
@@ -250,28 +356,24 @@ const Warrantor = ({
             servereDisabilitySub: parseFloat(disaility.servereDisabilitySub.toString()),
           });
 
-          let afterData = Object.values(disaility);
-          console.log('after', afterData);
+          const disailityAfterData = Object.values(disaility);
 
-          let beforeData = Object.values(disUpdateData);
-          console.log('before', beforeData);
-          afterData.map((item, index) => {
-            if (item !== beforeData[index]) {
+          const disailitybeforeData = Object.values(disUpdateData);
+          disailityAfterData.map((item, index) => {
+            if (item !== disailitybeforeData[index]) {
               changeRecord.push({
                 changeItem: disName[index],
                 ItemName: disItem[index],
-                contentBefore: beforeData[index].toString(),
+                contentBefore: disailitybeforeData[index].toString(),
                 contentAfter: item.toString(),
               });
             }
           });
         }
 
-        let afterData = Object.values(data);
-        console.log('after', afterData);
+        const afterData = Object.values(data);
 
-        let beforeData = Object.values(HealthInfoData);
-        console.log('before', beforeData);
+        const beforeData = Object.values(HealthInfoData);
 
         beforeData.map((item, index) => {
           if (index < 9) {
@@ -279,7 +381,7 @@ const Warrantor = ({
               changeRecord.push({
                 changeItem: healthName[index],
                 ItemName: healthItem[index],
-                contentBefore: beforeData[index].toString(),
+                contentBefore: afterData[index].toString(),
                 contentAfter: item.toString(),
               });
             }
@@ -291,7 +393,6 @@ const Warrantor = ({
     eduform
       .validateFields()
       .then(() => {
-        console.log('e');
         const data: politicalInfo = eduform.getFieldsValue();
         politicalData.push({
           personalId: data?.personalId,
@@ -320,56 +421,45 @@ const Warrantor = ({
             });
           }
         });
+
+        if (changeRecord.length !== 0) {
+          updatePeopleInfo({
+            variables: {
+              id: basicData.id,
+              changeRecord: {
+                CreateChangeRecordDto: changeRecord,
+              },
+              priority: parseInt(porform.getFieldsValue().priority),
+            },
+            onCompleted: () => {
+              message.success('已为您创建审核记录');
+              // 跳回上一页面
+              navigate('/population-manager/person-search');
+            },
+            onError: () => {
+              message.error('创建审核记录失败');
+            },
+          });
+        } else {
+          message.warning('您未修改任何信息');
+        }
       })
       .catch(() => setErrorVisibile(true));
 
     warform
       .validateFields()
       .then(() => {
-        console.log('w');
-        const data: WarrantorType = warform.getFieldsValue();
-        warrantorData.push({
-          community: data?.community,
-          gridding: data?.gridding,
-          gridPersonId: data?.gridPersonId,
-          girdPersonPhone: data?.girdPersonPhone,
-          policeName: data?.policeName,
-          policePhone: data?.policePhone,
-          gridPersonName: data?.gridPersonName,
-          police: data?.police,
-        });
+        // console.log('w');
 
-        let afterData = Object.values(data);
-        let beforeData = Object.values(warData);
-
-        afterData.map((item, index) => {
-          if (item !== beforeData[index]) {
-            changeRecord.push({
-              ItemName: warItem[index],
-              changeItem: warName[index],
-              contentBefore: beforeData[index].toString(),
-              contentAfter: item.toString(),
-            });
-          }
-        });
-        console.log(changeRecord);
-
-        updatePeopleInfo({
-          variables: {
-            id: basicData.id,
-            changeRecord: {
-              CreateChangeRecordDto: changeRecord,
-            },
-            priority: parseInt(porform.getFieldsValue().priority),
-          },
-          onCompleted: () => {
-            message.success('已为您创建审核记录');
-            // 跳回上一页面
-          },
-          onError: () => {
-            message.error('创建审核记录失败');
-          },
-        });
+        if (userid !== warData.gridPersonId) {
+          changeRecord.push({
+            ItemName: 'grid_user_id',
+            changeItem: '网格员编号',
+            contentBefore: warData.gridPersonId?.toString() ?? '',
+            contentAfter: userid ? userid.toString() : '',
+          });
+        }
+        // console.log(changeRecord);
       })
       .catch(() => setErrorVisibile(true));
     if (errorVisible) {
@@ -382,63 +472,27 @@ const Warrantor = ({
       <div className={styles.Container}>
         <div className={styles.Basic}>
           <Form form={warform}>
-            <Row>
-              <Col span={8}>
-                <Form.Item name="community" label="社区所在:">
-                  {/* <label className={styles.Label}>曾用名：</label> */}
-                  <Input placeholder="请填写" style={{ width: '11vw' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="gridding" label="网格所在:">
-                  <Input placeholder="请填写" style={{ width: '15vw' }} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8}>
-                <Form.Item name="gridPersonName" label="网格员个人姓名:">
-                  {/* <label className={styles.Label}>曾用名：</label> */}
-                  <Input placeholder="请填写" style={{ width: '11vw' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="gridPersonId" label="网格员编号:">
-                  <Input placeholder="请填写" style={{ width: '15vw' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="girdPersonPhone"
-                  label="网格员联系方式:"
-                  style={{ float: 'right' }}
-                >
-                  <Input placeholder="请填写" style={{ width: '15vw' }} />
-                </Form.Item>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8}>
-                <Form.Item name="police" label="所属派出所:">
-                  {/* <label className={styles.Label}>曾用名：</label> */}
-                  <Input placeholder="请填写" style={{ width: '11vw' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="policeName" label="民警姓名:">
-                  <Input placeholder="请填写" style={{ width: '15vw' }} />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item
-                  name="policePhone"
-                  label="民警联系方式:"
-                  style={{ float: 'right' }}
-                >
-                  <Input placeholder="请填写" style={{ width: '15vw' }} />
-                </Form.Item>
-              </Col>
-            </Row>
+            <Form.Item name="gridPersonName" label="网格员">
+              <Input
+                placeholder="请输入网格员名称"
+                style={{ width: '20vw' }}
+                suffix={
+                  <SearchOutlined
+                    onClick={() => {
+                      let name = warform.getFieldValue('gridPersonName');
+                      if (!name) {
+                        message.info('请输入网格员名称');
+                        return;
+                      }
+                      let role = '网格员';
+                      setGridperson(true);
+                      setSearchName(name);
+                      setSearchRole(role);
+                    }}
+                  />
+                }
+              />
+            </Form.Item>
           </Form>
         </div>
       </div>
@@ -461,10 +515,47 @@ const Warrantor = ({
         onCancel={() => setUrgencyVisible(false)}
       >
         <Form form={porform}>
-          <Form.Item name="priority" label="紧急程度：">
-            <Input placeholder="请输入紧急程度,如：1-3" />
+          <Form.Item
+            name="priority"
+            label="紧急程度："
+            rules={[
+              {
+                required: true,
+                message: '请选择紧急程度！',
+              },
+            ]}
+          >
+            <Select placeholder="请选择紧急程度">
+              <Option key={1} value={1}>
+                紧急
+              </Option>
+              <Option key={2} value={2}>
+                加急
+              </Option>
+              <Option key={3} value={3}>
+                一般
+              </Option>
+            </Select>
           </Form.Item>
         </Form>
+      </Modal>
+
+      <Modal
+        // style={{z-index:"1"}}
+        zIndex={1}
+        title={'网格员信息'}
+        open={gridperson}
+        onCancel={() => {
+          setSearchName('');
+          setGridperson(false);
+        }}
+        footer={null}
+      >
+        <Table
+          // style={{ overflow: 'hidden' }}
+          columns={columnsRole}
+          dataSource={informationRole}
+        />
       </Modal>
     </>
   );

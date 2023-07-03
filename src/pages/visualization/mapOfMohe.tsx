@@ -118,7 +118,7 @@ function MapOfMohe() {
               position: 'right',
               color: '#000',
               formatter(d: any) {
-                console.log(d, 'd');
+                // console.log(d, 'd');
                 return `<div >${d.data.name}</div>`;
               },
             },

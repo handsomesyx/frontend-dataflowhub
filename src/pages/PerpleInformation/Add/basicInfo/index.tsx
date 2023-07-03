@@ -119,7 +119,7 @@ const BasicInfo = ({
       // refetchQueries: ['findFamilyMemberInfo'],
     })
       .then((result) => {
-        console.log(result);
+        // console.log(result);
         if (result.data.createFamilyInfo) {
           message.success('已为您创建审核记录');
           setAddVisible(false);
@@ -466,8 +466,27 @@ const BasicInfo = ({
               </Form.Item>
             </Col>
             <Col span={11}>
-              <Form.Item name="priority" label="紧急程度：">
-                <Input style={{ width: '15vw' }} placeholder="请输入紧急程度,如：1-3" />
+              <Form.Item
+                name="priority"
+                label="紧急程度："
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择紧急程度！',
+                  },
+                ]}
+              >
+                <Select placeholder="请选择紧急程度" style={{ width: '15vw' }}>
+                  <Option key={1} value={1}>
+                    紧急
+                  </Option>
+                  <Option key={2} value={2}>
+                    加急
+                  </Option>
+                  <Option key={3} value={3}>
+                    一般
+                  </Option>
+                </Select>
               </Form.Item>
             </Col>
           </Row>
@@ -485,8 +504,27 @@ const BasicInfo = ({
         onCancel={() => setDeleteVisible(false)}
       >
         <Form form={form}>
-          <Form.Item name="priority" label="紧急程度：">
-            <Input placeholder="请输入紧急程度,如：1-3" />
+          <Form.Item
+            name="priority"
+            label="紧急程度："
+            rules={[
+              {
+                required: true,
+                message: '请选择紧急程度！',
+              },
+            ]}
+          >
+            <Select placeholder="请选择紧急程度">
+              <Option key={1} value={1}>
+                紧急
+              </Option>
+              <Option key={2} value={2}>
+                加急
+              </Option>
+              <Option key={3} value={3}>
+                一般
+              </Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

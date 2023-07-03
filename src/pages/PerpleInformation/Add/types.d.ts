@@ -176,6 +176,8 @@ export type propertyInfo = {
   SocialWorker?: JSON;
   drivingLicenseType: string;
   creatorId?: number;
+  Social?: string[];
+  Volunteer?: string[];
 };
 
 export type changeInfo = {

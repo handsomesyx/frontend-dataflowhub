@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import MenuIcon from '../../assets/caidan_moren.svg';
 import styles from './HomePage.module.less';
+
 function MenuItem({ item, isSubMenuItem }: any) {
   const navigate = useNavigate();
   const handleItemClick = () => {
@@ -35,7 +36,7 @@ function MenuItem({ item, isSubMenuItem }: any) {
       onClick={handleItemClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      id={item.id + 'go_back'}
+      id={`${item.id}go_back`}
     >
       <>
         <span>{item.text}</span>
@@ -44,7 +45,7 @@ function MenuItem({ item, isSubMenuItem }: any) {
             <img src={MenuIcon} style={{ marginLeft: '.5em' }} />
             <ul className={styles.DropdownTopMenu}>
               {item.children.map((childItem: any) => (
-                <MenuItem key={childItem.id} item={childItem} isSubMenuItem={true} />
+                <MenuItem key={childItem.id} item={childItem} isSubMenuItem />
               ))}
             </ul>
           </>
@@ -78,10 +79,16 @@ function Menu() {
         },
       ],
     },
+    // {
+    //   id: '2',
+    //   text: '用户管理',
+    //   path: '/user-manager',
+    //   show: true,
+    // },
     {
       id: '2',
-      text: '用户管理',
-      path: '/user-manager',
+      text: '事件管理',
+      path: '/event-management',
       show: true,
     },
     {
@@ -106,12 +113,6 @@ function Menu() {
           id: '3-3',
           text: '审核模块',
           path: '/population-manager/pending',
-          show: true,
-        },
-        {
-          id: '3-4',
-          text: '展示（暂时）',
-          path: '/population-manager/person-show',
           show: true,
         },
         // {
@@ -178,22 +179,43 @@ function Menu() {
       path: '',
       show: false,
     },
+    // {
+    //   id: '9',
+    //   text: '事件管理',
+    //   path: '/event-management',
+    //   show: true,
+    // },
     {
       id: '9',
-      text: '事件管理',
-      path: '/event-management',
+      text: '日志记录',
+      path: '/log-record',
       show: true,
+      children: [
+        {
+          id: '9-1',
+          text: '登录日志',
+          path: '/log-record/login-log',
+          show: true,
+        },
+
+        {
+          id: '9-2',
+          text: '操作日志',
+          path: '/log-record/operate-log',
+          show: true,
+        },
+      ],
     },
     {
       id: '10',
-      text: '日志记录',
-      path: '/log-record',
+      text: '绩效查看',
+      path: '/check-performance',
       show: true,
     },
     {
       id: '11',
-      text: '绩效查看',
-      path: '/check-performance',
+      text: '用户管理',
+      path: '/user-manager',
       show: true,
     },
     {
@@ -244,7 +266,7 @@ function Menu() {
   useEffect(() => {
     const id = findItemIdByRoute(menuItems, location.pathname) || '';
     if (id) {
-      const currentElement = document.getElementById(id + 'go_back');
+      const currentElement = document.getElementById(`${id}go_back`);
       const ul = currentElement?.parentElement;
       // 是二级路由情况
       if (id.indexOf('-') !== -1) {
