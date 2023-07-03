@@ -12,16 +12,19 @@ function ProcessingModal(Props: {
   role: number;
   level: number;
   visible: boolean;
+  reloading: boolean;
   id: number;
   disable: boolean;
   setVisible: (visible: boolean) => void;
+  setReloading: (reloading: boolean) => void;
   data: eventData | undefined;
+  updata: Function;
 }) {
   // 处理中的modal 民警有一个去处理的按钮，网格员没有
   const [form] = Form.useForm();
   const [visableResult, setVisableResult] = useState(false);
   const [visableHandlingOpinions, setVisableHandlingOpinions] = useState(false);
-  const { id, visible, disable, role, data } = Props;
+  const { id, visible, disable, role, data, updata } = Props;
   const List: UploadFile[] = [
     {
       uid: '-1',
@@ -154,6 +157,9 @@ function ProcessingModal(Props: {
         setVisible={setVisableResult}
         level={Props.level}
         disable={false}
+        updata={updata}
+        reloading={Props.reloading}
+        setReloading={Props.setReloading}
       />
     </div>
   );

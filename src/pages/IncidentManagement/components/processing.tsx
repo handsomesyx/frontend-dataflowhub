@@ -8,11 +8,12 @@ import type { eventData, user } from '@/pages/IncidentManagement/type';
 import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 
 /* 处理中 */
-function Processing(Props: { role: number }) {
+function Processing(Props: { role: number; updata: Function }) {
   const [visible, setVisible] = useState(false);
-  const { role } = Props; // 这个用来判断是民警还是网格员
+  const { role, updata } = Props; // 这个用来判断是民警还是网格员
   const [id, setId] = useState<number>(-1);
   const [ModelData, SetModelData] = useState<eventData>();
+  const [reloading, setReloading] = useState<boolean>(false);
   const columns: ColumnsType<eventData> = [
     {
       title: '事件信息',
@@ -83,11 +84,14 @@ function Processing(Props: { role: number }) {
         id={id}
         disable={true}
         visible={visible}
+        reloading={reloading}
         setVisible={setVisible}
+        setReloading={setReloading}
         level={2}
         data={ModelData}
+        updata={updata}
       />
-      <CaseRating columns={columns} level={2} />
+      <CaseRating columns={columns} level={2} reloading={reloading} />
     </div>
   );
 }

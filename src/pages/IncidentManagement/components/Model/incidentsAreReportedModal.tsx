@@ -86,9 +86,9 @@ function IncidentsAreReportedModal(Props: {
     if (role === 1) {
       updata({
         variables: {
-          modifyReportInput: {
+          ModifyReportInput: {
             id: id,
-            processing_status: '已知晓',
+            processing_status: '处理中',
           },
         },
       })
@@ -199,6 +199,8 @@ function IncidentsAreReportedModal(Props: {
         setVisible={setVisableResult}
         level={Props.level}
         disable={false}
+        reloading={reloading}
+        setReloading={setReloading}
       />
     </div>
   );

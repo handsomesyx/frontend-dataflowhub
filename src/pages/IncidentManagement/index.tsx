@@ -10,10 +10,9 @@ import ToBeEvaluated from '@/pages/IncidentManagement/components/toBeEvaluated';
 import { getUserType } from '@/store/SaveToken';
 
 function IncidentManagement() {
-  console.log(getUserType(), 'getUserType(');
-  const role = 2; // 1表示民警，2表示网格员
-
-  const [modifyReportInfo] = useMutation(modifyTheEventInformation);
+  const role = getUserType() === 'gridMember' ? 2 : 1; // 1表示民警，2表示网格员
+  console.log(role, 'getUserType(');
+  const [modifyReportInfo] = useMutation(modifyTheEventInformation); // 除了添加以为，包括删除在内的函数均为此函数触发
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -27,7 +26,7 @@ function IncidentManagement() {
     {
       key: '2',
       label: '处理中',
-      children: <Processing role={role} />,
+      children: <Processing role={role} updata={modifyReportInfo} />,
     },
     {
       key: '3',

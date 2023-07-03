@@ -9,6 +9,7 @@ import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 
 function Finished(Props: { role: number }) {
   const [visible, setVisible] = useState(false);
+  const [ModelData, setModelData] = useState<eventData>({} as eventData);
   const { role } = Props; // 这个用来判断是民警还是网格员
   const [id, setId] = useState<number>(-1);
 
@@ -69,6 +70,7 @@ function Finished(Props: { role: number }) {
           <Button
             type="link"
             onClick={() => {
+              setModelData(record);
               setId(record.id);
               setVisible(true);
               console.log('查看详情', record.id);
@@ -91,6 +93,7 @@ function Finished(Props: { role: number }) {
         id={id}
         disable={true}
         setVisible={setVisible}
+        data={ModelData}
       />
     </div>
   );

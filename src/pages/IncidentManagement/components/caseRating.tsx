@@ -1,7 +1,6 @@
 /*
  * 事件系统中的表格 */
 import { useQuery } from '@apollo/client';
-import { useMount } from 'ahooks';
 import type { TablePaginationConfig } from 'antd';
 import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
@@ -60,15 +59,12 @@ function CaseRating(Props: {
 
   // 分页点击其他的时候触发，这里重新refetch就行应该
   function handleChangeTable(e: TablePaginationConfig) {
+    GetList({
+      processing_status: Levelstate,
+    });
     console.log(e.current);
     setPage(e.current || 1);
   }
-  useMount(() => {
-    setTimeout(() => {
-      setTotal(100);
-      setData([]);
-    }, 100);
-  });
 
   return (
     <div>

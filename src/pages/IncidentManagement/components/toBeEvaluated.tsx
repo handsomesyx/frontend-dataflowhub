@@ -11,6 +11,8 @@ function ToBeEvaluated(Props: { role: number; updata: Function }) {
   const [visible, setVisible] = useState(false);
   const { role, updata } = Props; // 这个用来判断是民警还是网格员
   const [id, setId] = useState<number>(-1);
+  const [ModelData, setModelData] = useState<eventData>({} as eventData);
+  const [reloading, setReloading] = useState(false);
   const columns: ColumnsType<eventData> = [
     {
       title: '事件信息',
@@ -61,13 +63,14 @@ function ToBeEvaluated(Props: { role: number; updata: Function }) {
       render: (time: number) => <span>{timestampToTime(time)}</span>,
     },
     {
-      title: 'Action',
+      title: '操作',
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
           <Button
             type="link"
             onClick={() => {
+              setModelData(record);
               setId(record.id);
               setVisible(true);
             }}
@@ -80,8 +83,11 @@ function ToBeEvaluated(Props: { role: number; updata: Function }) {
   ];
   return (
     <div>
-      <CaseRating columns={columns} level={3} />
+      <CaseRating columns={columns} level={3} reloading={reloading} />
       <TobeEvaluatedViewModal
+        reloading={reloading}
+        setReloading={setReloading}
+        data={ModelData}
         updata={updata}
         role={role}
         level={3}

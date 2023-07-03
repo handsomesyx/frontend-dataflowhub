@@ -1,5 +1,5 @@
 /* 评价的model */
-import { Button, Form, Input, Modal, Rate } from 'antd';
+import { Button, Form, Input, message, Modal, Rate } from 'antd';
 
 function AppraiseModal(Props: {
   role: number;
@@ -8,9 +8,12 @@ function AppraiseModal(Props: {
   id: number;
   disable: boolean;
   setVisible: (visible: boolean) => void;
+  reloading: boolean;
+  setReloading: (reloading: boolean) => void;
+  updata: Function;
 }) {
   const [form] = Form.useForm();
-  const { id, visible, disable, role } = Props;
+  const { id, visible, disable, role, updata } = Props;
   console.log(id);
   return (
     <div>
@@ -38,8 +41,24 @@ function AppraiseModal(Props: {
                     form
                       .validateFields()
                       .then((values) => {
-                        console.log(values);
-                        Props.setVisible(false);
+                        updata({
+                          variables: {
+                            ModifyReportInput: {
+                              id: id,
+                              processing_status: '已完结',
+                              ...values,
+                            },
+                          },
+                        })
+                          .then(() => {
+                            Props.setVisible(false);
+                            Props.setReloading(!Props.reloading);
+                            message.success('评价成功');
+                          })
+                          .catch(() => {
+                            console.log('error');
+                            message.error('评价失败');
+                          });
                       })
                       .catch(() => {
                         console.log('error');
@@ -55,12 +74,12 @@ function AppraiseModal(Props: {
         <Form form={form}>
           <Form.Item
             label="总体"
-            name="processTheResults"
+            name="reporter_star_rating"
             rules={[{ required: true, message: '请填写评分' }]}
           >
             <Rate />
           </Form.Item>
-          <Form.Item label="备注" name="remark">
+          <Form.Item label="备注" name="reporter_evaluate">
             <Input disabled={disable} />
           </Form.Item>
         </Form>

@@ -6,10 +6,12 @@ function HandlingOpinionsModal(Props: {
   role: number;
   level: number;
   visible: boolean;
+  reloading: boolean;
   id: number;
   disable: boolean;
   setVisible: (visible: boolean) => void;
-  updata?: Function;
+  setReloading: (reloading: boolean) => void;
+  updata: Function;
 }) {
   const [form] = Form.useForm();
   const { id, visible, disable, role, updata } = Props;
@@ -35,22 +37,24 @@ function HandlingOpinionsModal(Props: {
               <Button
                 type={'primary'}
                 onClick={() => {
-                  if (updata) {
-                    updata({
-                      modifyReportInput: {
+                  updata({
+                    variables: {
+                      ModifyReportInput: {
                         id: id,
                         processing_status: '待评价',
-                        police_opinion: form.getFieldValue('processTheResults'),
+                        police_opinion: form.getFieldValue('police_opinion'),
                       },
+                    },
+                  })
+                    .then(() => {
+                      form.setFieldValue('police_opinion', '');
+                      Props.setVisible(false);
+                      Props.setReloading(true);
+                      message.success('修改成功');
                     })
-                      .then(() => {
-                        Props.setVisible(false);
-                        message.success('修改成功');
-                      })
-                      .catch(() => {
-                        message.error('修改失败');
-                      });
-                  }
+                    .catch(() => {
+                      message.error('修改失败');
+                    });
                 }}
               >
                 提交
@@ -63,7 +67,7 @@ function HandlingOpinionsModal(Props: {
           <div style={{ marginTop: '20px' }}>处理结果:</div>
           <Form.Item
             label=""
-            name="processTheResults"
+            name="police_opinion"
             rules={[{ required: true, message: '请填写结果' }]}
           >
             <TextArea rows={4} disabled={disable} />
