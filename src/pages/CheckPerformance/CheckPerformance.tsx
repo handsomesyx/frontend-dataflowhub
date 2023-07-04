@@ -130,6 +130,7 @@ const CheckPerformance: React.FC = () => {
         setIsDefault(true);
         break;
     }
+    setPagination({ current: 1, pageSize: pageSizeSet });
   };
 
   // 一系列状态Hook，用来存储表单
@@ -159,9 +160,12 @@ const CheckPerformance: React.FC = () => {
   const areaID = grid !== 0 ? grid : town !== 0 ? town : city;
 
   // 设置分页，获取当前的页码
+  // 按需修改pageSizeSet
+  const pageSizeSet = 2;
+
   const [pagination, setPagination] = useState<any>({
     current: 1, // 默认为第一页
-    pageSize: 1, // 测试用的页大小，按需修改
+    pageSize: pageSizeSet, // 测试用的页大小，按需修改
   });
 
   // 处理分页，参考了刘康的分页方法，但最后自己修改了绝大部分
@@ -169,7 +173,7 @@ const CheckPerformance: React.FC = () => {
   // 所以无法让后端排队按skip take送数据，只能一次全拿出来
   // 所以这里采用的是前端的slice方式，分割显示
   const handlePageChange = (page: number, pageSize?: number) => {
-    setPagination({ current: page, pageSize: pageSize || 1 });
+    setPagination({ current: page, pageSize: pageSize || pageSizeSet });
   };
 
   // 每次点击标签页进行的改变，主要是改变了页码数
@@ -204,7 +208,7 @@ const CheckPerformance: React.FC = () => {
     // } else
     if (error) {
       // 查询发生错误
-      console.error('Error:', error);
+      // console.error('Error:', error);
       alert(error.message);
     }
     // else if (grid === 'default') {
@@ -230,6 +234,7 @@ const CheckPerformance: React.FC = () => {
           },
         });
         // console.log(UsedDataLength);
+        setPagination({ current: 1, pageSize: pageSizeSet });
       }
     }
   };
