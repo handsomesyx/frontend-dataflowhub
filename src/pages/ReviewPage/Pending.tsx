@@ -343,15 +343,26 @@ const App: React.FC = () => {
   };
 
   const handlePass = () => {
-    // console.log(checkedList);
+    let reason: string;
+    checkedList.map((item) => {
+      reason = item + reason;
+    });
     const newData = {
-      request_data: { class: classabcd, detailClass: checkedList },
       review_comments: '审核通过',
       status: 1,
       review_time: new Date(),
     };
+
+    const classData = {
+      person_classification: classabcd,
+      classification_reason: checkedList.toString(),
+    };
     updateAudit({
-      variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId },
+      variables: {
+        new_data: newData,
+        rightnow_auditrecords_id: rightnowAuditrecordsId,
+        class_data: classData,
+      },
     });
   };
 

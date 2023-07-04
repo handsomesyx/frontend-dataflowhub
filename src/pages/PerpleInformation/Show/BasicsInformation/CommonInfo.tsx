@@ -1,9 +1,10 @@
-import { useMutation } from '@apollo/client';
-import { Button, Form, message, Modal, Select } from 'antd';
+import { useMutation, useQuery } from '@apollo/client';
+import { Button, Form, message, Modal, Select, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { DeletePeopleInfo } from '@/apis';
+import { DeletePeopleInfo, getChangeRecordByPersonalId } from '@/apis';
 
 import styles from './style.module.less';
 
@@ -12,6 +13,13 @@ interface Props {
   peopleData: CommonPeopleBasics;
 }
 const { Option } = Select;
+
+interface ChangeWhat {
+  id: any;
+  change_item: string;
+  content_before: string;
+  content_after: string;
+}
 
 /**
  * @description 基础信息接口
@@ -54,6 +62,27 @@ const Common: React.FC<Props> = ({ peopleData }) => {
   const id = window.localStorage.getItem('userIdNum');
   const [form] = Form.useForm();
   const [deleteVisible, setDeleteVisible] = useState<boolean>();
+  const [recordVisible, setRecordVisible] = useState<boolean>();
+  // const [changesShow, setChangesShow] = useState<dataChange[]>([]);
+  const [changedata, setChangedata] = useState<ChangeWhat[]>([]);
+  const changecolumns: ColumnsType<ChangeWhat> = [
+    {
+      title: '变更属性',
+      dataIndex: 'value',
+      key: 'value',
+      width: '15%',
+    },
+    {
+      title: '变更前',
+      dataIndex: 'before',
+      key: 'before',
+    },
+    {
+      title: '变更后',
+      dataIndex: 'after',
+      key: 'after',
+    },
+  ];
   const navigate = useNavigate();
 
   const [deletePeopleInfo] = useMutation(DeletePeopleInfo);
@@ -73,6 +102,39 @@ const Common: React.FC<Props> = ({ peopleData }) => {
         message.error('创建审核记录失败');
       });
   };
+
+  useQuery(getChangeRecordByPersonalId, {
+    // client,
+    variables: { personalId: Number(id) },
+    onCompleted: (data) => {
+      // console.log(data.getChangeRecord); // 控制台结果
+      const changewhat = data.getChangeRecordByPersonalId.map((item: ChangeWhat) => ({
+        after: item?.content_after,
+        before: item?.content_before,
+        value: item?.change_item,
+        key: item?.id,
+      }));
+
+      // console.log(changewhat);
+      setChangedata(changewhat);
+    },
+  });
+  console.log(changedata);
+
+  // useEffect(() => {
+  //   if (changeData) {
+  //     console.log(changeData);
+
+  //     const changewhat = changeData?.data?.getChangeRecord.map((item: ChangeWhat) => ({
+  //       after: item?.content_after,
+  //       before: item?.content_before,
+  //       value: item?.change_item,
+  //       key: item?.id,
+  //     }));
+
+  //     setChangedata(changewhat);
+  //   }
+  // }, [changeData]);
 
   return (
     <div className={styles.CommonBox}>
@@ -160,6 +222,15 @@ const Common: React.FC<Props> = ({ peopleData }) => {
           style={{ marginRight: '10px' }}
           type="primary"
           onClick={() => {
+            setRecordVisible(true);
+          }}
+        >
+          查看历史记录
+        </Button>
+        <Button
+          style={{ marginRight: '10px' }}
+          type="primary"
+          onClick={() => {
             navigate(`/population-manager/person-management-update/${Number(id)}`);
           }}
         >
@@ -200,6 +271,25 @@ const Common: React.FC<Props> = ({ peopleData }) => {
               </Select>
             </Form.Item>
           </Form>
+        </Modal>
+
+        <Modal
+          // okText="确认"
+          // cancelText="取消"
+          title="历史变更记录"
+          open={recordVisible}
+          maskClosable
+          footer={null}
+          // width={1000}
+          // onOk={deletePeople}
+          onCancel={() => setRecordVisible(false)}
+        >
+          <Table
+            pagination={false}
+            columns={changecolumns}
+            dataSource={changedata}
+            // size="middle"
+          />
         </Modal>
       </div>
     </div>
