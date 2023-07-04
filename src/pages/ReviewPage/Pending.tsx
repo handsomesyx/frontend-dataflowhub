@@ -74,6 +74,7 @@ interface DataType {
   key: string;
 }
 interface personinfo {
+  name: ReactNode;
   real_name: String;
   id_card: String;
 }
@@ -345,13 +346,18 @@ const App: React.FC = () => {
   const handlePass = () => {
     // console.log(checkedList);
     const newData = {
-      request_data: { class: classabcd, detailClass: checkedList },
       review_comments: '审核通过',
       status: 1,
       review_time: new Date(),
     };
+    const checkedList_string = checkedList.join(' ');
+    const classData = {
+      classification_reason: checkedList_string,
+      person_classification: classabcd
+    };
     updateAudit({
-      variables: { new_data: newData, rightnow_auditrecords_id: rightnowAuditrecordsId },
+      variables: { class_data:classData,new_data: newData,
+         rightnow_auditrecords_id: rightnowAuditrecordsId },
     });
   };
 
@@ -506,7 +512,7 @@ const App: React.FC = () => {
           column={{ xxl: 1, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
         >
           <Descriptions.Item label="姓名">
-            {changesShow[0]?.personal_info?.real_name}
+            {changesShow[0]?.personal_info?.name}
           </Descriptions.Item>
           <Descriptions.Item label="身份证号">
             {changesShow[0]?.personal_info?.id_card}
