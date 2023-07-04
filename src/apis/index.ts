@@ -1008,6 +1008,7 @@ export const GetPerson = gql`
       data {
         id
         username
+        real_name
         role_name
         grid_name
         create_time
