@@ -92,7 +92,8 @@ const AdministrativeRegion: React.FC = () => {
   const [communityleader, setCommunityleader] = useState(false);
   const [communityleaderloading, setCommunityleaderloading] = useState(true);
   // 搜索的用户信息
-  const [informationRole, setInformationRole] = useState();
+  const [informationRole, setInformationRole] = useState([]);
+  const [search, setSearch] = useState(false);
   // 右键时添加区域的父ID，是当前所选的ID
   const [parentID, setParentID] = useState<number>();
   // 当前所选区域的父节点ID
@@ -216,6 +217,7 @@ const AdministrativeRegion: React.FC = () => {
         <Space size="middle">
           <Button
             onClick={() => {
+              setSearch(true);
               setSearchName('');
               setUserID(value.id);
               if (searchRole === '网格长') {
@@ -269,24 +271,42 @@ const AdministrativeRegion: React.FC = () => {
     if (Griddata) {
       let grid_data = Griddata.findManyGrid.data;
       let data = grid_data.map((item: any) => {
-        let grid_name = item.name;
-        let grid_leader_name = item.grid_leader_info.real_name;
-        let area_name = item.area_info.name;
-        let area_leader_name = item.area_leader_info.real_name;
-        let grid_leader_id = item.grid_leader_info.id;
-        let id = item.id;
-        let area_id = item.area_info.id;
-        return {
-          name: grid_name,
-          grid_leader_name: grid_leader_name,
-          area_name: area_name,
-          area_id: area_id,
-          area_leader_name: area_leader_name,
-          grid_leader_id: grid_leader_id,
-          id: id,
-        };
+        if (item.grid_leader_info) {
+          let grid_leader_name = item.grid_leader_info.real_name;
+          let grid_leader_id = item.grid_leader_info.id;
+          let grid_name = item.name;
+          let area_name = item.area_info.name;
+          let area_leader_name = item.area_leader_info.real_name;
+          let id = item.id;
+          let area_id = item.area_info.id;
+          return {
+            name: grid_name,
+            grid_leader_name: grid_leader_name,
+            area_name: area_name,
+            area_id: area_id,
+            area_leader_name: area_leader_name,
+            grid_leader_id: grid_leader_id,
+            id: id,
+          };
+        } else {
+          let grid_name = item.name;
+          let area_name = item.area_info.name;
+          let area_leader_name = item.area_leader_info.real_name;
+          let id = item.id;
+          let area_id = item.area_info.id;
+          return {
+            name: grid_name,
+            grid_leader_name: ' ',
+            area_name: area_name,
+            area_id: area_id,
+            area_leader_name: area_leader_name,
+            grid_leader_id: ' ',
+            id: id,
+          };
+        }
       });
       setGriddata(data);
+
       // let grid_data = [];
 
       setTotal(Griddata.findManyGrid.count);
@@ -485,6 +505,11 @@ const AdministrativeRegion: React.FC = () => {
     setCheckedKeys(res);
   };
   const onAddGrid = async () => {
+    if (!search) {
+      message.info('请根据您输入的网格长姓名进行搜索选择！');
+      return;
+    }
+    setSearch(false);
     let name = formSubmit.getFieldValue('Areaname');
     let areaid = parseInt(name[name.length - 1]);
     const addGriddata: any = await addGrid({
@@ -519,6 +544,11 @@ const AdministrativeRegion: React.FC = () => {
     formSubmit.resetFields();
   };
   const onUpdateGrid = async () => {
+    if (!search) {
+      message.info('请根据您输入的网格长姓名进行搜索选择！');
+      return;
+    }
+    setSearch(false);
     let name = formUpdate.getFieldValue('Areaname');
     let areaid;
     if (typeof name === 'string') {
@@ -692,12 +722,17 @@ const AdministrativeRegion: React.FC = () => {
               placeholder="请选择所属社区"
             />
           </Form.Item>
-          <Form.Item name="Gridleader" label="所属网格长">
+          <Form.Item name="Gridleader" label="所属网格长" extra={
+            <div style={{ color: 'red' }}>
+              注意：输入完请点击搜索进行网格长信息查询并选择
+            </div>
+          }>
             <Input
               placeholder="请输入网格长名称"
               suffix={
                 <SearchOutlined
                   onClick={() => {
+
                     let name = formSubmit.getFieldValue('Gridleader');
                     if (!name) {
                       message.info('请输入网格长名称');
@@ -705,6 +740,7 @@ const AdministrativeRegion: React.FC = () => {
                     }
                     let role = '网格长';
                     setGridleader(true);
+                    setGridleaderloading(true);
                     setSearchName(name);
                     setSearchRole(role);
                   }}
@@ -771,7 +807,11 @@ const AdministrativeRegion: React.FC = () => {
               placeholder="请选择所属社区"
             />
           </Form.Item>
-          <Form.Item name="leader" label="所属网格长">
+          <Form.Item name="leader" label="所属网格长" extra={
+            <div style={{ color: 'red' }}>
+              注意：输入完请点击搜索进行网格长信息查询并选择
+            </div>
+          }>
             <Input
               placeholder="请输入网格长名称"
               suffix={
@@ -784,6 +824,7 @@ const AdministrativeRegion: React.FC = () => {
                     }
                     let role = '网格长';
                     setGridleader(true);
+                    setGridleaderloading(true);
                     setSearchName(name);
                     setSearchRole(role);
                   }}
@@ -878,6 +919,11 @@ const AdministrativeRegion: React.FC = () => {
           //   refetchQueries: ['findManyArea'],
           // });
           // //console.log('areadata', areadata);
+          if (!search && level === 2) {
+            message.info('请根据您输入的网格长姓名进行搜索选择！');
+            return;
+          }
+          setSearch(false);
           addArea({
             variables: {
               data: {
@@ -937,7 +983,7 @@ const AdministrativeRegion: React.FC = () => {
                 },
               ]}
             >
-              <Input placeholder="请输入行政区域" style={{ width: '12vw' }} />
+              <Input placeholder="请输入行政区域" style={{ width: '20vw' }} />
             </Form.Item>
             {level === 2 ? (
               <Form.Item
@@ -949,10 +995,15 @@ const AdministrativeRegion: React.FC = () => {
                     message: '请输入社区主任',
                   },
                 ]}
+                extra={
+                  <div style={{ color: 'red' }}>
+                    注意：输入完请点击搜索进行社区主任信息查询并选择
+                  </div>
+                }
               >
                 <Input
                   placeholder="请输入社区主任"
-                  style={{ width: '12vw' }}
+                  style={{ width: '20vw' }}
                   suffix={
                     <SearchOutlined
                       onClick={() => {
@@ -963,6 +1014,7 @@ const AdministrativeRegion: React.FC = () => {
                         }
                         let role = '社区主任';
                         setCommunityleader(true);
+                        setCommunityleaderloading(true);
                         setSearchName(name);
                         setSearchRole(role);
                       }}
@@ -981,6 +1033,11 @@ const AdministrativeRegion: React.FC = () => {
         open={modalRenameVisible}
         getContainer={false}
         onOk={() => {
+          if (!search && level === 3) {
+            message.info('请根据您输入的社区主任姓名进行搜索选择！');
+            return;
+          }
+          setSearch(false);
           updateArea({
             awaitRefetchQueries: true,
             refetchQueries: ['findManyArea', 'findManyGrid'], // 重新查询
@@ -1036,6 +1093,11 @@ const AdministrativeRegion: React.FC = () => {
                   message: '请输入社区主任',
                 },
               ]}
+              extra={
+                <div style={{ color: 'red' }}>
+                  注意：输入完请点击搜索进行社区主任信息查询并选择
+                </div>
+              }
             >
               <Input
                 placeholder="请输入社区主任"
@@ -1049,6 +1111,7 @@ const AdministrativeRegion: React.FC = () => {
                       }
                       let role = '社区主任';
                       setCommunityleader(true);
+                      setCommunityleaderloading(true);
                       setSearchName(name);
                       setSearchRole(role);
                     }}
@@ -1153,6 +1216,7 @@ const AdministrativeRegion: React.FC = () => {
         onCancel={() => {
           setSearchName('');
           setGridleader(false);
+          setInformationRole([]);
         }}
         footer={null}
       >
@@ -1170,6 +1234,7 @@ const AdministrativeRegion: React.FC = () => {
         onCancel={() => {
           setSearchName('');
           setCommunityleader(false);
+          setInformationRole([]);
         }}
         footer={null}
       >
