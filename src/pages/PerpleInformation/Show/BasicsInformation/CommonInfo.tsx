@@ -26,6 +26,7 @@ interface ChangeWhat {
  */
 
 export type CommonPeopleBasics = {
+  age?: string;
   img?: string;
   name?: string;
   card?: string;
@@ -119,7 +120,6 @@ const Common: React.FC<Props> = ({ peopleData }) => {
       setChangedata(changewhat);
     },
   });
-  console.log(changedata);
 
   // useEffect(() => {
   //   if (changeData) {
@@ -190,6 +190,10 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span>
               {peopleData?.sex === false ? '男' : peopleData?.sex === true ? '女' : ''}
             </span>
+          </div>
+          <div>
+            <span></span>年龄：
+            <span>{peopleData?.age}</span>
           </div>
         </div>
       </div>

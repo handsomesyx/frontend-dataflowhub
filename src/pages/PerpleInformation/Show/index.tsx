@@ -74,6 +74,7 @@ function InformationShow() {
     history: dataAll?.history,
     height: dataAll?.height,
     sex: dataAll?.gender,
+    age: dataAll?.age,
   };
 
   // 家庭成员信息配置;

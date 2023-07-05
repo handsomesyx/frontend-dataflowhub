@@ -568,9 +568,9 @@ const SearchBasic = () => {
               ></Select>
             </div>
             <div>
-              <span>别名</span>：
+              <span>绰号</span>：
               <Input
-                placeholder="输入别名"
+                placeholder="输入绰号"
                 allowClear
                 onChange={(a) => {
                   handleFliterData(a, 'nickname');
