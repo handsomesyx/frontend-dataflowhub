@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { message, Modal, Upload } from 'antd';
+import { Modal, Upload } from 'antd';
 import type { RcFile, UploadProps } from 'antd/es/upload';
 import type { UploadFile } from 'antd/es/upload/interface';
 // import axios from 'axios';
@@ -37,8 +37,10 @@ const MyUpload = (Props: {
 
   const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     console.log(newFileList, 'newFileList');
-    message.success('上传成功');
     setFileList(newFileList);
+  };
+  const returnURl = () => {
+    return `http://${window.location.hostname}:7000/file/upload/image`;
   };
 
   const uploadButton = (
@@ -51,7 +53,7 @@ const MyUpload = (Props: {
   return (
     <>
       <Upload
-        action="http://127.0.0.1:7000/file/upload/image" //
+        action={returnURl} //
         method="post" // 上传方法，post或者get
         listType="picture-card" // 类型，你要是想改样式直接改这个，别瞎改
         fileList={fileList} // 这里进行表示上传拥有的本身数据
