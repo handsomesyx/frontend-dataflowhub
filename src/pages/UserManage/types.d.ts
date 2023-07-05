@@ -10,6 +10,7 @@ export type TableDataType = {
 export type DataType = {
   id: number;
   username: string | null;
+  real_name: string | null;
   role_name: string | null;
   grid_name: string | null;
   create_time: string;

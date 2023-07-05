@@ -168,8 +168,16 @@ export const GET_AUDIT_CHANGE = gql`
 `;
 //  修改审核信息
 export const UPDATE_AUDIT = gql`
-  mutation UpdateAudit($new_data: auditCreateInput!, $rightnow_auditrecords_id: Int!) {
-    updateAudit(new_data: $new_data, rightnow_auditrecords_id: $rightnow_auditrecords_id)
+  mutation UpdateAudit(
+    $new_data: auditCreateInput!
+    $rightnow_auditrecords_id: Int!
+    $class_data: personClassInput
+  ) {
+    updateAudit(
+      new_data: $new_data
+      rightnow_auditrecords_id: $rightnow_auditrecords_id
+      class_data: $class_data
+    )
   }
 `;
 
@@ -1007,6 +1015,7 @@ export const GetPerson = gql`
       data {
         id
         username
+        real_name
         role_name
         grid_name
         create_time
@@ -1153,6 +1162,19 @@ export const GetAllUnhandledEvents = gql`
       status
       update_time
       updater_id
+    }
+  }
+`;
+
+export const getChangeRecordByPersonalId = gql`
+  query getChangeRecordByPersonalId($personalId: Int!) {
+    getChangeRecordByPersonalId(personalId: $personalId) {
+      change_item
+      content_after
+      content_before
+      creator_id
+      id
+      is_delete
     }
   }
 `;

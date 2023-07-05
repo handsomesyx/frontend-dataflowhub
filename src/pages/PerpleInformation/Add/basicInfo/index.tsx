@@ -1,3 +1,5 @@
+import 'dayjs/locale/zh-cn';
+
 import { useMutation, useQuery } from '@apollo/client';
 import type { FormInstance } from 'antd';
 import { Button, Col, Divider, Form, Input, message, Modal, Row, Select } from 'antd';
@@ -65,6 +67,18 @@ const BasicInfo = ({
     },
   });
 
+  function formatLocalDate(aa: any) {
+    if (aa) {
+      let timestamp = parseInt(aa);
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    } else return '--';
+  }
+
   const [createFamilyInfo] = useMutation(CreateFamilyInfo);
   const [deleteFamilyInfo] = useMutation(DeleteFamilyInfo);
 
@@ -87,7 +101,7 @@ const BasicInfo = ({
         currentAddress: basicUpdateData.current_address,
         formerName: basicUpdateData.former_name,
         nickname: basicUpdateData.nickname,
-        dateOfResidence: basicUpdateData.date_of_residence,
+        dateOfResidence: formatLocalDate(basicUpdateData?.date_of_residence),
         height: basicUpdateData?.height,
         age: basicUpdateData?.age,
         gender: basicUpdateData?.gender,
@@ -183,9 +197,13 @@ const BasicInfo = ({
       <div className={styles.Container}>
         <div className={styles.Basic}>
           {/* <h3>基本信息</h3> */}
-          <Button className={styles.Btn} onClick={() => setManyVisible(true)}>
-            批量导入
-          </Button>
+          {update ? (
+            <></>
+          ) : (
+            <Button className={styles.Btn} onClick={() => setManyVisible(true)}>
+              批量导入
+            </Button>
+          )}
           <div className={styles.FormInput}>
             <Row>
               <Col span={2}>
@@ -330,7 +348,10 @@ const BasicInfo = ({
                       </Col>
                       <Col span={8}>
                         <Form.Item name="dateOfResidence" label="何时来本地居住:">
-                          <Input placeholder="请填写" style={{ width: '15vw' }} />
+                          <Input
+                            placeholder="请填写(格式:YYYY-MM-DD)"
+                            style={{ width: '15vw' }}
+                          />
                         </Form.Item>
                       </Col>
                     </Row>

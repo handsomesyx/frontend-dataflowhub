@@ -57,7 +57,7 @@ export default function PersonManage() {
   // 设置分页，获取当前的页码
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 10,
+    pageSize: 5,
   });
   // 每次点击标签页进行的改变，主要是改变了页码数
   const handleTableChange = (newPagination: TablePaginationConfig) => {
@@ -108,13 +108,19 @@ export default function PersonManage() {
     {
       title: '用户名',
       dataIndex: 'username',
-      width: '15%',
+      width: '10%',
       align: 'center',
     },
     {
       title: '用户角色',
       dataIndex: 'role_name',
-      width: '15%',
+      width: '10%',
+      align: 'center',
+    },
+    {
+      title: '真实姓名',
+      dataIndex: 'real_name',
+      width: '10%',
       align: 'center',
     },
     {
@@ -293,6 +299,7 @@ export default function PersonManage() {
             mobile: value.mobile,
             password: value.password,
             username: value.userName,
+            real_name: value.real_name,
           },
           input2: ipt2,
         },
@@ -409,6 +416,7 @@ export default function PersonManage() {
             mobile: newRecord.mobile,
             password: newRecord.password ? newRecord.password : record?.password,
             username: newRecord.username,
+            real_name: newRecord.real_name,
           },
           input2: ipt2,
         },
@@ -522,12 +530,12 @@ export default function PersonManage() {
       setPagination(() => {
         return {
           current: 1,
-          pageSize: 10,
+          pageSize: pageSize,
         };
       });
       refetch({
         skip: 0,
-        take: 10,
+        take: pageSize,
         selectOption: {},
       });
     } else {
@@ -537,7 +545,7 @@ export default function PersonManage() {
         setPagination(() => {
           return {
             current: 1,
-            pageSize: 10,
+            pageSize: pageSize,
           };
         });
         setSelectObject({
@@ -548,7 +556,7 @@ export default function PersonManage() {
         });
         refetch({
           skip: 0,
-          take: 10,
+          take: pageSize,
           selectOption: {
             username: username,
             area_id: administrionAreaId,
@@ -754,6 +762,20 @@ export default function PersonManage() {
                 <Input placeholder="请输入用户名" />
               </Form.Item>
               <Form.Item
+                name="real_name"
+                label="真实姓名"
+                labelCol={{ span: 6 }}
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入真实姓名',
+                  },
+                ]}
+              >
+                {/* <span>用户名：</span><br/> */}
+                <Input placeholder="请输入真实姓名" />
+              </Form.Item>
+              <Form.Item
                 name="id_card"
                 label="身份证:"
                 labelCol={{ span: 6 }}
@@ -777,8 +799,8 @@ export default function PersonManage() {
                   {
                     required: true,
                     // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                    min: 6,
-                    message: '密码长度不少于6位',
+                    min: 8,
+                    message: '密码长度不少于8位',
                   },
                 ]}
                 validateTrigger={['onBlur']}
@@ -965,6 +987,20 @@ export default function PersonManage() {
             <Input placeholder="请输入用户名" />
           </Form.Item>
           <Form.Item
+            name="real_name"
+            label="真实姓名"
+            labelCol={{ span: 6 }}
+            rules={[
+              {
+                required: true,
+                message: '请输入真实姓名',
+              },
+            ]}
+          >
+            {/* <span>用户名：</span><br/> */}
+            <Input placeholder="请输入真实姓名" />
+          </Form.Item>
+          <Form.Item
             name="id_card"
             label="身份证:"
             labelCol={{ span: 6 }}
@@ -988,8 +1024,8 @@ export default function PersonManage() {
               {
                 // required: true,
                 // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                min: 6,
-                message: '密码长度不少于6位',
+                min: 8,
+                message: '密码长度不少于8位',
               },
             ]}
             validateTrigger={['onBlur']}

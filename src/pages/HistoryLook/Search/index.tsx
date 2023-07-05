@@ -13,7 +13,6 @@ import {
 } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import {
   getPeopleDataFilter,
@@ -213,7 +212,7 @@ const SearchBasic = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pagination?.current, pagination?.pageSize]);
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   /* 处理是否展开菜单 */
   const handleShowSearch = () => {
@@ -229,9 +228,9 @@ const SearchBasic = () => {
     setShowSearch((pre) => !pre);
   };
 
-  const showMadal = () => {
-    navigate('/population-manager/person-management-add');
-  };
+  // const showMadal = () => {
+  //   navigate('/population-manager/person-management-add');
+  // };
 
   // 处理传入展示列表页面BasicShowList的数据
   const datalist = () => {
@@ -374,10 +373,10 @@ const SearchBasic = () => {
           <button className={styles.ClickShow} onClick={handleShowSearch}>
             {isshowSearch ? '收起筛选' : '展开筛选'}
           </button>
-          <button className={styles.AddPeople} onClick={showMadal}>
+          {/* <button className={styles.AddPeople} onClick={showMadal}>
             <span style={{ transform: ' scale(1.5)', display: 'inline-block' }}>+</span>
             &nbsp;增加人员信息
-          </button>
+          </button> */}
         </div>
       </div>
 
