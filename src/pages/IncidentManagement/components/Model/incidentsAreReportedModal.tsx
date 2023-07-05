@@ -83,7 +83,7 @@ function IncidentsAreReportedModal(Props: {
         .then((values) => {
           console.log(fileList);
           const filTemp = fileList.map((item) => {
-            return `http://localhost:7000/static/${item.response}`;
+            return `http://${window.location.hostname}:7000/static/${item.response}`;
           });
           console.log(filTemp, 'filTemp');
           addReportInfo({
