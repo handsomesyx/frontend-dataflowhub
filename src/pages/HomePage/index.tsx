@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
+// Card,  Row
 import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
-// Card,  Row
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { GetAllHandledEvents, GetAllUnhandledEvents } from '@/apis';
@@ -273,15 +273,18 @@ function HomePage() {
               <div style={{ color: '#fff' }}>
                 <Popover placement="bottomRight" content={content}>
                   <Badge
+                    offset={[-2, 7]}
                     style={{
                       marginRight: '23px',
                       // backgroundColor: '#52c41a',
                     }}
                     count={unHandleSource.length}
-                    size="default"
+                    size="small"
                   >
                     <BellOutlined
                       style={{
+                        position: 'relative',
+                        top: '6px',
                         marginRight: '30px',
                         color: 'white',
                         fontSize: 20,
