@@ -67,18 +67,6 @@ const BasicInfo = ({
     },
   });
 
-  function formatLocalDate(aa: any) {
-    if (aa) {
-      let timestamp = parseInt(aa);
-      const date = new Date(timestamp);
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-
-      return `${year}-${month}-${day}`;
-    } else return '--';
-  }
-
   const [createFamilyInfo] = useMutation(CreateFamilyInfo);
   const [deleteFamilyInfo] = useMutation(DeleteFamilyInfo);
 
@@ -101,7 +89,7 @@ const BasicInfo = ({
         currentAddress: basicUpdateData.current_address,
         formerName: basicUpdateData.former_name,
         nickname: basicUpdateData.nickname,
-        dateOfResidence: formatLocalDate(basicUpdateData?.date_of_residence),
+        dateOfResidence: basicUpdateData?.date_of_residence,
         height: basicUpdateData?.height,
         age: basicUpdateData?.age,
         gender: basicUpdateData?.gender,
