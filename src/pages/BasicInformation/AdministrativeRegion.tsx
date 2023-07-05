@@ -722,17 +722,20 @@ const AdministrativeRegion: React.FC = () => {
               placeholder="请选择所属社区"
             />
           </Form.Item>
-          <Form.Item name="Gridleader" label="所属网格长" extra={
-            <div style={{ color: 'red' }}>
-              注意：输入完请点击搜索进行网格长信息查询并选择
-            </div>
-          }>
+          <Form.Item
+            name="Gridleader"
+            label="所属网格长"
+            extra={
+              <div style={{ color: 'red' }}>
+                注意：输入完请点击搜索进行网格长信息查询并选择
+              </div>
+            }
+          >
             <Input
               placeholder="请输入网格长名称"
               suffix={
                 <SearchOutlined
                   onClick={() => {
-
                     let name = formSubmit.getFieldValue('Gridleader');
                     if (!name) {
                       message.info('请输入网格长名称');
@@ -807,11 +810,15 @@ const AdministrativeRegion: React.FC = () => {
               placeholder="请选择所属社区"
             />
           </Form.Item>
-          <Form.Item name="leader" label="所属网格长" extra={
-            <div style={{ color: 'red' }}>
-              注意：输入完请点击搜索进行网格长信息查询并选择
-            </div>
-          }>
+          <Form.Item
+            name="leader"
+            label="所属网格长"
+            extra={
+              <div style={{ color: 'red' }}>
+                注意：输入完请点击搜索进行网格长信息查询并选择
+              </div>
+            }
+          >
             <Input
               placeholder="请输入网格长名称"
               suffix={

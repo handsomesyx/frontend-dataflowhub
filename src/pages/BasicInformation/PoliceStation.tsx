@@ -736,12 +736,15 @@ export default function PoliceStation() {
         okText="确认"
         cancelText="取消"
       >
-        <Form form={formAddPolice} layout="vertical" >
-          <Form.Item name="nameInfo" extra={
-            <div style={{ color: 'red' }}>
-              注意：输入完请点击搜索进行警员信息查询并选择
-            </div>
-          }>
+        <Form form={formAddPolice} layout="vertical">
+          <Form.Item
+            name="nameInfo"
+            extra={
+              <div style={{ color: 'red' }}>
+                注意：输入完请点击搜索进行警员信息查询并选择
+              </div>
+            }
+          >
             <Input
               placeholder="请输入搜索关键字"
               suffix={
@@ -847,7 +850,7 @@ export default function PoliceStation() {
                   multiple
                   showCheckedStrategy={SHOW_CHILD}
                   placeholder="请选择所属行政区域"
-                // changeOnSelect
+                  // changeOnSelect
                 />
               </Form.Item>
             </Col>
@@ -995,7 +998,7 @@ export default function PoliceStation() {
               multiple
               showCheckedStrategy={SHOW_CHILD}
               placeholder="请选择所属行政区域"
-            // changeOnSelect
+              // changeOnSelect
             />
           </Form.Item>
         </Form>
