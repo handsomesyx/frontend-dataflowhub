@@ -1,14 +1,14 @@
 /* eslint-disable max-len */
 import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
-import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 // Card,  Row
+import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
-import { GetAllHandledEvents, GetAllUnhandledEvents, GetCurrentUser } from '@/apis';
-import { getRefreshToken, getUserName, logout } from '@/store/SaveToken';
+import { GetAllHandledEvents, GetAllUnhandledEvents } from '@/apis';
+import { getRefreshToken, getUserId, getUserName, logout } from '@/store/SaveToken';
 
 import TopIcon from '../../assets/top.svg';
 import styles from './HomePage.module.less';
@@ -51,7 +51,7 @@ function HomePage() {
   }
 
   const [hintChoose, setHintChoose] = useState('1');
-  const [userId, setUserId] = useState(1169); // 目前是写死的id
+  // const [userId, setUserId] = useState(1169); // 目前是写死的id
   const [_unHandledNumber, setUnHandledNumber] = useState(0);
   // _unHandledNumber
   const [_HandledNumber, setHandledNumber] = useState(0);
@@ -59,18 +59,18 @@ function HomePage() {
   const [unHandleSource, setUnhandleSource] = useState<EventData[]>([]);
   const [handleSource, setHandleSource] = useState<EventData[]>([]);
   // 获取当前用户信息
-  const { data: currentUser } = useQuery(GetCurrentUser, {
-    onCompleted: (data: number) => {
-      setUserId(data);
-      console.log(currentUser);
-    },
-  });
+  // const { data: currentUser } = useQuery(GetCurrentUser, {
+  //   onCompleted: (data: number) => {
+  //     setUserId(data);
+  //     console.log(currentUser);
+  //   },
+  // });
   // 获取未处理数据
   const { data: unhandleData, refetch: unhandledDataRefetch } = useQuery(
     GetAllUnhandledEvents,
     {
       variables: {
-        data: { ID: userId },
+        data: { ID: Number(getUserId()) },
       },
       onCompleted: (data) => {
         setUnhandleSource(data.getAllUnhandledEvents);
@@ -86,7 +86,7 @@ function HomePage() {
     GetAllHandledEvents,
     {
       variables: {
-        data: { ID: userId },
+        data: { ID: Number(getUserId()) },
       },
       onCompleted: (data) => {
         setHandleSource(data.getAllHandledEvents);
@@ -110,14 +110,14 @@ function HomePage() {
   useEffect(() => {
     if (hintChoose === '1') {
       unhandledDataRefetch({
-        data: { ID: userId },
+        data: { ID: Number(getUserId()) },
       });
     } else if (hintChoose === '2') {
       handledDataRefetch({
-        data: { ID: userId },
+        data: { ID: Number(getUserId()) },
       });
     }
-  }, [hintChoose, handledDataRefetch, unhandledDataRefetch, userId]);
+  }, [hintChoose, handledDataRefetch, unhandledDataRefetch]);
 
   const IsHandled = (
     <>
@@ -127,11 +127,13 @@ function HomePage() {
             const getEventPageRoute = (eventType: string) => {
               switch (eventType) {
                 case '报告提交':
-                  return '/basic-information/administrativeRegion'; // 跳转到类型A的路由
+                  return '/basic-information/administrativeRegion';
                 case '报告审核':
-                  return '/type-b-route'; // 跳转到类型B的路由
+                  return '/type-b-route';
                 case '人员变更':
-                  return '/population-manager/pending'; // 跳转到类型C的路由
+                  return '/population-manager/pending';
+                case '事件上报':
+                  return '/event-manager';
                 default:
                   return '/default-route'; // 默认的路由
               }
@@ -271,15 +273,18 @@ function HomePage() {
               <div style={{ color: '#fff' }}>
                 <Popover placement="bottomRight" content={content}>
                   <Badge
+                    offset={[-2, 7]}
                     style={{
                       marginRight: '23px',
                       // backgroundColor: '#52c41a',
                     }}
                     count={unHandleSource.length}
-                    size="default"
+                    size="small"
                   >
                     <BellOutlined
                       style={{
+                        position: 'relative',
+                        top: '6px',
                         marginRight: '30px',
                         color: 'white',
                         fontSize: 20,
