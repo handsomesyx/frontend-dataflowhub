@@ -31,14 +31,7 @@ function IncidentsAreReportedModal(Props: {
   const { id, visible, disable, role, setReloading, updata, reloading } = Props;
   const [visableResult, setVisableResult] = useState(false);
   const [visableHandlingOpinions, setVisableHandlingOpinions] = useState(false);
-  const List: UploadFile[] = [
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ];
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [addReportInfo] = useMutation(addAnEventGridMember, {
     onCompleted(data) {
       console.log(data, '添加成功');
@@ -55,6 +48,23 @@ function IncidentsAreReportedModal(Props: {
     if (Props.data) {
       const tempData = dealEventData(Props.data);
       form.setFieldsValue(tempData);
+      console.log(Props.data.image_url);
+      if (Props.data.image_url) {
+        const uu = Props.data.image_url.split(',');
+        const tempFileList: UploadFile[] = uu.map((item: string, index: number) => {
+          return {
+            uid: `${item}-${index}`,
+            name: item,
+            status: 'done',
+            url: item,
+            response: item,
+          };
+        });
+        setFileList(tempFileList);
+      }
+    } else {
+      form.resetFields();
+      setFileList([]);
     }
     if (Props.data?.issue_level === 'C') {
       setVisableHandlingOpinions(true);
@@ -71,9 +81,17 @@ function IncidentsAreReportedModal(Props: {
       form
         .validateFields()
         .then((values) => {
+          console.log(fileList);
+          const filTemp = fileList.map((item) => {
+            return `http://localhost:7000/static/${item.response}`;
+          });
+          console.log(filTemp, 'filTemp');
           addReportInfo({
             variables: {
-              addReportInput: values,
+              addReportInput: {
+                ...values,
+                image_url: filTemp.toString(),
+              },
             },
           });
         })
@@ -123,7 +141,7 @@ function IncidentsAreReportedModal(Props: {
             <Input disabled={disable} />
           </Form.Item>
           <Form.Item label="图片" name="image_url">
-            <MyUpload disable={false} List={List} />
+            <MyUpload disable={disable} fileList={fileList} setFileList={setFileList} />
           </Form.Item>
           <Form.Item
             label="事件分类级别"

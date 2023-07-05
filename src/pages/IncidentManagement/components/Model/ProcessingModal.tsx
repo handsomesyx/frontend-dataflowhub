@@ -25,19 +25,29 @@ function ProcessingModal(Props: {
   const [visableResult, setVisableResult] = useState(false);
   const [visableHandlingOpinions, setVisableHandlingOpinions] = useState(false);
   const { id, visible, disable, role, data, updata } = Props;
-  const List: UploadFile[] = [
-    {
-      uid: '-1',
-      name: 'image.png',
-      status: 'done',
-      url: 'https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png',
-    },
-  ];
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
   console.log(id);
   useEffect(() => {
     if (data) {
       const tempData = dealEventData(data);
       form.setFieldsValue(tempData);
+      console.log(data.image_url);
+      if (data.image_url) {
+        const uu = data.image_url.split(',');
+        const tempFileList: UploadFile[] = uu.map((item: string, index: number) => {
+          return {
+            uid: `${item}-${index}`,
+            name: item,
+            status: 'done',
+            url: item,
+            response: item,
+          };
+        });
+        setFileList(tempFileList);
+      }
+    } else {
+      form.resetFields();
+      setFileList([]);
     }
     if (data?.issue_level === 'C') {
       setVisableHandlingOpinions(true);
@@ -82,7 +92,7 @@ function ProcessingModal(Props: {
             <Input disabled={disable} />
           </Form.Item>
           <Form.Item label="图片" name="image_url">
-            <MyUpload disable={false} List={List} />
+            <MyUpload disable={disable} fileList={fileList} setFileList={setFileList} />
           </Form.Item>
           <Form.Item
             label="事件分类级别"

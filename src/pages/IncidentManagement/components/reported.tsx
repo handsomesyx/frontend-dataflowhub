@@ -171,6 +171,7 @@ function Reported(Props: { role: number; updata: Function }) {
           <Button
             type={'primary'}
             onClick={() => {
+              setModelData(undefined);
               setdisable(false);
               setVisible(true);
             }}
