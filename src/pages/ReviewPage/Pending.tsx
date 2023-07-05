@@ -495,7 +495,7 @@ const App: React.FC = () => {
               >
                 拒绝
               </Button>
-              ,
+              
               <Button key="ok1" type="primary" onClick={handlePass}>
                 同意
               </Button>
