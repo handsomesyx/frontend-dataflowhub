@@ -169,10 +169,22 @@ export function OperateLog() {
           id: i + 1,
           creator_name: datas[i].creator_name,
           operation:
-            datas[i].operation === 0
+            datas[i].operation === 1
+              ? '增加人口'
+              : datas[i].operation === 2
+              ? '修改人口'
+              : datas[i].operation === 3
+              ? '查找人口'
+              : datas[i].operation === 4
+              ? '删除人口'
+              : datas[i].operation === 5
               ? '用户登录'
-              : datas[i].operation === 1
+              : datas[i].operation === 6
               ? '用户退出'
+              : datas[i].operation === 7
+              ? '增加事件'
+              : datas[i].operation === 8
+              ? '处理事件'
               : '',
           request_query: datas[i].request_query,
           request_type: datas[i].request_type,
@@ -242,7 +254,23 @@ export function OperateLog() {
       dataIndex: 'operation',
       align: 'center' as 'center',
       render: (text: number) => {
-        return text === 0 ? '用户登录' : text === 1 ? '用户退出' : '';
+        return text === 1
+          ? '增加人口'
+          : text === 2
+          ? '修改人口'
+          : text === 3
+          ? '查找人口'
+          : text === 4
+          ? '删除人口'
+          : text === 5
+          ? '用户登录'
+          : text === 6
+          ? '用户退出'
+          : text === 7
+          ? '增加事件'
+          : text === 8
+          ? '处理事件'
+          : '';
       },
     },
     {

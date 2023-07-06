@@ -126,14 +126,10 @@ function HomePage() {
             // 根据事件类型路由跳转
             const getEventPageRoute = (eventType: string) => {
               switch (eventType) {
-                case '报告提交':
-                  return '/basic-information/administrativeRegion';
-                case '报告审核':
-                  return '/type-b-route';
+                case '事件上报':
+                  return '/event-management';
                 case '人员变更':
                   return '/population-manager/pending';
-                case '事件上报':
-                  return '/event-manager';
                 default:
                   return '/default-route'; // 默认的路由
               }
@@ -170,12 +166,10 @@ function HomePage() {
         ? unHandleSource?.map((item: EventData, index: any) => {
             const getEventPageRoute = (eventType: string) => {
               switch (eventType) {
-                case '报告提交':
-                  return '/basic-information/administrativeRegion'; // 跳转到类型A的路由
-                case '报告审核':
-                  return '/type-b-route'; // 跳转到类型B的路由
+                case '事件上报':
+                  return '/event-management';
                 case '人员变更':
-                  return '/population-manager/pending'; // 跳转到类型C的路由
+                  return '/population-manager/pending';
                 default:
                   return '/default-route'; // 默认的路由
               }
