@@ -597,6 +597,10 @@ const AdministrativeRegion: React.FC = () => {
         <Col span={5} style={{ height: '100%' }}>
           <Card
             style={{ height: '100%' }}
+            bodyStyle={{
+              height: '96%',
+              overflow: 'auto'
+            }}
             title={
               <div
                 style={{
@@ -619,7 +623,7 @@ const AdministrativeRegion: React.FC = () => {
               // autoExpandParent={autoExpandParent}
               // @ts-ignore
               onCheck={onCheck}
-              height={600}
+              // height={600}
               // checkedKeys={checkedKeys}
               // onSelect={onSelect}
               // selectedKeys={selectedKeys}
