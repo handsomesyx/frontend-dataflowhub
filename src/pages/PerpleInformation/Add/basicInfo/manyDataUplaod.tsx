@@ -320,7 +320,9 @@ const ManyDataUpload = ({
         <Row>
           <Col span={12}>
             <Upload {...infoProps}>
-              <Button icon={<UploadOutlined />}>人员信息上传</Button>
+              <Button icon={<UploadOutlined />} style={{ textAlign: 'center' }}>
+                人员信息上传
+              </Button>
             </Upload>
           </Col>
           <Col span={12}>
@@ -330,7 +332,7 @@ const ManyDataUpload = ({
                         </Upload> */}
             <Form.Item
               name="priority"
-              label="紧急程度："
+              // label="紧急程度："
               rules={[
                 {
                   required: true,
@@ -338,7 +340,7 @@ const ManyDataUpload = ({
                 },
               ]}
             >
-              <Select placeholder="请选择紧急程度" style={{ width: '15vw' }}>
+              <Select placeholder="请选择紧急程度" style={{ width: '200px' }}>
                 <Option key={1} value={1}>
                   紧急
                 </Option>
