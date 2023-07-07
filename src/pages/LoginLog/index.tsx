@@ -164,12 +164,7 @@ export function LoginLog() {
         exportData.push({
           id: i + 1,
           username: datas[i].username,
-          operation:
-            datas[i].operation === 0
-              ? '用户登录'
-              : datas[i].operation === 1
-              ? '用户退出'
-              : '',
+          operation: datas[i].operation === 1 ? '用户登录' : '',
           status:
             datas[i].status === 0
               ? '失败'
@@ -229,7 +224,7 @@ export function LoginLog() {
       dataIndex: 'operation',
       align: 'center' as 'center',
       render: (text: number) => {
-        return text === 0 ? '用户登录' : text === 1 ? '用户退出' : '';
+        return text === 1 ? '用户登录' : '';
       },
     },
     // {
