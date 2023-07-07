@@ -355,7 +355,16 @@ const BasicInfo = ({
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item name="gender" label="性别:">
+                        <Form.Item
+                          name="gender"
+                          label="性别:"
+                          rules={[
+                            {
+                              required: true,
+                              message: '请选择性别！',
+                            },
+                          ]}
+                        >
                           <Select style={{ width: '15vw' }}>
                             <Option key={1} value={false}>
                               男

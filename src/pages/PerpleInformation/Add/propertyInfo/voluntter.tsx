@@ -32,7 +32,6 @@ const Volunteer = ({ form, data }: props) => {
                         name={[name, 'VolunteerStatus']}
                         label="志愿记录"
                         style={{ float: 'left' }}
-                        required
                       >
                         <Input placeholder="请填写" style={{ width: '26vw' }} />
                       </Form.Item>
