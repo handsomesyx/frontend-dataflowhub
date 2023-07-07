@@ -226,9 +226,17 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <AdministrativeRegion />
-                </div>
+                <>
+                  {getUserType() === 'superAdmin' ? (
+                    <div className="NotContentFFF">
+                      <AdministrativeRegion />
+                    </div>
+                  ) : (
+                    <div>
+                      无权访问,只有超级管理员可对行政区域进行管理
+                    </div>
+                  )}
+                </>
               </Suspense>
             ),
           },
@@ -248,8 +256,13 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                {/* <div>警局管理</div> */}
-                <PoliceStation />
+                <div>
+                  {getUserType() === 'superAdmin' ? (
+                    <PoliceStation />
+                  ) : (
+                    '无权访问,只有超级管理员可对警局进行管理'
+                  )}
+                </div>
               </Suspense>
             ),
           },
