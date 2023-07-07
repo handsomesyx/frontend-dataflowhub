@@ -960,6 +960,7 @@ export const login = gql`
       refreshToken
       user {
         role
+        id_card
         username
         id
       }
