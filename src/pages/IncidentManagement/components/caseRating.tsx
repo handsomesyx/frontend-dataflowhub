@@ -48,6 +48,8 @@ function CaseRating(Props: {
       },
       variables: {
         processing_status: Levelstate,
+        skip: (page - 1) * 10,
+        take: 10,
       },
     },
   );
@@ -59,11 +61,11 @@ function CaseRating(Props: {
 
   // 分页点击其他的时候触发，这里重新refetch就行应该
   function handleChangeTable(e: TablePaginationConfig) {
+    setPage(e.current || 1);
     GetList({
       processing_status: Levelstate,
     });
     console.log(e.current);
-    setPage(e.current || 1);
   }
 
   return (
