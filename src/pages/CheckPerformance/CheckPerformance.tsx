@@ -139,7 +139,7 @@ const CheckPerformance: React.FC = () => {
   };
 
   // 一系列状态Hook，用来存储表单
-  const [menuState, setMenuState] = useState(0);
+  const [menuState, setMenuState] = useState(4);
 
   // name:String
   const [name, setName] = useState('');
@@ -226,6 +226,7 @@ const CheckPerformance: React.FC = () => {
   // 注意判零思想，如果表单的数据为空，则默认返回所有数据
   // select * from table;
   const handleSearch = () => {
+    setIsDefault(false);
     // //console.log(beginTime, endTime);
     // if (loading) {
     //   // 查询正在进行中
@@ -243,10 +244,7 @@ const CheckPerformance: React.FC = () => {
     else {
       // 查询成功
       const tempMenu = menuState;
-      if (tempMenu === 0) {
-        // //console.log('no menu selected');
-        // alert('请选择网格员或民警');
-      } else {
+      if (tempMenu !== 0) {
         setIsDefault(false);
         fetchData({
           variables: {
@@ -419,7 +417,7 @@ const CheckPerformance: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'data.xlsx';
+      link.download = '绩效.xlsx';
       link.click();
 
       URL.revokeObjectURL(url);
