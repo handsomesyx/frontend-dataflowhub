@@ -54,6 +54,7 @@ function CaseRating(Props: {
     },
   );
   useEffect(() => {
+    setPage(1);
     GetList({
       processing_status: Levelstate,
     });
