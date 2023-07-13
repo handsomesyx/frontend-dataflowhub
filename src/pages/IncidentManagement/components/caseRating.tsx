@@ -54,19 +54,18 @@ function CaseRating(Props: {
     },
   );
   useEffect(() => {
-    setPage(1);
     GetList({
       processing_status: Levelstate,
     });
-  }, [Props.reloading, GetList, Levelstate]);
+  }, [page, GetList, Levelstate]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [Props.reloading, Props.level, setPage]);
 
   // 分页点击其他的时候触发，这里重新refetch就行应该
   function handleChangeTable(e: TablePaginationConfig) {
     setPage(e.current || 1);
-    GetList({
-      processing_status: Levelstate,
-    });
-    console.log(e.current);
   }
 
   return (
