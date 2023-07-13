@@ -976,15 +976,15 @@ const AdministrativeRegion: React.FC = () => {
         >
           <Form
             form={formAddArea}
-            style={{
-              width: '100%',
-              marginTop: '0.5%',
-              marginBottom: '0.5%',
-              paddingTop: '3%',
-              paddingBottom: '1%',
-              paddingLeft: '10%',
-              paddingRight: '1%',
-            }}
+            // style={{
+            //   width: '95%',
+            //   marginTop: '0.5%',
+            //   marginBottom: '0.5%',
+            //   paddingTop: '3%',
+            //   paddingBottom: '1%',
+            //   paddingLeft: '10%',
+            //   paddingRight: '1%',
+            // }}
             preserve={false}
           >
             <Form.Item
@@ -997,7 +997,7 @@ const AdministrativeRegion: React.FC = () => {
                 },
               ]}
             >
-              <Input placeholder="请输入行政区域" style={{ width: '20vw' }} />
+              <Input placeholder="请输入行政区域" />
             </Form.Item>
             {level === 2 ? (
               <Form.Item
@@ -1017,7 +1017,7 @@ const AdministrativeRegion: React.FC = () => {
               >
                 <Input
                   placeholder="请输入社区主任"
-                  style={{ width: '20vw' }}
+                  // style={{ width: '20vw' }}
                   suffix={
                     <SearchOutlined
                       onClick={() => {
@@ -1224,7 +1224,11 @@ const AdministrativeRegion: React.FC = () => {
       </Modal>
       <Modal
         // style={{z-index:"1"}}
-        zIndex={1}
+        // style={{
+        //   top: 20,
+        // }}
+        // centered
+        // zIndex={1}
         title={'网格长信息'}
         open={gridleader}
         onCancel={() => {
