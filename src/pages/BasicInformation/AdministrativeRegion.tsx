@@ -70,7 +70,7 @@ const AdministrativeRegion: React.FC = () => {
   // 网格长名称
   const [gridleaderName, setGridleaderName] = useState();
   // 行政区域名称
-  const [areaName, setAreaName] = useState();
+  // const [areaName, setAreaName] = useState();
   // 行政区域ID
   const [areaId, setAreaId] = useState<number>();
   // 行政区域层级
@@ -489,9 +489,11 @@ const AdministrativeRegion: React.FC = () => {
         CommunityLeadername: area_leader_name,
       });
       setUserID(area_leader_id);
+    } else {
+      formRename.setFieldsValue({ areaname: e.node.title });
     }
 
-    setAreaName(e.node.title);
+    // setAreaName(e.node.title);
     setEditlevel(true);
     setLevel(level);
     setParentID(key);
@@ -592,9 +594,13 @@ const AdministrativeRegion: React.FC = () => {
   return (
     <>
       <Row gutter={16} style={{ height: '100%' }}>
-        <Col span={4} style={{ height: '100%' }}>
+        <Col span={5} style={{ height: '100%' }}>
           <Card
             style={{ height: '100%' }}
+            bodyStyle={{
+              height: '96%',
+              overflow: 'auto'
+            }}
             title={
               <div
                 style={{
@@ -617,6 +623,7 @@ const AdministrativeRegion: React.FC = () => {
               // autoExpandParent={autoExpandParent}
               // @ts-ignore
               onCheck={onCheck}
+              // height={600}
               // checkedKeys={checkedKeys}
               // onSelect={onSelect}
               // selectedKeys={selectedKeys}
@@ -625,7 +632,7 @@ const AdministrativeRegion: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col style={{ backgroundColor: 'white', borderRadius: '4px' }} span={20}>
+        <Col style={{ backgroundColor: 'white', borderRadius: '4px' }} span={19}>
           <div
             style={{
               display: 'flex',
@@ -1077,7 +1084,7 @@ const AdministrativeRegion: React.FC = () => {
         okText="确认"
         cancelText="取消"
       >
-        <Form form={formRename} initialValues={{ areaname: areaName }}>
+        <Form form={formRename}>
           <Form.Item
             name="areaname"
             label="区域名称"

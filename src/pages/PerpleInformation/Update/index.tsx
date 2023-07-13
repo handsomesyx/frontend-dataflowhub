@@ -61,17 +61,17 @@ function InformationUpdate() {
     }
   }, [data, data?.getPeopleData?.peopleData.head_url, imgSrc]);
 
-  // function formatLocalDate(aa: any) {
-  //     if (aa) {
-  //         let timestamp = parseInt(aa);
-  //         const date = new Date(timestamp);
-  //         const year = date.getFullYear();
-  //         const month = String(date.getMonth() + 1).padStart(2, '0');
-  //         const day = String(date.getDate()).padStart(2, '0');
+  function formatLocalDate(aa: any) {
+    if (aa) {
+      let timestamp = parseInt(aa);
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
 
-  //         return `${year}-${month}-${day}`;
-  //     } else return '--';
-  // }
+      return `${year}-${month}-${day}`;
+    } else return '--';
+  }
 
   const objJson = (obj: any) => {
     let output = '';
@@ -96,7 +96,7 @@ function InformationUpdate() {
     current_address: dataAll?.current_address,
     former_name: dataAll?.former_name,
     nickname: dataAll?.nickname,
-    date_of_residence: dataAll?.date_of_residence,
+    date_of_residence: formatLocalDate(dataAll?.date_of_residence),
     age: dataAll?.age,
     height: dataAll?.height,
     gender: dataAll?.gender,

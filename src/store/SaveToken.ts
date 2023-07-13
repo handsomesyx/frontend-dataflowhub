@@ -56,6 +56,15 @@ export const saveUserId = (user: number) => {
 export const saveUserName = (user: any) => {
   window.localStorage.setItem('userName', user || '');
 };
+// 存储用户的身份号码
+export const saveUserIdCard = (user: any) => {
+  window.localStorage.setItem('userCard', user || '');
+};
+
+// 获取当前用户身份号码
+export const getUserIdCard = () => {
+  return window.localStorage.getItem('userCard') || '';
+};
 
 // 用户登出，删除window.localStorage 删除用户的类型
 export const logout = () => {

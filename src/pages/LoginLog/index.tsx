@@ -9,6 +9,7 @@ import {
   Input,
   message,
   Modal,
+  Popover,
   Row,
   Space,
   Table,
@@ -163,12 +164,7 @@ export function LoginLog() {
         exportData.push({
           id: i + 1,
           username: datas[i].username,
-          operation:
-            datas[i].operation === 0
-              ? '用户登录'
-              : datas[i].operation === 1
-              ? '用户退出'
-              : '',
+          operation: datas[i].operation === 1 ? '用户登录' : '',
           status:
             datas[i].status === 0
               ? '失败'
@@ -188,7 +184,7 @@ export function LoginLog() {
         { header: '日志编号', key: 'id', width: 12 },
         { header: '用户名', key: 'username', width: 30 },
         { header: '用户操作', key: 'operation', width: 30 },
-        { header: '状态', key: 'status', width: 80 },
+        // { header: '状态', key: 'status', width: 80 },
         { header: '操作IP', key: 'ip', width: 80 },
         { header: '创建时间', key: 'create_time', width: 30 },
       ];
@@ -209,7 +205,7 @@ export function LoginLog() {
     {
       key: 'id',
       title: '序号',
-      width: 30,
+      width: 50,
       render: (_text: any, _record: any, index: any) =>
         `${(current - 1) * pageSize + index + 1} `,
       align: 'center' as 'center',
@@ -217,36 +213,44 @@ export function LoginLog() {
     {
       key: 'username',
       title: '用户名',
-      width: 100,
+      width: 70,
       dataIndex: 'username',
       align: 'center' as 'center',
     },
     {
       key: 'operation',
       title: '用户操作',
-      width: 60,
+      width: 70,
       dataIndex: 'operation',
       align: 'center' as 'center',
       render: (text: number) => {
-        return text === 0 ? '用户登录' : text === 1 ? '用户退出' : '';
+        return text === 1 ? '用户登录' : '';
       },
     },
-    {
-      key: 'status',
-      title: '状态',
-      width: 60,
-      dataIndex: 'status',
-      align: 'center' as 'center',
-      render: (text: number) => {
-        return text === 0 ? '失败' : text === 1 ? '成功' : text === 2 ? '账号已锁定' : '';
-      },
-    },
+    // {
+    //   key: 'status',
+    //   title: '状态',
+    //   width: 60,
+    //   dataIndex: 'status',
+    //   align: 'center' as 'center',
+    //   render: (text: number) => {
+    //     return text === 0 ? '失败' : text === 1 ? '成功' : text === 2 ? '账号已锁定' : '';
+    //   },
+    // },
     {
       key: 'ip',
       title: '操作IP',
       width: 150,
       dataIndex: 'ip',
       align: 'center' as 'center',
+      render: (_text: any, record: any) => {
+        let temp = record.ip;
+        return (
+          <Popover placement="top" title="操作IP" content={temp}>
+            <p>{temp.substring(0, 35)}</p>
+          </Popover>
+        );
+      },
     },
     {
       key: 'create_time',
@@ -257,7 +261,7 @@ export function LoginLog() {
     },
     {
       title: '操作',
-      width: 180,
+      width: 50,
       align: 'center' as 'center',
       render: (_record: TableData) => (
         <>
@@ -268,7 +272,7 @@ export function LoginLog() {
   ];
   return (
     <>
-      <div>
+      <div style={{ height: '100%', overflow: 'auto' }}>
         <div
           style={{
             margin: '10px  22px 22px 22px ',
@@ -344,7 +348,7 @@ export function LoginLog() {
                 {colRecod?.operation}
               </Descriptions.Item>
               <Descriptions.Item label="操作IP">{colRecod?.ip}</Descriptions.Item>
-              <Descriptions.Item label="状态">{colRecod?.status}</Descriptions.Item>
+              {/* <Descriptions.Item label="状态">{colRecod?.status}</Descriptions.Item> */}
               <Descriptions.Item label="创建时间">
                 {colRecod?.create_time}
               </Descriptions.Item>

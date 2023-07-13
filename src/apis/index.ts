@@ -40,7 +40,6 @@ export const QUERY_AUDITS = gql`
           username
         }
         priority
-        request_data
         request_time
         review_comments
         review_time
@@ -77,7 +76,6 @@ export const QUERY_OK = gql`
           username
         }
         priority
-        request_data
         request_time
         review_comments
         review_time
@@ -114,7 +112,6 @@ export const QUERY_REFUSE = gql`
           real_name
         }
         priority
-        request_data
         request_time
         review_comments
         review_time
@@ -169,14 +166,14 @@ export const GET_AUDIT_CHANGE = gql`
 //  修改审核信息
 export const UPDATE_AUDIT = gql`
   mutation UpdateAudit(
+    $class_data: personClassInput
     $new_data: auditCreateInput!
     $rightnow_auditrecords_id: Int!
-    $class_data: personClassInput
   ) {
     updateAudit(
+      class_data: $class_data
       new_data: $new_data
       rightnow_auditrecords_id: $rightnow_auditrecords_id
-      class_data: $class_data
     )
   }
 `;
@@ -963,6 +960,7 @@ export const login = gql`
       refreshToken
       user {
         role
+        id_card
         username
         id
       }

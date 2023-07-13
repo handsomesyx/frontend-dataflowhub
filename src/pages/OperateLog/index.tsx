@@ -9,6 +9,7 @@ import {
   Input,
   message,
   Modal,
+  Popover,
   Row,
   Space,
   Table,
@@ -168,10 +169,22 @@ export function OperateLog() {
           id: i + 1,
           creator_name: datas[i].creator_name,
           operation:
-            datas[i].operation === 0
+            datas[i].operation === 1
+              ? '增加人口'
+              : datas[i].operation === 2
+              ? '修改人口'
+              : datas[i].operation === 3
+              ? '查找人口'
+              : datas[i].operation === 4
+              ? '删除人口'
+              : datas[i].operation === 5
               ? '用户登录'
-              : datas[i].operation === 1
+              : datas[i].operation === 6
               ? '用户退出'
+              : datas[i].operation === 7
+              ? '增加事件'
+              : datas[i].operation === 8
+              ? '处理事件'
               : '',
           request_query: datas[i].request_query,
           request_type: datas[i].request_type,
@@ -196,11 +209,11 @@ export function OperateLog() {
         { header: '日志编号', key: 'id', width: 12 },
         { header: '用户名', key: 'creator_name', width: 30 },
         { header: '操作描述', key: 'operation', width: 30 },
-        { header: '请求URL', key: 'request_query', width: 30 },
+        { header: '请求URL', key: 'request_query', width: 80 },
         { header: '请求方式', key: 'request_type', width: 30 },
-        { header: '请求参数', key: 'request_params', width: 30 },
-        { header: '请求时长', key: 'request_time', width: 30 },
-        { header: '状态', key: 'status', width: 80 },
+        { header: '请求参数', key: 'request_params', width: 50 },
+        { header: '请求时长', key: 'request_time', width: 50 },
+        // { header: '状态', key: 'status', width: 80 },
         { header: '操作IP', key: 'ip', width: 80 },
         { header: '创建时间', key: 'create_time', width: 30 },
       ];
@@ -230,45 +243,77 @@ export function OperateLog() {
     {
       key: 'creator_name',
       title: '用户名',
-      width: 100,
+      width: 70,
       dataIndex: 'creator_name',
       align: 'center' as 'center',
     },
     {
       key: 'operation',
       title: '操作描述',
-      width: 100,
+      width: 70,
       dataIndex: 'operation',
       align: 'center' as 'center',
       render: (text: number) => {
-        return text === 0 ? '用户登录' : text === 1 ? '用户退出' : '';
+        return text === 1
+          ? '增加人口'
+          : text === 2
+          ? '修改人口'
+          : text === 3
+          ? '查找人口'
+          : text === 4
+          ? '删除人口'
+          : text === 5
+          ? '用户登录'
+          : text === 6
+          ? '用户退出'
+          : text === 7
+          ? '增加事件'
+          : text === 8
+          ? '处理事件'
+          : '';
       },
     },
     {
       key: 'request_query',
       title: '请求URL',
-      width: 100,
+      width: 150,
       dataIndex: 'request_query',
       align: 'center' as 'center',
+      render: (_text: any, record: any) => {
+        let temp = record.request_query;
+        return (
+          <Popover placement="top" title="请求URL" content={temp}>
+            <p>{temp.substring(0, 35)}</p>
+          </Popover>
+        );
+      },
     },
     {
       key: 'request_type',
       title: '请求方式',
-      width: 100,
+      width: 70,
       dataIndex: 'request_type',
       align: 'center' as 'center',
     },
     {
       key: 'request_params',
       title: '请求参数',
-      width: 100,
+      width: 150,
       dataIndex: 'request_params',
       align: 'center' as 'center',
+      render: (_text: any, record: any) => {
+        let temp = record.request_params;
+        return (
+          <Popover placement="top" title="请求参数" content={temp}>
+            <p>{temp.substring(0, 35)}</p>
+          </Popover>
+        );
+      },
     },
     {
       key: 'request_time',
       title: '请求时长',
-      width: 100,
+      width: 150,
       dataIndex: 'request_time',
       align: 'center' as 'center',
     },
@@ -278,17 +323,25 @@ export function OperateLog() {
       width: 150,
       dataIndex: 'ip',
       align: 'center' as 'center',
-    },
-    {
-      key: 'status',
-      title: '状态',
-      width: 150,
-      dataIndex: 'status',
-      align: 'center' as 'center',
-      render: (text: number) => {
-        return text === 0 ? '失败' : text === 1 ? '成功' : text === 2 ? '账号已锁定' : '';
+      render: (_text: any, record: any) => {
+        let temp = record.ip;
+        return (
+          <Popover placement="top" title="操作IP" content={temp}>
+            <p>{temp.substring(0, 35)}</p>
+          </Popover>
+        );
       },
     },
+    // {
+    //   key: 'status',
+    //   title: '状态',
+    //   width: 150,
+    //   dataIndex: 'status',
+    //   align: 'center' as 'center',
+    //   render: (text: number) => {
+    //     return text === 0 ? '失败' : text === 1 ? '成功' : text === 2 ? '账号已锁定' : '';
+    //   },
+    // },
     {
       key: 'create_time',
       title: '创建时间',
@@ -298,7 +351,7 @@ export function OperateLog() {
     },
     {
       title: '操作',
-      width: 180,
+      width: 50,
       align: 'center' as 'center',
       render: (_record: TableData) => (
         <>
@@ -309,7 +362,7 @@ export function OperateLog() {
   ];
   return (
     <>
-      <div>
+      <div style={{ height: '100%', overflow: 'auto' }}>
         <div
           style={{
             margin: '10px  22px 22px 22px ',
@@ -396,7 +449,7 @@ export function OperateLog() {
               <Descriptions.Item label="请求参数">
                 {colRecod?.request_params}
               </Descriptions.Item>
-              <Descriptions.Item label="状态">{colRecod?.status}</Descriptions.Item>
+              {/* <Descriptions.Item label="状态">{colRecod?.status}</Descriptions.Item> */}
             </Descriptions>
             <Space style={{ position: 'relative', left: 550 }}>
               <Button onClick={() => setModalOpen(false)}>取消</Button>
