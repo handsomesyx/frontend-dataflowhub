@@ -87,19 +87,19 @@ function InformationShow() {
       household_id: item?.household_id,
     };
   });
-  const objJson = (obj: any) => {
-    let output = '';
-    for (let key in obj) {
-      let value = obj[key];
-      output = key + ': ' + value;
-    }
-    return output;
-  };
+  // const objJson = (obj: any) => {
+  //   let output = '';
+  //   for (let key in obj) {
+  //     let value = obj[key];
+  //     output = key + ': ' + value;
+  //   }
+  //   return output;
+  // };
 
   // 专群结合数据
   const CombinationData: CombinationType = {
     level: dataAll?.person_classification,
-    reason: objJson(dataAll?.classification_reason),
+    reason: dataAll?.classification_reason,
     petition: dataAll?.petition,
   };
 

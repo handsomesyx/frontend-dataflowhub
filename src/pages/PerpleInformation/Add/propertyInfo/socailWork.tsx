@@ -30,7 +30,6 @@ const SocialWork = ({ form, data }: props) => {
                         name={[name, 'SocialWorker']}
                         style={{ float: 'left' }}
                         label="社工服务记录:"
-                        required
                       >
                         <Input placeholder="请填写" style={{ width: '26vw' }} />
                       </Form.Item>

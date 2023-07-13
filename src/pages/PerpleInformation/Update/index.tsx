@@ -73,14 +73,14 @@ function InformationUpdate() {
     } else return '--';
   }
 
-  const objJson = (obj: any) => {
-    let output = '';
-    for (let key in obj) {
-      let value = obj[key];
-      output = key + ': ' + value;
-    }
-    return output;
-  };
+  // const objJson = (obj: any) => {
+  //   let output = '';
+  //   for (let key in obj) {
+  //     let value = obj[key];
+  //     output = key + ': ' + value;
+  //   }
+  //   return output;
+  // };
   const dataAll = data?.getPeopleData?.peopleData;
 
   // 基础信息配置
@@ -105,7 +105,7 @@ function InformationUpdate() {
   // 专群结合数据
   const CombinationData: CombinationType = {
     level: dataAll?.person_classification,
-    reason: objJson(dataAll?.classification_reason),
+    reason: dataAll?.classification_reason,
     petition: dataAll?.petition,
   };
 
