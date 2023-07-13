@@ -599,6 +599,7 @@ const CheckPerformance: React.FC = () => {
             margin: '10px auto',
           }}
           onChange={handlePageChange}
+          showTotal={(total) => `共 ${total} 条`}
         />
       </div>
     </Layout>
