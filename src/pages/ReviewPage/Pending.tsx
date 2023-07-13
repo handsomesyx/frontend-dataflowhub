@@ -39,6 +39,16 @@ interface ChangeWhat {
   content_after: string;
 }
 
+function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 const options = [
   {
     label: 'A',
@@ -59,6 +69,7 @@ const options = [
 ];
 
 interface DataType {
+  request_data: any;
   action_type: ReactNode;
   id: any;
   priority: Number;
@@ -157,6 +168,8 @@ const App: React.FC = () => {
   const [plainOptions, setPlainOptions] = useState<string[]>([]);
   const [comment, setComment] = useState('未填写'); // 拒绝原因
   const [classabcd, setClassabcd] = useState('未分类'); // 人员ABCD分类
+  const [namecardnow, setNamecardnow] = useState('未设置'); // 身份证编辑中
+  const [idcardnow, setIdcardnow] = useState('未设置'); // 身份证编辑中
   const [checkedList, setCheckedList] = useState<CheckboxValueType[]>(['未选择']);
   const onsubChange = (list: CheckboxValueType[]) => {
     setCheckedList(list);
@@ -217,7 +230,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    // console.log('getUserType', getUserType());
+    console.log('getUserType', getUserType());
     let tmp = 7;
     if (getUserType() === 'superAdmin') {
       setRole(1);
@@ -234,7 +247,7 @@ const App: React.FC = () => {
     // console.log('身份验证完成');
 
     if (data) {
-      // console.log(data);
+      console.log(data);
       const username = getUserName();
       const filtered = data.findManyAudit.data.filter((item: any) => {
         if (
@@ -257,16 +270,19 @@ const App: React.FC = () => {
         return false;
       });
       message.info('列表加载完成');
+      console.log(filtered);
+      
       const formattedData = filtered.map((item: any) => {
         const date = new Date(item.create_time);
-        const formattedDate = date.toLocaleString();
+        const formattedDate = formatDate(date);
         return {
           ...item,
           key: item.id,
           create_time: formattedDate,
         };
       });
-      // console.log(formattedData);
+      console.log("显示结果");
+      console.log(formattedData);
       setDataSource(formattedData);
     }
   }, [data]);
@@ -294,6 +310,9 @@ const App: React.FC = () => {
   };
 
   const showModal = (e: any) => {
+    setIdcardnow(e.request_data.id_card);
+    setNamecardnow(e.request_data.name);
+    console.log(e);
     if (e.action_type === '1') {
       setShowClass(true);
       setChangecolumns([
@@ -388,22 +407,26 @@ const App: React.FC = () => {
       key: 'action_type1',
       render: (_, text) => {
         let content = '编辑';
+        let name = '未提交姓名';
         switch (text?.action_type) {
           case '1':
             content = '新增';
+            name=text?.request_data.name;
             break;
           case '2':
             content = '删除';
+            name=text?.person_info?.name;
             break;
           case '3':
             content = '修改';
+            name=text?.person_info?.name;
             break;
           default:
             break;
         }
         return (
           <a onClick={showModal}>
-            {content}姓名为&quot;{text?.person_info?.name}&quot;的群众信息
+            {content}姓名为&quot;{name}&quot;的群众信息
           </a>
         );
       },
@@ -518,10 +541,10 @@ const App: React.FC = () => {
           column={{ xxl: 1, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
         >
           <Descriptions.Item label="姓名">
-            {changesShow[0]?.personal_info?.name}
+          {changesShow[0]?.personal_info?.name?changesShow[0]?.personal_info?.name:namecardnow}
           </Descriptions.Item>
           <Descriptions.Item label="身份证号">
-            {changesShow[0]?.personal_info?.id_card}
+          {changesShow[0]?.personal_info?.id_card?changesShow[0]?.personal_info?.id_card:idcardnow}
           </Descriptions.Item>
         </Descriptions>
         <Divider />
