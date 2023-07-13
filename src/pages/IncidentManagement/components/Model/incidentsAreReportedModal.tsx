@@ -1,6 +1,6 @@
 /* 事件上报添加model 网格员用 */
 import { useMutation } from '@apollo/client';
-import { Form, Input, message, Modal, Radio, Select } from 'antd';
+import { Button, Form, Input, message, Modal, Radio, Select, Space } from 'antd';
 import type { UploadFile } from 'antd/es/upload';
 import { useEffect, useState } from 'react';
 
@@ -73,6 +73,30 @@ function IncidentsAreReportedModal(Props: {
     }
   }, [setVisableHandlingOpinions, Props, form]);
 
+  function dealButton() {
+    if (role === 1) {
+      return (
+        <Space>
+          <Button onClick={handleCancel}>已知晓</Button>
+          <Button type="primary" onClick={handleSubmit}>
+            去处理
+          </Button>
+        </Space>
+      );
+    } else if (disable) {
+      return null;
+    } else {
+      return (
+        <Space>
+          <Button onClick={handleCancel}>取消</Button>
+          <Button type="primary" onClick={handleSubmit}>
+            提交
+          </Button>
+        </Space>
+      );
+    }
+  }
+
   function handleSubmit() {
     if (role === 1) {
       Props.setVisible(false);
@@ -129,8 +153,7 @@ function IncidentsAreReportedModal(Props: {
         open={visible}
         onCancel={handleCancel}
         onOk={handleSubmit}
-        cancelText={role === 1 ? '已知晓' : '取消'}
-        okText={role === 1 ? '去处理' : '提交'}
+        footer={dealButton()}
       >
         <Form form={form} labelCol={{ span: 5 }} wrapperCol={{ span: 16 }}>
           <Form.Item
