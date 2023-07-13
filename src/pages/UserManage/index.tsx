@@ -633,7 +633,7 @@ export default function PersonManage() {
   };
 
   return (
-    <div className="UserManage">
+    <div className="UserManage" style={{ height: '100%', overflow: 'auto' }}>
       <div>
         <Row>
           <Col span={12}>

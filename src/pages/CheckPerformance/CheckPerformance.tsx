@@ -161,8 +161,8 @@ const CheckPerformance: React.FC = () => {
 
   // 设置分页，获取当前的页码
   // 按需修改pageSizeSet
-  const pageSizeSet = 2;
-
+  const pageSizeSet = 5;
+  const pageSizeOptions = ['5', '10', '20', '30']; // 自定义每页显示条数选项
   const [pagination, setPagination] = useState<any>({
     current: 1, // 默认为第一页
     pageSize: pageSizeSet, // 测试用的页大小，按需修改
@@ -416,7 +416,7 @@ const CheckPerformance: React.FC = () => {
   };
 
   return (
-    <Layout className="CpLayout">
+    <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       {/* 网格员 警员 菜单 */}
       <Menu
         onClick={onMenuClick}
@@ -589,6 +589,8 @@ const CheckPerformance: React.FC = () => {
           />
         </Table>
         <Pagination
+          showSizeChanger
+          pageSizeOptions={pageSizeOptions}
           current={pagination.current}
           pageSize={pagination.pageSize}
           total={UsedDataLength}
