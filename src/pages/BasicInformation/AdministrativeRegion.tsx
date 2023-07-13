@@ -632,7 +632,7 @@ const AdministrativeRegion: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col style={{ backgroundColor: 'white', borderRadius: '4px' }} span={19}>
+        <Col style={{ backgroundColor: 'white', borderRadius: '4px', height: '100%', overflow: 'auto' }} span={19}>
           <div
             style={{
               display: 'flex',
@@ -997,7 +997,8 @@ const AdministrativeRegion: React.FC = () => {
                 },
               ]}
             >
-              <Input placeholder="请输入行政区域" />
+
+              <Input style={{ width: '350px' }} placeholder="请输入行政区域" />
             </Form.Item>
             {level === 2 ? (
               <Form.Item
@@ -1017,7 +1018,6 @@ const AdministrativeRegion: React.FC = () => {
               >
                 <Input
                   placeholder="请输入社区主任"
-                  // style={{ width: '20vw' }}
                   suffix={
                     <SearchOutlined
                       onClick={() => {
