@@ -30,6 +30,7 @@ export const QUERY_AUDITS = gql`
     findManyAudit(select: { status: 0 }, skip: 0, take: 10000) {
       count
       data {
+        request_data
         action_type
         create_time
         creator_id
@@ -66,6 +67,7 @@ export const QUERY_OK = gql`
     findManyAudit(select: { status: 1 }, skip: 0, take: 1000) {
       count
       data {
+        request_data
         action_type
         create_time
         creator_id
@@ -102,6 +104,7 @@ export const QUERY_REFUSE = gql`
     findManyAudit(select: { status: 2 }, skip: 0, take: 1000) {
       count
       data {
+        request_data
         action_type
         create_time
         creator_id

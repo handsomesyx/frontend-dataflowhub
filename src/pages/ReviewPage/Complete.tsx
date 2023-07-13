@@ -7,6 +7,16 @@ import React, { useEffect, useState } from 'react';
 import { DELETE_AUDIT_MUTATION, QUERY_OK, QUERY_REFUSE } from '@/apis';
 import { getUserName, getUserType } from '@/store/SaveToken';
 
+function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 interface Audi {
   action_type: string;
   create_time: Date;
@@ -106,8 +116,8 @@ const App: React.FC = () => {
       const formattedData = filtered.map((item: any) => {
         const date = new Date(item.update_time);
         const date1 = new Date(item.create_time);
-        const formattedDate = date.toLocaleString();
-        const formattedDate1 = date1.toLocaleString();
+        const formattedDate = formatDate(date);
+        const formattedDate1 = formatDate(date1);
         return {
           ...item,
           create_time: formattedDate1,
