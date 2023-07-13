@@ -10,13 +10,18 @@ import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import type { MenuProps, TablePaginationConfig } from 'antd';
 import { Pagination } from 'antd';
 import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
 import locale from 'antd/es/date-picker/locale/zh_CN';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import ExcelJS from 'exceljs';
 // 如果是时间戳格式的DateTime，解锁luxon
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 
 import { getUserType } from '../../store/SaveToken';
+
+dayjs.extend(customParseFormat);
 
 const { Column } = Table;
 
@@ -195,6 +200,27 @@ const CheckPerformance: React.FC = () => {
       setEndTime(undefined);
     }
   };
+
+  // eslint-disable-next-line arrow-body-style
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current > dayjs().endOf('day');
+  };
+
+  // const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
+  //   if (type === 'start') {
+  //     return {
+  //       disabledHours: () => range(0, 60).splice(4, 20),
+  //       disabledMinutes: () => range(30, 60),
+  //       disabledSeconds: () => [55, 56],
+  //     };
+  //   }
+  //   return {
+  //     disabledHours: () => range(0, 60).splice(20, 4),
+  //     disabledMinutes: () => range(0, 31),
+  //     disabledSeconds: () => [55, 56],
+  //   };
+  // };
 
   // 上传查找表单
   // 注意判零思想，如果表单的数据为空，则默认返回所有数据
@@ -492,7 +518,10 @@ const CheckPerformance: React.FC = () => {
         />
 
         <RangePicker
-          showTime
+          disabledDate={disabledDate}
+          showTime={{
+            hideDisabledOptions: true,
+          }}
           locale={locale}
           className="RangePicker"
           onChange={handleRangeChange}

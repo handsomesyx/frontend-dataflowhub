@@ -25,6 +25,7 @@
     "file-saver": "^2.0.5",
     "graphql": "^16.5.0",
     "luxon": "^3.3.0",
+    "moment": "^2.29.4",
     "pinyin": "^3.0.0-alpha.5",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
