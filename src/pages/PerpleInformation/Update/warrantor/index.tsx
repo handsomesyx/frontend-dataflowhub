@@ -84,7 +84,7 @@ const Warrantor = ({
   imgSrc,
 }: props) => {
   const [warform] = Form.useForm();
-  const [errorVisible, setErrorVisibile] = useState<Boolean>(false);
+  // const [errorVisible, setErrorVisibile] = useState<Boolean>(false);
 
   const [updatePeopleInfo] = useMutation(UpdatePeopleInfo);
   const [urgencyVisible, setUrgencyVisible] = useState<boolean>();
@@ -180,13 +180,12 @@ const Warrantor = ({
     const ecoData: economicInfo[] = [];
     // const warrantorData: WarrantorType[] = [];
     const changeRecord: changeInfo[] = [];
-    setErrorVisibile(false);
     setUrgencyVisible(false);
+    let errVisible: boolean = false;
     porform
       ?.validateFields()
       .then(() => {
         const data: propertyInfo = porform.getFieldsValue();
-
         let volunter: { [x: number]: string }[] = [];
         let social: { [x: number]: string }[] = [];
         data?.Social?.map((item: any, index: number) => {
@@ -252,7 +251,9 @@ const Warrantor = ({
           }
         });
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
 
     ecomomicform
       ?.validateFields()
@@ -290,12 +291,13 @@ const Warrantor = ({
           }
         });
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
     basicform
       ?.validateFields()
       .then(() => {
         const data: basicInfo = basicform.getFieldsValue();
-
         baiscData.push({
           name: data?.name,
           // certificateType: data?.certificateType,
@@ -317,16 +319,27 @@ const Warrantor = ({
         let beforeData = Object.values(basicData);
         afterData.map((item, index) => {
           if (item.toString() !== beforeData[index + 2].toString()) {
-            changeRecord.push({
-              changeItem: baiscName[index],
-              ItemName: baiscItem[index],
-              contentBefore: beforeData[index + 2].toString(),
-              contentAfter: item.toString(),
-            });
+            if (beforeData[index + 2]) {
+              changeRecord.push({
+                changeItem: baiscName[index],
+                ItemName: baiscItem[index],
+                contentBefore: beforeData[index + 2].toString(),
+                contentAfter: item.toString(),
+              });
+            } else {
+              changeRecord.push({
+                changeItem: baiscName[index],
+                ItemName: baiscItem[index],
+                contentBefore: 'null',
+                contentAfter: item.toString(),
+              });
+            }
           }
         });
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
 
     healthform
       ?.validateFields()
@@ -381,14 +394,16 @@ const Warrantor = ({
               changeRecord.push({
                 changeItem: healthName[index],
                 ItemName: healthItem[index],
-                contentBefore: afterData[index].toString(),
-                contentAfter: item.toString(),
+                contentAfter: afterData[index].toString(),
+                contentBefore: item.toString(),
               });
             }
           }
         });
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
 
     eduform
       .validateFields()
@@ -416,7 +431,7 @@ const Warrantor = ({
             changeRecord.push({
               ItemName: politicalItem[index],
               changeItem: politicalName[index],
-              contentBefore: beforeData[index].toString(),
+              contentBefore: beforeData[index],
               contentAfter: item.toString(),
             });
           }
@@ -444,7 +459,9 @@ const Warrantor = ({
           message.warning('您未修改任何信息');
         }
       })
-      .catch(() => setErrorVisibile(true));
+      .catch(() => {
+        errVisible = true;
+      });
 
     warform
       .validateFields()
@@ -461,8 +478,10 @@ const Warrantor = ({
         }
         // console.log(changeRecord);
       })
-      .catch(() => setErrorVisibile(true));
-    if (errorVisible) {
+      .catch(() => {
+        errVisible = true;
+      });
+    if (errVisible) {
       message.error('您有未完成填写的必填项');
     }
   };
@@ -545,6 +564,7 @@ const Warrantor = ({
         zIndex={1}
         title={'网格员信息'}
         open={gridperson}
+        centered
         onCancel={() => {
           setSearchName('');
           setGridperson(false);

@@ -11,7 +11,9 @@ import {
   Select,
   Spin,
 } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
 import zhCN from 'antd/locale/zh_CN';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -366,6 +368,12 @@ const SearchBasic = () => {
       return { ...pre, [dataName]: a };
     });
   };
+
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current > dayjs().endOf('day');
+  };
+
   return (
     <div className={styles.FlexColomnBox}>
       <div className={styles.TopBox}>
@@ -437,7 +445,11 @@ const SearchBasic = () => {
             <div>
               <span>录入日期：</span>
               <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleinTimeChange} />
+                <RangePicker
+                  style={{ width: '60%' }}
+                  onChange={handleinTimeChange}
+                  disabledDate={disabledDate}
+                />
               </ConfigProvider>
             </div>
           </div>
@@ -497,7 +509,11 @@ const SearchBasic = () => {
             <div>
               <span>修改日期</span>：
               <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleTimeChange} />
+                <RangePicker
+                  style={{ width: '60%' }}
+                  disabledDate={disabledDate}
+                  onChange={handleTimeChange}
+                />
               </ConfigProvider>
             </div>
           </div>

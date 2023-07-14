@@ -158,16 +158,16 @@ function InformationUpdate() {
     planting_breeding: '', // 种植养殖情况
     plant_type: dataAll?.economicData[0]?.plant_type, // 种植种类
     plant_quantity: dataAll?.economicData[0]?.plant_quantity, // 种植数量
-    plant_area: dataAll?.economicData[0]?.plant_quantity, // 种植面积
+    plant_area: dataAll?.economicData[0]?.plant_area, // 种植面积
     breeding_type: dataAll?.economicData[0]?.breeding_type, // 养殖种类
     breeding_quantity: dataAll?.economicData[0]?.breeding_quantity, // 养殖数量
     business_info: dataAll?.economicData[0]?.business_info, // 营商情况(商户名称)
     business_location: dataAll?.economicData[0]?.business_location, // 门面位置
-    license_number: dataAll?.economicData[0]?.plant_type, // 营业执照编号
-    fire_equipment_type: dataAll?.economicData[0]?.plant_type, // 门面消防设备类型
-    fire_equipment_quantity: dataAll?.economicData[0]?.plant_type, // 门面消防设备数量
-    surveillance_status: dataAll?.economicData[0]?.plant_type, // 门面电子监控状态
-    surveillance_quantity: dataAll?.economicData[0]?.plant_type, // 门面电子监控数量
+    license_number: dataAll?.economicData[0]?.license_number, // 营业执照编号
+    fire_equipment_type: dataAll?.economicData[0]?.fire_equipment_type, // 门面消防设备类型
+    fire_equipment_quantity: dataAll?.economicData[0]?.fire_equipment_quantity, // 门面消防设备数量
+    surveillance_status: dataAll?.economicData[0]?.surveillance_status, // 门面电子监控状态
+    surveillance_quantity: dataAll?.economicData[0]?.surveillance_quantity, // 门面电子监控数量
   };
 
   const OtherInfoData: OtherInfoType = {
