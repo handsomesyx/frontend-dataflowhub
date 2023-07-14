@@ -5,6 +5,7 @@ import { Input, message, Radio, type RadioChangeEvent, Select } from 'antd';
 import { ConfigProvider } from 'antd';
 import DatePicker from 'antd/es/date-picker';
 import zhCN from 'antd/locale/zh_CN';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -169,8 +170,44 @@ const HomeSearch = () => {
             <div className={styles.TimeBox}>
               <div className={styles.Timetitle}>时间筛选</div>
               <ConfigProvider locale={zhCN}>
-                <DatePicker className={styles.TimeOne} onChange={TimeonChangeDown} />
-                <DatePicker className={styles.TimeTwo} onChange={TimeonChangeUp} />
+                <DatePicker
+                  disabledDate={(current) => {
+                    const choose2day = optiondata.timeup;
+                    if (choose2day) {
+                      if (dayjs.unix(choose2day / 1000).endOf('day') < current) {
+                        return true;
+                      }
+                      if (current > dayjs().endOf('day')) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    } else {
+                      return current && current > dayjs().endOf('day');
+                    }
+                  }}
+                  className={styles.TimeOne}
+                  onChange={TimeonChangeDown}
+                />
+                <DatePicker
+                  disabledDate={(current) => {
+                    const choose1day = optiondata.timedown;
+                    if (choose1day) {
+                      if (dayjs.unix(choose1day / 1000).startOf('day') > current) {
+                        return true;
+                      }
+                      if (current > dayjs().endOf('day')) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    } else {
+                      return current && current > dayjs().endOf('day');
+                    }
+                  }}
+                  className={styles.TimeTwo}
+                  onChange={TimeonChangeUp}
+                />
               </ConfigProvider>
             </div>
           </>
