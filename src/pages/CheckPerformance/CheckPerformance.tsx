@@ -439,6 +439,20 @@ const CheckPerformance: React.FC = () => {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   };
 
+  // 筛选 x
+  const handleClear = (index: number) => {
+    if (index === 0) {
+      setCity(0);
+      setTown(0);
+      setGrid(0);
+    } else if (index === 1) {
+      setTown(0);
+      setGrid(0);
+    } else if (index === 2) {
+      setGrid(0);
+    }
+  };
+
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       {/* 网格员 警员 菜单 */}
@@ -463,6 +477,7 @@ const CheckPerformance: React.FC = () => {
           }}
         />
         <Select
+          allowClear
           placeholder="请选择城市"
           className="BlockTypeGrid"
           options={level1Areas.map((area: { name: any; id: any }) => ({
@@ -480,8 +495,10 @@ const CheckPerformance: React.FC = () => {
               setGrid(0);
             }
           }}
+          onClear={()=> handleClear(0)}
         />
         <Select
+          allowClear
           placeholder="请选择镇"
           className="BlockTypeGrid"
           options={getTownOptions(city)}
@@ -495,9 +512,11 @@ const CheckPerformance: React.FC = () => {
               setGrid(0);
             }
           }}
+          onClear={()=> handleClear(1)}
           value={town !== 0 ? town : null || null}
         />
         <Select
+          allowClear
           placeholder="请选择社区"
           className="BlockTypeGrid"
           options={getGridOptions(town)}
@@ -510,6 +529,7 @@ const CheckPerformance: React.FC = () => {
               setGrid(selectedOption.value);
             }
           }}
+          onClear={()=> handleClear(2)}
           value={grid !== 0 ? grid : null || null}
           // Set the value to the first option's value only if grid is not 'default'
           // 当重新选择上一个Select选项后，该选项需要重新选择
