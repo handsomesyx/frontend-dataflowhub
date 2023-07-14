@@ -88,7 +88,12 @@ export default function PersonManage() {
   const [username, setUsername] = useState<string>('');
 
   // 筛选条件
-  const [selectObject, setSelectObject] = useState<SelectObject>();
+  const [selectObject, setSelectObject] = useState<SelectObject>({
+    username: '',
+    area_id: undefined,
+    community_id: undefined,
+    grid_id: undefined,
+  });
 
   // 记录表格中的一行数据，方便修改和删除当前记录
   const [record, setRecord] = useState<DataType>();
@@ -219,7 +224,7 @@ export default function PersonManage() {
     variables: {
       skip: skip,
       take: take,
-      selectOption: {},
+      selectOption: selectObject,
     },
     onCompleted: () => {
       setLoading(false);
@@ -260,7 +265,7 @@ export default function PersonManage() {
   // 将行政区域划分为镇和社区
   useEffect(() => {
     if (area) {
-      // //console.log('行政区域长度', area?.getArea);
+      // console.log('行政区域长度', area?.getArea);
       const areaData = area?.getArea.filter((item: Area) => {
         return item.level === 2;
       });
@@ -269,15 +274,15 @@ export default function PersonManage() {
       });
       setAdministrationAreaList(areaData);
       setCommunityList(communityData);
-      // //console.log('行政区域',areaData);
-      // //console.log('社区',communityData);
+      // console.log('行政区域',areaData);
+      // console.log('社区',communityData);
     }
   }, [area]);
 
   // 点击添加用户弹窗的确定按钮之后，提交数据的处理函数
   const handleOkAdd = () => {
     form.validateFields().then((value) => {
-      // //console.log(value.userName);
+      // console.log(value.userName);
       let ipt2 = {};
       if (value.role_id === 4) {
         ipt2 = {
@@ -388,12 +393,12 @@ export default function PersonManage() {
 
   // 点击修改用户弹窗的确定按钮之后，提交数据的处理函数
   const handleOkUpd = () => {
-    // //console.log('record_id',record?.id);
-    // //console.log('record的值',record);
+    // console.log('record_id',record?.id);
+    // console.log('record的值',record);
     form2.validateFields().then(() => {
       // form.setFieldsValue(record);
       const newRecord: any = form2.getFieldsValue();
-      // //console.log('newRecord的值', newRecord);
+      // console.log('newRecord的值', newRecord);
       let ipt2 = {};
       if (newRecord.role_id === 4) {
         ipt2 = {
@@ -474,19 +479,22 @@ export default function PersonManage() {
     setGridId(undefined);
     // 将administrionAreaId设置为下拉菜单选择的内容
     setAdministrionAreaId(value);
+    setFirstCommunity(undefined);
     // setP(value);
     const newCommunityList = area?.getArea.filter((item: Area) => {
       return item.parent_id === value;
     });
     if (newCommunityList.length > 0) {
       setCommunityList(newCommunityList);
-      setFirstCommunity(newCommunityList[0].id);
+      // setFirstCommunity(newCommunityList[0].id);
       const newGridList = grid?.getGrid.filter((item: any) => {
         return item.area_id === value || item.area_id === newCommunityList[0].id;
       });
       setGridList(newGridList);
       // 联级
     } else {
+      setFirstCommunity(undefined);
+      setCommunityList(undefined);
       message.error('该行政区域下没有社区');
     }
   };
@@ -498,7 +506,14 @@ export default function PersonManage() {
     const newGridList = grid?.getGrid.filter((item: any) => {
       return item.area_id === value || item.area_id === administrionAreaId;
     });
+    const communityData = area?.getArea.filter((item: Area) => {
+      return item.id === value;
+    });
+    const areaDate = area?.getArea.filter((item: Area) => {
+      return item.id === communityData[0].parent_id;
+    });
     setGridList(newGridList);
+    setAdministrionAreaId(areaDate[0].id);
   };
   // 选择网格
   const selectGrid = (p: number) => {
@@ -509,8 +524,8 @@ export default function PersonManage() {
   // 获取输入的username
   const changeUsername = (e: any) => {
     setUsername(e.target.value);
-    // //console.log('e.target.value', e.target.value);
-    // //console.log('usernameInput', username);
+    // console.log('e.target.value', e.target.value);
+    // console.log('usernameInput', username);
   };
 
   // 记录筛选按钮的点击状态
@@ -520,12 +535,19 @@ export default function PersonManage() {
     console.log('username', username);
     console.log('gridid', gridId);
     console.log('communityid', firstCommunity);
+    // setUsername('haha');
     // 取消状态screenDataState的值为true,点击取消,重新查询
     if (isSelected) {
       setGridId(undefined);
       setFirstCommunity(undefined);
       setAdministrionAreaId(undefined);
       setUsername('');
+      setSelectObject({
+        username: '',
+        area_id: undefined,
+        community_id: undefined,
+        grid_id: undefined,
+      });
       setIsSelected(!isSelected);
       setPagination(() => {
         return {
@@ -536,9 +558,15 @@ export default function PersonManage() {
       refetch({
         skip: 0,
         take: pageSize,
-        selectOption: {},
+        selectOption: {
+          username: '',
+          area_id: undefined,
+          community_id: undefined,
+          grid_id: undefined,
+        },
       });
     } else {
+      console.log('用户名改没改啊', username);
       if (username !== '' || gridId || administrionAreaId || firstCommunity) {
         console.log('执行了筛选');
         setIsSelected(!isSelected);
@@ -583,6 +611,15 @@ export default function PersonManage() {
     }
   };
 
+  // useEffect(() => {
+  //   setPagination(() => {
+  //     return {
+  //       current: 1,
+  //       pageSize: pageSize,
+  //     };
+  //   });
+  // }, [isSelected, pageSize]);
+
   // 保存图片的base64编码
   const [imageUrl, setImageUrl] = useState('');
   // const [loading, setLoading] = useState(false);
@@ -597,7 +634,7 @@ export default function PersonManage() {
       // 保存编码
       if (reader.result) {
         setImageUrl(reader.result.toString());
-        // //console.log(imageUrl);
+        // console.log(imageUrl);
       }
     };
   };
@@ -633,7 +670,7 @@ export default function PersonManage() {
   };
 
   return (
-    <div className="UserManage" style={{ height: '100%', overflow: 'auto' }}>
+    <div className="UserManage">
       <div>
         <Row>
           <Col span={12}>
