@@ -68,4 +68,4 @@ jobs:
         run: ls -l
       - name: 构建部署
         run: |
-          rsync -avz --delete ./dist/ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/mohe/front-end-mohe/
+          rsync -avz --delete ./dist/ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/mohe/front-end-mohe/dist/
