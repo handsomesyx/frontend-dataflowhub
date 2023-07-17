@@ -599,7 +599,7 @@ const AdministrativeRegion: React.FC = () => {
             style={{ height: '100%' }}
             bodyStyle={{
               height: '96%',
-              overflow: 'auto'
+              overflow: 'auto',
             }}
             title={
               <div

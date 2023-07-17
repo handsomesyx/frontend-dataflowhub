@@ -10,13 +10,18 @@ import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import type { MenuProps, TablePaginationConfig } from 'antd';
 import { Pagination } from 'antd';
 import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
 import locale from 'antd/es/date-picker/locale/zh_CN';
+import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import ExcelJS from 'exceljs';
 // 如果是时间戳格式的DateTime，解锁luxon
 import { DateTime } from 'luxon';
 import React, { useState } from 'react';
 
 import { getUserType } from '../../store/SaveToken';
+
+dayjs.extend(customParseFormat);
 
 const { Column } = Table;
 
@@ -134,7 +139,7 @@ const CheckPerformance: React.FC = () => {
   };
 
   // 一系列状态Hook，用来存储表单
-  const [menuState, setMenuState] = useState(0);
+  const [menuState, setMenuState] = useState(4);
 
   // name:String
   const [name, setName] = useState('');
@@ -196,10 +201,32 @@ const CheckPerformance: React.FC = () => {
     }
   };
 
+  // eslint-disable-next-line arrow-body-style
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current > dayjs().endOf('day');
+  };
+
+  // const disabledRangeTime: RangePickerProps['disabledTime'] = (_, type) => {
+  //   if (type === 'start') {
+  //     return {
+  //       disabledHours: () => range(0, 60).splice(4, 20),
+  //       disabledMinutes: () => range(30, 60),
+  //       disabledSeconds: () => [55, 56],
+  //     };
+  //   }
+  //   return {
+  //     disabledHours: () => range(0, 60).splice(20, 4),
+  //     disabledMinutes: () => range(0, 31),
+  //     disabledSeconds: () => [55, 56],
+  //   };
+  // };
+
   // 上传查找表单
   // 注意判零思想，如果表单的数据为空，则默认返回所有数据
   // select * from table;
   const handleSearch = () => {
+    setIsDefault(false);
     // //console.log(beginTime, endTime);
     // if (loading) {
     //   // 查询正在进行中
@@ -217,10 +244,7 @@ const CheckPerformance: React.FC = () => {
     else {
       // 查询成功
       const tempMenu = menuState;
-      if (tempMenu === 0) {
-        // //console.log('no menu selected');
-        // alert('请选择网格员或民警');
-      } else {
+      if (tempMenu !== 0) {
         setIsDefault(false);
         fetchData({
           variables: {
@@ -393,7 +417,7 @@ const CheckPerformance: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = 'data.xlsx';
+      link.download = '绩效.xlsx';
       link.click();
 
       URL.revokeObjectURL(url);
@@ -413,6 +437,20 @@ const CheckPerformance: React.FC = () => {
     const seconds = String(date.getSeconds()).padStart(2, '0');
 
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  // 筛选 x
+  const handleClear = (index: number) => {
+    if (index === 0) {
+      setCity(0);
+      setTown(0);
+      setGrid(0);
+    } else if (index === 1) {
+      setTown(0);
+      setGrid(0);
+    } else if (index === 2) {
+      setGrid(0);
+    }
   };
 
   return (
@@ -439,6 +477,7 @@ const CheckPerformance: React.FC = () => {
           }}
         />
         <Select
+          allowClear
           placeholder="请选择城市"
           className="BlockTypeGrid"
           options={level1Areas.map((area: { name: any; id: any }) => ({
@@ -456,8 +495,10 @@ const CheckPerformance: React.FC = () => {
               setGrid(0);
             }
           }}
+          onClear={()=> handleClear(0)}
         />
         <Select
+          allowClear
           placeholder="请选择镇"
           className="BlockTypeGrid"
           options={getTownOptions(city)}
@@ -471,9 +512,11 @@ const CheckPerformance: React.FC = () => {
               setGrid(0);
             }
           }}
+          onClear={()=> handleClear(1)}
           value={town !== 0 ? town : null || null}
         />
         <Select
+          allowClear
           placeholder="请选择社区"
           className="BlockTypeGrid"
           options={getGridOptions(town)}
@@ -486,13 +529,17 @@ const CheckPerformance: React.FC = () => {
               setGrid(selectedOption.value);
             }
           }}
+          onClear={()=> handleClear(2)}
           value={grid !== 0 ? grid : null || null}
           // Set the value to the first option's value only if grid is not 'default'
           // 当重新选择上一个Select选项后，该选项需要重新选择
         />
 
         <RangePicker
-          showTime
+          disabledDate={disabledDate}
+          showTime={{
+            hideDisabledOptions: true,
+          }}
           locale={locale}
           className="RangePicker"
           onChange={handleRangeChange}

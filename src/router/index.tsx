@@ -232,9 +232,7 @@ const routeConfig: routerConfigType[] = [
                       <AdministrativeRegion />
                     </div>
                   ) : (
-                    <div>
-                      无权访问,只有超级管理员可对行政区域进行管理
-                    </div>
+                    <div>无权访问,只有超级管理员可对行政区域进行管理</div>
                   )}
                 </>
               </Suspense>
