@@ -32,11 +32,17 @@ jobs:
 
       - name: 构建
         run: npm run build:prod
+      - name: 打包构建工件
+        run: |
+          mkdir artifact
+          mv dist artifact/
+        shell: bash
       - name: 上传构建工件
         uses: actions/upload-artifact@v2
         with:
-          name: dist
-          path: dist
+          name: artifact
+          path: artifact
+
 
 
   deploy:
@@ -48,7 +54,7 @@ jobs:
       - name: 下载构建工件
         uses: actions/download-artifact@v2
         with:
-          name: dist
+          name: artifact
 
       - name: 安装 SSH 私钥
         uses: webfactory/ssh-agent@v0.5.3
