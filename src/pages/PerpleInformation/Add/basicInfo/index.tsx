@@ -239,7 +239,8 @@ const BasicInfo = ({
                           rules={[
                             {
                               required: true,
-                              message: '请输入身份证号或护照！',
+                              pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+                              message: '请输入正确的身份证号或护照！',
                             },
                           ]}
                         >
@@ -427,7 +428,7 @@ const BasicInfo = ({
                             <Button
                               onClick={() => {
                                 setDeleteVisible(true);
-                                setMemberId(item.personalId);
+                                setMemberId(item.memberId);
                                 setPersonalId(item.personalId);
                               }}
                             >
@@ -461,12 +462,30 @@ const BasicInfo = ({
         <Form labelCol={{ span: 8 }} form={formFamily}>
           <Row>
             <Col span={12}>
-              <Form.Item name="idCard" label="成员身份证号:" required>
-                <Input placeholder="请填写" style={{ width: '15vw' }} />
+              <Form.Item
+                name="idCard"
+                label="成员身份证号:"
+                rules={[
+                  {
+                    required: true,
+                    message: '请填写成员身份证号！',
+                  },
+                ]}
+              >
+                <Input placeholder="请填写" style={{ width: '300px' }} />
               </Form.Item>
             </Col>
             <Col span={11}>
-              <Form.Item name="relationship" label="成员与本人关系:" required>
+              <Form.Item
+                name="memberRelation"
+                label="成员与本人关系:"
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择成员与本人关系！',
+                  },
+                ]}
+              >
                 <Select placeholder="请选择">
                   {relation.map((item) => (
                     <Option key={item.index} value={item.relation}>
@@ -480,7 +499,7 @@ const BasicInfo = ({
           <Row>
             <Col span={12}>
               <Form.Item name="hId" label="户号:">
-                <Input placeholder="请输入" style={{ width: '15vw' }} />
+                <Input placeholder="请输入" style={{ width: '300px' }} />
               </Form.Item>
             </Col>
             <Col span={11}>
@@ -494,7 +513,7 @@ const BasicInfo = ({
                   },
                 ]}
               >
-                <Select placeholder="请选择紧急程度" style={{ width: '15vw' }}>
+                <Select placeholder="请选择紧急程度">
                   <Option key={1} value={1}>
                     紧急
                   </Option>

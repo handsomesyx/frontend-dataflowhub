@@ -82,8 +82,10 @@ const PorpertyInfo = ({
             VolunteerStatus: item[index + 1],
           };
         });
-        setVolunteerStatus(resultVolunteer);
-        setVolunteerOn(true);
+        if (resultVolunteer[0].VolunteerStatus) {
+          setVolunteerStatus(resultVolunteer);
+          setVolunteerOn(true);
+        }
       }
       if (socailArr.length !== 0) {
         const resultSocial = socailArr.map((item, index) => {
@@ -91,8 +93,10 @@ const PorpertyInfo = ({
             SocialWorker: item[index + 1],
           };
         });
-        setSocialWorker(resultSocial);
-        setSocialWorkOn(true);
+        if (resultSocial[0].SocialWorker) {
+          setSocialWorker(resultSocial);
+          setSocialWorkOn(true);
+        }
       }
     }
   }, [porData, porform]);

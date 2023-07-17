@@ -155,7 +155,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span></span>曾用名：<span>{peopleData?.formerName}</span>
           </div>
           <div>
-            <span>*</span>身高<span>{peopleData?.height}</span>
+            <span></span>身高：<span>{peopleData?.height}</span>
           </div>
           <div style={{ width: '100%' }}>
             <span>*</span>所属派出所：
