@@ -30,14 +30,19 @@ import {
   GetRole,
   UpdatePerson,
 } from '@/apis';
+import { getUserType } from '@/store/SaveToken';
 
-import type { Area, DataType, Grid, SelectObject } from './types';
+import type { Area, DataType, Grid, Police, SelectObject } from './types';
 
 export default function PersonManage() {
   // 检查参数
   // const [p, setP] = useState<number>();
 
+  const user_role = getUserType();
+
   const [role_id, setRole_id] = useState<number>();
+
+  const [select_role_id, setSelect_Role_id] = useState<number>();
 
   const [loading, setLoading] = useState(false);
 
@@ -79,6 +84,13 @@ export default function PersonManage() {
   // 社区下拉框
   const [communityList, setCommunityList] = useState<[Area]>();
 
+  // 创建网格员时行政区域下拉框
+  const [createAreaList, setcreateAreaList] = useState<[Area]>();
+  // 创建网格员时社区下拉框
+  const [createCommunityList, setCreateCommunityList] = useState<[Area]>();
+  const [createGridList, setCreateGridList] = useState<[Grid]>();
+  const [createPoliceList, setCreatePoliceList] = useState<[Police]>();
+
   // 增加和修改时的gridid
   const [gridIdInput, setGridIdInput] = useState<number>();
   // 增加和修改时的policeid
@@ -93,6 +105,7 @@ export default function PersonManage() {
     area_id: undefined,
     community_id: undefined,
     grid_id: undefined,
+    role_id: undefined,
   });
 
   // 记录表格中的一行数据，方便修改和删除当前记录
@@ -225,6 +238,7 @@ export default function PersonManage() {
       skip: skip,
       take: take,
       selectOption: selectObject,
+      user_role: user_role,
     },
     onCompleted: () => {
       setLoading(false);
@@ -249,14 +263,24 @@ export default function PersonManage() {
   }, [db]);
 
   // 获取角色表的信息
-  const { data: role } = useQuery(GetRole);
+  const { data: role } = useQuery(GetRole, {
+    variables: {
+      user_role: user_role,
+    },
+  });
   // 获取警员信息
   const { data: police, refetch: refetch2 } = useQuery(GetPolice);
+  useEffect(() => {
+    if (police) {
+      setCreatePoliceList(police?.getPolice);
+    }
+  }, [police]);
   // 获取网格信息
   const { data: grid } = useQuery(GetGrid);
   useEffect(() => {
     if (grid) {
       setGridList(grid?.getGrid);
+      setCreateGridList(grid?.getGrid);
     }
   }, [grid]);
 
@@ -273,7 +297,9 @@ export default function PersonManage() {
         return item.level === 3;
       });
       setAdministrationAreaList(areaData);
+      setcreateAreaList(areaData);
       setCommunityList(communityData);
+      setCreateCommunityList(communityData);
       // console.log('行政区域',areaData);
       // console.log('社区',communityData);
     }
@@ -321,7 +347,9 @@ export default function PersonManage() {
               area_id: administrionAreaId,
               grid_id: gridId,
               community_id: firstCommunity,
+              role_id: select_role_id,
             },
+            user_role: user_role,
           });
           refetch2();
           form.resetFields();
@@ -336,7 +364,7 @@ export default function PersonManage() {
         })
         .catch(() => {
           message.error('重复添加');
-          form.resetFields();
+          // form.resetFields();
         });
     });
   };
@@ -369,7 +397,9 @@ export default function PersonManage() {
             area_id: administrionAreaId,
             grid_id: gridId,
             community_id: firstCommunity,
+            role_id: select_role_id,
           },
+          user_role: user_role,
         });
         refetch2();
       },
@@ -434,7 +464,9 @@ export default function PersonManage() {
               area_id: administrionAreaId,
               grid_id: gridId,
               community_id: firstCommunity,
+              role_id: select_role_id,
             },
+            user_role: user_role,
           });
           refetch2();
           setImageUrl('');
@@ -521,11 +553,68 @@ export default function PersonManage() {
     setGridId(p);
   };
 
+  // 创建网格员时候的联级，选择第一级之后自动选择第二级第一个
+  const [firstCommunityCreate, setFirstCommunityCreate] = useState<number>();
+  const [administrionAreaIdCreate, setAdministrionAreaIdCreate] = useState<number>();
+  const selectAreaCreate = (value: number) => {
+    setGridIdInput(undefined);
+    // 将administrionAreaId设置为下拉菜单选择的内容
+    setAdministrionAreaIdCreate(value);
+    setFirstCommunityCreate(undefined);
+    // setP(value);
+    const newPoliceList = police?.getPolice.filter((item: Police) => {
+      return item.areaid === value;
+    });
+    const newCommunityList = area?.getArea.filter((item: Area) => {
+      return item.parent_id === value;
+    });
+    if (newPoliceList.length > 0) {
+      setCreatePoliceList(newPoliceList);
+    } else {
+      setCreatePoliceList(undefined);
+      message.error('行政区域下无警员');
+    }
+    if (newCommunityList.length > 0) {
+      setCreateCommunityList(newCommunityList);
+      setFirstCommunityCreate(newCommunityList[0].id);
+      const newGridList = grid?.getGrid.filter((item: any) => {
+        return item.area_id === value || item.area_id === newCommunityList[0].id;
+      });
+      setCreateGridList(newGridList);
+      // 联级
+    } else {
+      setFirstCommunityCreate(undefined);
+      setCreateCommunityList(undefined);
+      message.error('该行政区域下没有社区');
+    }
+  };
+
+  // 创建网格员时设置社区id
+  const selectCommunityCreate = (value: number) => {
+    setGridIdInput(undefined);
+    setFirstCommunityCreate(value);
+    const newGridList = grid?.getGrid.filter((item: any) => {
+      return item.area_id === value || item.area_id === administrionAreaId;
+    });
+    const communityData = area?.getArea.filter((item: Area) => {
+      return item.id === value;
+    });
+    const areaDate = area?.getArea.filter((item: Area) => {
+      return item.id === communityData[0].parent_id;
+    });
+    setCreateGridList(newGridList);
+    setAdministrionAreaIdCreate(areaDate[0].id);
+  };
+
   // 获取输入的username
   const changeUsername = (e: any) => {
     setUsername(e.target.value);
     // console.log('e.target.value', e.target.value);
     // console.log('usernameInput', username);
+  };
+
+  const selectRoleid = (value: number) => {
+    setSelect_Role_id(value);
   };
 
   // 记录筛选按钮的点击状态
@@ -542,11 +631,13 @@ export default function PersonManage() {
       setFirstCommunity(undefined);
       setAdministrionAreaId(undefined);
       setUsername('');
+      setSelect_Role_id(undefined);
       setSelectObject({
         username: '',
         area_id: undefined,
         community_id: undefined,
         grid_id: undefined,
+        role_id: undefined,
       });
       setIsSelected(!isSelected);
       setPagination(() => {
@@ -563,11 +654,18 @@ export default function PersonManage() {
           area_id: undefined,
           community_id: undefined,
           grid_id: undefined,
+          role_id: undefined,
         },
       });
     } else {
       console.log('用户名改没改啊', username);
-      if (username !== '' || gridId || administrionAreaId || firstCommunity) {
+      if (
+        username !== '' ||
+        gridId ||
+        administrionAreaId ||
+        firstCommunity ||
+        select_role_id
+      ) {
         console.log('执行了筛选');
         setIsSelected(!isSelected);
         setPagination(() => {
@@ -581,6 +679,7 @@ export default function PersonManage() {
           area_id: administrionAreaId,
           grid_id: gridId,
           community_id: firstCommunity,
+          role_id: select_role_id,
         });
         refetch({
           skip: 0,
@@ -590,22 +689,11 @@ export default function PersonManage() {
             area_id: administrionAreaId,
             grid_id: gridId,
             community_id: firstCommunity,
+            role_id: select_role_id,
           },
         });
         console.log('查询的数据', db?.getPerson.data);
       } else {
-        // setIsSelected(!isSelected);
-        // setPagination(() => {
-        //   return {
-        //     current: 1,
-        //     pageSize: 2,
-        //   };
-        // });
-        // refetch({
-        //   skip: 0,
-        //   take: 2,
-        //   selectOption: {},
-        // });
         message.error('没有筛选条件！');
       }
     }
@@ -735,9 +823,26 @@ export default function PersonManage() {
                 ))}
               </Select>
 
+              {user_role === 'superAdmin' ? (
+                <Select
+                  placeholder="请选择角色"
+                  style={{ width: '150px' }}
+                  onChange={selectRoleid}
+                  value={select_role_id}
+                >
+                  {role?.getRole.map((item: any) => (
+                    <Option key={item.id} value={item.id}>
+                      {item.remark}
+                    </Option>
+                  ))}
+                </Select>
+              ) : (
+                <></>
+              )}
+
               <Input
                 style={{ width: '150px' }}
-                placeholder="请输入用户名"
+                placeholder="请输入姓名"
                 value={username}
                 onChange={changeUsername}
               />
@@ -866,6 +971,59 @@ export default function PersonManage() {
                 {/* <span>手机号：</span><br/> */}
                 <Input placeholder="请输入手机号码" />
               </Form.Item>
+
+              {role_id === 4 && (
+                <Form.Item
+                  name="area_id"
+                  label="请选择行政区域"
+                  labelCol={{ span: 6 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择行政区域',
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="请选择行政区域"
+                    onChange={selectAreaCreate}
+                    value={administrionAreaIdCreate}
+                  >
+                    {createAreaList?.map((item: any) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              )}
+
+              {role_id === 4 && (
+                <Form.Item
+                  name="community_id"
+                  label="请选择社区"
+                  labelCol={{ span: 6 }}
+                  rules={[
+                    {
+                      required: true,
+                      message: '请选择社区',
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="请选择社区"
+                    onChange={selectCommunityCreate}
+                    value={firstCommunityCreate}
+                  >
+                    {createCommunityList?.map((item: any) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              )}
+
               {role_id === 4 && (
                 <Form.Item
                   name="grid_id"
@@ -878,8 +1036,12 @@ export default function PersonManage() {
                     },
                   ]}
                 >
-                  <Select placeholder="请选择网格" onChange={selectGridInput}>
-                    {grid?.getGrid.map((item: any) => (
+                  <Select
+                    placeholder="请选择网格"
+                    onChange={selectGridInput}
+                    value={gridIdInput}
+                  >
+                    {createGridList?.map((item: any) => (
                       <Option key={item.id} value={item.id}>
                         {item.name}
                       </Option>
@@ -901,9 +1063,9 @@ export default function PersonManage() {
                   ]}
                 >
                   <Select placeholder="请选择警员" onChange={selectPoliceInput}>
-                    {police?.getPolice.map((item: any) => (
+                    {createPoliceList?.map((item: any) => (
                       <Option key={item.police_user_id} value={item.police_user_id}>
-                        {item.username}
+                        {item.real_name}
                       </Option>
                     ))}
                   </Select>
@@ -1128,7 +1290,7 @@ export default function PersonManage() {
               <Select placeholder="请选择警员" onChange={selectPoliceInput}>
                 {police?.getPolice.map((item: any) => (
                   <Option key={item.police_user_id} value={item.police_user_id}>
-                    {item.username}
+                    {item.real_name}
                   </Option>
                 ))}
               </Select>

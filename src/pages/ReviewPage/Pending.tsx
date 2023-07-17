@@ -271,7 +271,7 @@ const App: React.FC = () => {
       });
       message.info('列表加载完成');
       console.log(filtered);
-      
+
       const formattedData = filtered.map((item: any) => {
         const date = new Date(item.create_time);
         const formattedDate = formatDate(date);
@@ -281,7 +281,7 @@ const App: React.FC = () => {
           create_time: formattedDate,
         };
       });
-      console.log("显示结果");
+      console.log('显示结果');
       console.log(formattedData);
       setDataSource(formattedData);
     }
@@ -411,15 +411,15 @@ const App: React.FC = () => {
         switch (text?.action_type) {
           case '1':
             content = '新增';
-            name=text?.request_data.name;
+            name = text?.request_data.name;
             break;
           case '2':
             content = '删除';
-            name=text?.person_info?.name;
+            name = text?.person_info?.name;
             break;
           case '3':
             content = '修改';
-            name=text?.person_info?.name;
+            name = text?.person_info?.name;
             break;
           default:
             break;
@@ -541,10 +541,14 @@ const App: React.FC = () => {
           column={{ xxl: 1, xl: 2, lg: 3, md: 3, sm: 2, xs: 1 }}
         >
           <Descriptions.Item label="姓名">
-          {changesShow[0]?.personal_info?.name?changesShow[0]?.personal_info?.name:namecardnow}
+            {changesShow[0]?.personal_info?.name
+              ? changesShow[0]?.personal_info?.name
+              : namecardnow}
           </Descriptions.Item>
           <Descriptions.Item label="身份证号">
-          {changesShow[0]?.personal_info?.id_card?changesShow[0]?.personal_info?.id_card:idcardnow}
+            {changesShow[0]?.personal_info?.id_card
+              ? changesShow[0]?.personal_info?.id_card
+              : idcardnow}
           </Descriptions.Item>
         </Descriptions>
         <Divider />

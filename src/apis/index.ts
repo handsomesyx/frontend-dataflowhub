@@ -1011,8 +1011,18 @@ export const UpdatePerson = gql`
 
 // 查询人员信息
 export const GetPerson = gql`
-  query getPerson($skip: Int!, $take: Int!, $selectOption: selectOptionInput!) {
-    getPerson(skip: $skip, take: $take, selectOption: $selectOption) {
+  query getPerson(
+    $skip: Int!
+    $take: Int!
+    $selectOption: selectOptionInput!
+    $user_role: String!
+  ) {
+    getPerson(
+      skip: $skip
+      take: $take
+      selectOption: $selectOption
+      user_role: $user_role
+    ) {
       data {
         id
         username
@@ -1036,8 +1046,8 @@ export const GetPerson = gql`
 
 // 查询角色表
 export const GetRole = gql`
-  query getRole {
-    getRole {
+  query getRole($user_role: String!) {
+    getRole(user_role: $user_role) {
       id
       name
       remark
@@ -1050,7 +1060,8 @@ export const GetPolice = gql`
   query getPolice {
     getPolice {
       police_user_id
-      username
+      real_name
+      areaid
     }
   }
 `;

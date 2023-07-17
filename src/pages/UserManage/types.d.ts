@@ -35,6 +35,7 @@ export type SelectObject = {
   area_id?: number;
   community_id?: number;
   grid_id?: number;
+  role_id?: number;
 };
 
 export type Area = {
@@ -48,4 +49,10 @@ export type Grid = {
   id: number;
   name: string;
   area_id: number;
+};
+
+export type Police = {
+  police_user_id: number;
+  real_name: string;
+  areaid: number | null;
 };
