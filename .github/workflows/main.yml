@@ -22,7 +22,7 @@ jobs:
           node-version: 16.20.1
 
       - name: 安装依赖
-        run: npm ci
+        run: yarn install
 
       - name: 代码格式检查
         run: npm run lint
