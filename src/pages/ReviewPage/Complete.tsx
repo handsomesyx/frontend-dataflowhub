@@ -265,7 +265,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Table pagination={{ pageSize: 9 }} columns={columns} dataSource={datashow} />
+      <Table pagination={{ defaultPageSize:9}} columns={columns} dataSource={datashow} />
       <Modal
         okText="确认"
         cancelText="取消"
