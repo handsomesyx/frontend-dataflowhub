@@ -5,7 +5,6 @@ on:
     branches:
       - newdev
 
-
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
