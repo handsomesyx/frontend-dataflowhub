@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - newdev
-  pull_request:
-    branches:
-      - newdev
 
 jobs:
   build_and_test:
