@@ -63,7 +63,7 @@ jobs:
         uses: burnett01/rsync-deployments@5.2
         with:
           switches: -avzr --delete
-          path: artifact/dist/
+          path: dist/
           remote_path: /opt/mohe/front/dist/
           remote_host: ${{ secrets.DEPLOY_HOST_DEV }}
           remote_user: ${{ secrets.DEPLOY_USER_DEV }}
