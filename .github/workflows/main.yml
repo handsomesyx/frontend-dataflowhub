@@ -16,41 +16,23 @@ jobs:
       - name: 检出代码
         uses: actions/checkout@v2
 
-      - name: 安装 pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: false
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          cache: 'yarn'
 
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_ENV
-        shell: bash
-
-      - uses: actions/cache@v3
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-            
       - name: 安装依赖
-        run: pnpm install
+        run: yarn install
 
       - name: 代码格式检查
-        run: pnpm run lint
+        run: yarn run lint
 
       - name: 类型检查
-        run: pnpm run type-check
+        run: yarn run type-check
 
       - name: 构建
-        run: pnpm run build:prod
+        run: yarn run build:prod
 
   deploy:
     needs: build_and_test
