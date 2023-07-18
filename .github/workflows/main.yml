@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
@@ -34,6 +34,18 @@ jobs:
       - name: 构建
         run: yarn run build:prod
 
+      - name: 打包构建工件
+        run: |
+          mkdir artifact
+          mv dist artifact/
+        shell: bash
+
+      - name: 上传构建工件
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: artifact/
+
   deploy:
     needs: build_and_test
     runs-on: ubuntu-latest
@@ -41,6 +53,11 @@ jobs:
     steps:
       - name: 检出代码
         uses: actions/checkout@v2
+
+      - name: 下载构建工件
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
 
       - name: 安装 SSH 私钥
         uses: webfactory/ssh-agent@v0.5.3
@@ -51,12 +68,12 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           ssh-keyscan -t rsa ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-          
+
       - name: rsync deployments
         uses: burnett01/rsync-deployments@5.2
         with:
           switches: -avzr --delete
-          path: dist/
+          path: artifact/dist/
           remote_path: /opt/mohe/front-end-mohe/dist/
           remote_host: ${{ secrets.DEPLOY_HOST }}
           remote_user: ${{ secrets.DEPLOY_USER }}
