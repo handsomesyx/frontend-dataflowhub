@@ -371,7 +371,7 @@ const routeConfig: routerConfigType[] = [
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>
-              {getUserType() !== 'gridMember' ? (
+              {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
                 <PersonManage />
               ) : (
                 '无权访问,只有超级管理员可对人员进行管理'

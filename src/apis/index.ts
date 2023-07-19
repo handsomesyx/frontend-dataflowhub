@@ -986,17 +986,14 @@ export const RefreshToken = gql`
 // 增加人员
 export const CreatePerson = gql`
   mutation create($input: personCreateInput!, $input2: role_userCreateInput!) {
-    createPerson(input: $input, input2: $input2) {
-      username
-      id
-    }
+    createPerson(input: $input, input2: $input2)
   }
 `;
 
 // 删除人员
 export const DeletePerson = gql`
-  mutation deletePerson($id: Int!) {
-    deletePerson(id: $id) {
+  mutation deletePerson($id: Int!, $user_role: Int!) {
+    deletePerson(id: $id, user_role: $user_role) {
       id
     }
   }
@@ -1016,12 +1013,14 @@ export const GetPerson = gql`
     $take: Int!
     $selectOption: selectOptionInput!
     $user_role: String!
+    $user_name: String!
   ) {
     getPerson(
       skip: $skip
       take: $take
       selectOption: $selectOption
       user_role: $user_role
+      user_name: $user_name
     ) {
       data {
         id
@@ -1038,6 +1037,7 @@ export const GetPerson = gql`
         mobile
         grid_id
         police_user_id
+        policestation
       }
       total
     }
@@ -1057,8 +1057,8 @@ export const GetRole = gql`
 
 // 查询警员
 export const GetPolice = gql`
-  query getPolice {
-    getPolice {
+  query getPolice($username: String!, $role: String!) {
+    getPolice(username: $username, role: $role) {
       police_user_id
       real_name
       areaid
@@ -1068,8 +1068,8 @@ export const GetPolice = gql`
 
 // 查询网格
 export const GetGrid = gql`
-  query getGrid {
-    getGrid {
+  query getGrid($username: String!, $role: String!) {
+    getGrid(username: $username, role: $role) {
       id
       name
       area_id
@@ -1077,9 +1077,19 @@ export const GetGrid = gql`
   }
 `;
 
+// 查询派出所信息
+export const GetPolicestation = gql`
+  query getPolicestation($username: String!, $role: String!) {
+    getPolicestation(username: $username, role: $role) {
+      id
+      name
+    }
+  }
+`;
+
 export const GetArea = gql`
-  query getArea {
-    getArea {
+  query getArea($username: String!, $role: String!) {
+    getArea(username: $username, role: $role) {
       id
       name
       parent_id
