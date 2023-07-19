@@ -225,26 +225,6 @@ const PorpertyInfo = ({
             servereDisabilitySub: parseFloat(disaility.servereDisabilitySub.toString()),
           });
         }
-      })
-      .catch(() => {
-        errVisible = true;
-      });
-
-    eduform
-      .validateFields()
-      .then(() => {
-        const data: politicalInfo = eduform.getFieldsValue();
-        politicalData.push({
-          workUnit: data?.workUnit,
-          position: data?.position,
-          politicalStatus: data?.politicalStatus,
-          party: data?.partyOrganization,
-          religion: data?.religion,
-          nationality: data?.nationality,
-          education: data?.education,
-          militaryService: data?.militaryService,
-          school: data?.school,
-        });
 
         if (errVisible) {
           message.error('您有未完成填写的必填项');
@@ -284,10 +264,34 @@ const PorpertyInfo = ({
       })
       .catch(() => {
         errVisible = true;
+        message.error('您有未完成填写的必填项');
+      });
+
+    eduform
+      .validateFields()
+      .then(() => {
+        const data: politicalInfo = eduform.getFieldsValue();
+        politicalData.push({
+          workUnit: data?.workUnit,
+          position: data?.position,
+          politicalStatus: data?.politicalStatus,
+          party: data?.partyOrganization,
+          religion: data?.religion,
+          nationality: data?.nationality,
+          education: data?.education,
+          militaryService: data?.militaryService,
+          school: data?.school,
+        });
+      })
+      .catch(() => {
+        errVisible = true;
         if (errVisible) {
           message.error('您有未完成填写的必填项');
         }
       });
+    if (errVisible) {
+      message.error('您有未完成填写的必填项');
+    }
     // //console.log(porData);
   };
 

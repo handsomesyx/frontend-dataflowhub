@@ -143,7 +143,7 @@ function InformationUpdate() {
   };
   const EducationData: EducationType = {
     work_unit: dataAll?.politicalData?.work_unit,
-    position: dataAll?.politicalData?.work_unit,
+    position: dataAll?.politicalData?.position,
 
     religion: dataAll?.politicalData?.religion,
     political_status: dataAll?.politicalData?.political_status,

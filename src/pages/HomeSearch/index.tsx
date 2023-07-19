@@ -360,7 +360,7 @@ const HomeSearch = () => {
     // 判断是否都是空格
     const isAllSpacesRegex = /^\s*$/;
     const flag = isAllSpacesRegex.test(inputvalue);
-    if (!flag && inputvalue) {
+    if ((!flag && inputvalue) || isshowSearch) {
       const option = {
         content: inputvalue,
         option: optiondata,
