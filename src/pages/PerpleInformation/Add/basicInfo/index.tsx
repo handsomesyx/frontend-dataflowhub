@@ -11,6 +11,7 @@ import { CreateFamilyInfo, DeleteFamilyInfo, FindFamilyMember } from '@/apis';
 // import type { CommonPeopleBasics } from '../../Show/BasicsInformation/CommonInfo';
 import { relation } from '../Option';
 import type { familyInfo, getbasicInfo } from '../types';
+import DownloadSmaple from './downloadSample';
 import ImageUpload from './imageUpload';
 import ManyDataUpload from './manyDataUplaod';
 import styles from './styles.module.less';
@@ -188,9 +189,18 @@ const BasicInfo = ({
           {update ? (
             <></>
           ) : (
-            <Button className={styles.Btn} onClick={() => setManyVisible(true)}>
-              批量导入
-            </Button>
+            <>
+              <div className={styles.Btn}>
+                <DownloadSmaple />
+                <Button
+                  style={{ marginLeft: '1vw' }}
+                  type="primary"
+                  onClick={() => setManyVisible(true)}
+                >
+                  批量导入
+                </Button>
+              </div>
+            </>
           )}
           <div className={styles.FormInput}>
             <Row>
@@ -296,6 +306,7 @@ const BasicInfo = ({
                             {
                               required: true,
                               message: '请输入联系方式！',
+                              pattern: /^1[3-9][0-9]{9}$/,
                             },
                           ]}
                         >
@@ -346,7 +357,17 @@ const BasicInfo = ({
                     </Row>
                     <Row>
                       <Col span={8}>
-                        <Form.Item name="age" label="年龄:">
+                        <Form.Item
+                          name="age"
+                          label="年龄:"
+                          rules={[
+                            {
+                              // required: true,
+                              message: '请输入正确的年龄！',
+                              pattern: /^(0?[1-9]|[1-9][0-9])|^120/,
+                            },
+                          ]}
+                        >
                           <Input placeholder="请填写" style={{ width: '15vw' }} />
                         </Form.Item>
                       </Col>

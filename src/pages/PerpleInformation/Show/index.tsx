@@ -129,7 +129,7 @@ function InformationShow() {
   };
   const EducationData: EducationType = {
     work_unit: dataAll?.politicalData?.work_unit,
-    position: dataAll?.politicalData?.work_unit,
+    position: dataAll?.politicalData?.position,
     political_status: dataAll?.politicalData?.political_status,
     party_organization: dataAll?.politicalData?.party_organization,
     religion: dataAll?.politicalData?.religion,
@@ -158,25 +158,23 @@ function InformationShow() {
     };
   });
 
-  const OtherInfoData: OtherInfoType[] = dataAll?.propertyData?.map((item: any) => {
-    return {
-      house_info: '', // 房子信息 开关没有暂时没用上
-      house_owner: item?.house_owner, // 房子产权人
-      house_area: item?.house_area, // 建筑面积 平方米
-      hobbies: item?.hobbies, // 兴趣爱好
-      car_model: item?.car_model, // 车型号（可选）
-      car_plate: item?.car_plate, // 车牌照（可选）
-      car_owner: item?.car_owner, // 车辆所有人（可选）
-      car_color: item?.car_color, // 车身颜色（可选）
-      house_type: item?.house_type, // 房屋类型
-      house_condition: item?.house_condition, // 危房等级
-      smoking_status: item?.smoking_status, // 吸烟是否  必选
-      volunteer_status: JSON.stringify(item?.volunteer_status) ?? '[{}]',
-      // 志愿者{ } json里边写字符数组，来记录志愿者
-      social_worker: {}, // 社工{ }  json里边写字符数组，来记录社工
-      driving_license_type: item?.driving_license_type, // 驾驶证类型（可选）
-    };
-  });
+  const OtherInfoData: OtherInfoType = {
+    house_info: dataAll?.propertyData[0]?.house_info, // 房子信息 开关没有暂时没用上
+    house_owner: dataAll?.propertyData[0]?.house_owner, // 房子产权人
+    house_area: dataAll?.propertyData[0]?.house_area, // 建筑面积 平方米
+    house_type: dataAll?.propertyData[0]?.house_type, // 房屋类型
+    house_condition: dataAll?.propertyData[0]?.house_condition, // 危房等级
+    smoking_status: dataAll?.propertyData[0]?.smoking_status, // 吸烟是否  必选
+    hobbies: dataAll?.propertyData[0]?.hobbies, // 兴趣爱好
+    car_model: dataAll?.propertyData[0]?.car_model, // 车型号（可选）
+    car_owner: dataAll?.propertyData[0]?.car_owner, // 车辆所有人（可选）
+    car_plate: dataAll?.propertyData[0]?.car_plate, // 车牌照（可选）
+    car_color: dataAll?.propertyData[0]?.car_color, // 车身颜色（可选）
+    volunteer_status:
+      JSON.stringify(dataAll?.propertyData[0]?.volunteer_status) ?? '[{}]', // 志愿者{ } json里边写字符数组，来记录志愿者
+    social_worker: JSON.stringify(dataAll?.propertyData[0]?.social_worker) ?? '[{}]', // 社工{ }  json里边写字符数组，来记录社工
+    driving_license_type: dataAll?.propertyData[0]?.driving_license_type, // 驾驶证类型（可选）
+  };
 
   const WarrantorData: WarrantorType = {
     grid_name: dataAll?.bBData?.grid_name,
