@@ -254,7 +254,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div style={{overflowY: 'auto'}}>
+                <div style={{ overflowY: 'auto' }}>
                   {getUserType() === 'superAdmin' ? (
                     <PoliceStation />
                   ) : (
@@ -371,7 +371,7 @@ const routeConfig: routerConfigType[] = [
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>
-              {getUserType() === 'superAdmin' ? (
+              {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
                 <PersonManage />
               ) : (
                 '无权访问,只有超级管理员可对人员进行管理'

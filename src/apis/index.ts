@@ -986,17 +986,14 @@ export const RefreshToken = gql`
 // 增加人员
 export const CreatePerson = gql`
   mutation create($input: personCreateInput!, $input2: role_userCreateInput!) {
-    createPerson(input: $input, input2: $input2) {
-      username
-      id
-    }
+    createPerson(input: $input, input2: $input2)
   }
 `;
 
 // 删除人员
 export const DeletePerson = gql`
-  mutation deletePerson($id: Int!) {
-    deletePerson(id: $id) {
+  mutation deletePerson($id: Int!, $user_role: Int!) {
+    deletePerson(id: $id, user_role: $user_role) {
       id
     }
   }
@@ -1011,8 +1008,20 @@ export const UpdatePerson = gql`
 
 // 查询人员信息
 export const GetPerson = gql`
-  query getPerson($skip: Int!, $take: Int!, $selectOption: selectOptionInput!) {
-    getPerson(skip: $skip, take: $take, selectOption: $selectOption) {
+  query getPerson(
+    $skip: Int!
+    $take: Int!
+    $selectOption: selectOptionInput!
+    $user_role: String!
+    $user_name: String!
+  ) {
+    getPerson(
+      skip: $skip
+      take: $take
+      selectOption: $selectOption
+      user_role: $user_role
+      user_name: $user_name
+    ) {
       data {
         id
         username
@@ -1028,6 +1037,7 @@ export const GetPerson = gql`
         mobile
         grid_id
         police_user_id
+        policestation
       }
       total
     }
@@ -1036,8 +1046,8 @@ export const GetPerson = gql`
 
 // 查询角色表
 export const GetRole = gql`
-  query getRole {
-    getRole {
+  query getRole($user_role: String!) {
+    getRole(user_role: $user_role) {
       id
       name
       remark
@@ -1047,18 +1057,19 @@ export const GetRole = gql`
 
 // 查询警员
 export const GetPolice = gql`
-  query getPolice {
-    getPolice {
+  query getPolice($username: String!, $role: String!) {
+    getPolice(username: $username, role: $role) {
       police_user_id
-      username
+      real_name
+      areaid
     }
   }
 `;
 
 // 查询网格
 export const GetGrid = gql`
-  query getGrid {
-    getGrid {
+  query getGrid($username: String!, $role: String!) {
+    getGrid(username: $username, role: $role) {
       id
       name
       area_id
@@ -1066,9 +1077,19 @@ export const GetGrid = gql`
   }
 `;
 
+// 查询派出所信息
+export const GetPolicestation = gql`
+  query getPolicestation($username: String!, $role: String!) {
+    getPolicestation(username: $username, role: $role) {
+      id
+      name
+    }
+  }
+`;
+
 export const GetArea = gql`
-  query getArea {
-    getArea {
+  query getArea($username: String!, $role: String!) {
+    getArea(username: $username, role: $role) {
       id
       name
       parent_id
