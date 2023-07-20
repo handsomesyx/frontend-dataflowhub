@@ -508,11 +508,8 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Table
-        pagination={{ defaultPageSize: 9 }}
-        columns={columns}
-        dataSource={dataSource}
-      />
+      <Table pagination={{defaultPageSize:9,
+        pageSizeOptions: ['9', '10', '20', '50']}} columns={columns} dataSource={dataSource} />
       <Modal
         title="查看具体信息"
         open={open}
