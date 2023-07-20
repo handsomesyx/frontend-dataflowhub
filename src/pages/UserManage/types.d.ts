@@ -10,6 +10,7 @@ export type TableDataType = {
 export type DataType = {
   id: number;
   username: string | null;
+  real_name: string | null;
   role_name: string | null;
   grid_name: string | null;
   create_time: string;
@@ -21,6 +22,7 @@ export type DataType = {
   mobile: string;
   grid_id: number | null;
   police_user_id: number | null;
+  policestation: number | null;
 };
 
 export type Role_userInputType = {
@@ -34,6 +36,10 @@ export type SelectObject = {
   area_id?: number;
   community_id?: number;
   grid_id?: number;
+  role_id?: number;
+  police_station_id?: number | null;
+  role_community_id?: number | null;
+  role_grid_id?: number | null;
 };
 
 export type Area = {
@@ -47,4 +53,10 @@ export type Grid = {
   id: number;
   name: string;
   area_id: number;
+};
+
+export type Police = {
+  police_user_id: number;
+  real_name: string;
+  areaid: number[];
 };

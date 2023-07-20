@@ -15,10 +15,11 @@ import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
 const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
 const Visualization = React.lazy(() => import('@/pages/visualization'));
 import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
+// const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
+import IncidentManagement from '@/pages/IncidentManagement';
 // import Community from "@/pages/BasicInformation/Community";
 import { LoginLog } from '@/pages/LoginLog';
 import { OperateLog } from '@/pages/OperateLog';
-// const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 import { userType } from '@/store';
 import { getUserType } from '@/store/SaveToken';
 
@@ -36,6 +37,9 @@ const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'))
 const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
 const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
 const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
+const InformationShowHistory = React.lazy(
+  () => import('@/pages/HistoryLook/Show/InformationShowHistory'),
+);
 import './index.css';
 
 import type { routerConfigType } from './routerConfigType';
@@ -141,6 +145,17 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
+            path: 'person-show-history',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div className="NotContentFFF">
+                  <InformationShowHistory />
+                </div>
+              </Suspense>
+            ),
+          },
+          {
             path: 'history-lookOver',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
@@ -211,9 +226,15 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <AdministrativeRegion />
-                </div>
+                <>
+                  {getUserType() === 'superAdmin' ? (
+                    <div className="NotContentFFF">
+                      <AdministrativeRegion />
+                    </div>
+                  ) : (
+                    <div>无权访问,只有超级管理员可对行政区域进行管理</div>
+                  )}
+                </>
               </Suspense>
             ),
           },
@@ -233,8 +254,13 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                {/* <div>警局管理</div> */}
-                <PoliceStation />
+                <div style={{ overflowY: 'auto' }}>
+                  {getUserType() === 'superAdmin' ? (
+                    <PoliceStation />
+                  ) : (
+                    '无权访问,只有超级管理员可对警局进行管理'
+                  )}
+                </div>
               </Suspense>
             ),
           },
@@ -257,7 +283,9 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>事件管理</div>
+            <div>
+              <IncidentManagement />
+            </div>
           </Suspense>
         ),
       },
@@ -343,7 +371,7 @@ const routeConfig: routerConfigType[] = [
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
             <div>
-              {getUserType() === 'superAdmin' ? (
+              {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
                 <PersonManage />
               ) : (
                 '无权访问,只有超级管理员可对人员进行管理'

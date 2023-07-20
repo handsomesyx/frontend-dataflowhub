@@ -30,5 +30,5 @@ dist
 dist-ssr
 *.local
 
-yarn.lock
+# yarn.lock
 package-lock.json

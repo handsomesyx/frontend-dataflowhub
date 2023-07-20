@@ -35,7 +35,7 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
         // supervisorName: healthData?.supervisor_name,
       });
     }
-    if (disData) {
+    if (disData?.disability_id) {
       setOpenDis(true);
       disform.setFieldsValue({
         disabilityId: disData.disability_id,
@@ -201,7 +201,7 @@ const HealthInfo = ({ form, healthData, disData, disform }: props) => {
           </Form>
           {openDis ? (
             <>
-              <Form form={disform}>
+              <Form form={disform} labelCol={{ span: 8 }} labelWrap={true}>
                 <Row>
                   <Col span={6}>
                     <Form.Item

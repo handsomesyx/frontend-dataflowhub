@@ -73,7 +73,7 @@ module.exports = {
     'react/jsx-props-no-spreading': [0],
     'max-classes-per-file': [2, 2],
     'no-console': 'warn',
-    'max-len': ['error', { code: 100, ignoreTemplateLiterals: true }],
+    'max-len': ['error', { code: 150, ignoreTemplateLiterals: true }],
     'no-param-reassign': ['error', { props: false }],
     'react/prop-types': [0],
   },

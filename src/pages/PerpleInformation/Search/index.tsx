@@ -11,7 +11,9 @@ import {
   Select,
   Spin,
 } from 'antd';
+import type { RangePickerProps } from 'antd/es/date-picker';
 import zhCN from 'antd/locale/zh_CN';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -327,9 +329,12 @@ const SearchBasic = () => {
         isDelete: false,
       },
     }).then(({ data }) => {
+      // 注意将页面恢复1
       setPagination((pre) => {
         return {
           ...pre,
+          current: 1,
+          pageSize: 5,
           total: data?.getPeopleDataFilter?.total,
         };
       });
@@ -357,13 +362,18 @@ const SearchBasic = () => {
       return { ...pre, [dataName]: e };
     });
   };
-
   // 数据输出到fliter中 针对select组件
   const handleFliterDataSelect = (a: any, dataName: string) => {
     setFilterData((pre: any) => {
       return { ...pre, [dataName]: a };
     });
   };
+
+  const disabledDate: RangePickerProps['disabledDate'] = (current) => {
+    // Can not select days before today and today
+    return current && current > dayjs().endOf('day');
+  };
+
   return (
     <div className={styles.FlexColomnBox}>
       <div className={styles.TopBox}>
@@ -396,11 +406,12 @@ const SearchBasic = () => {
               <span>姓名：</span>
               <Input
                 placeholder="请输入姓名"
+                allowClear
                 onChange={(a) => {
                   handleFliterData(a, 'name');
                 }}
                 value={filterData?.name}
-                style={{ width: '60%' }}
+                style={{ width: '60%', display: 'flex' }}
               ></Input>
             </div>
             <div>
@@ -434,7 +445,11 @@ const SearchBasic = () => {
             <div>
               <span>录入日期：</span>
               <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleinTimeChange} />
+                <RangePicker
+                  style={{ width: '60%' }}
+                  onChange={handleinTimeChange}
+                  disabledDate={disabledDate}
+                />
               </ConfigProvider>
             </div>
           </div>
@@ -452,11 +467,12 @@ const SearchBasic = () => {
               <span>身份证号</span>：
               <Input
                 placeholder="输入身份证号"
+                allowClear
                 onChange={(a) => {
                   handleFliterData(a, 'id_card');
                 }}
                 value={filterData?.id_card}
-                style={{ width: '60%' }}
+                style={{ width: '60%', display: 'flex' }}
               ></Input>
             </div>
             <div>
@@ -482,17 +498,22 @@ const SearchBasic = () => {
               <span>住址</span>：
               <Input
                 placeholder="输入住址"
+                allowClear
                 onChange={(a) => {
                   handleFliterData(a, 'current_address');
                 }}
                 value={filterData?.current_address}
-                style={{ width: '60%' }}
+                style={{ width: '60%', display: 'flex' }}
               ></Input>
             </div>
             <div>
               <span>修改日期</span>：
               <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleTimeChange} />
+                <RangePicker
+                  style={{ width: '60%' }}
+                  disabledDate={disabledDate}
+                  onChange={handleTimeChange}
+                />
               </ConfigProvider>
             </div>
           </div>
@@ -563,14 +584,15 @@ const SearchBasic = () => {
               ></Select>
             </div>
             <div>
-              <span>别名</span>：
+              <span>绰号</span>：
               <Input
-                placeholder="输入别名"
+                placeholder="输入绰号"
+                allowClear
                 onChange={(a) => {
                   handleFliterData(a, 'nickname');
                 }}
                 value={filterData?.nickname}
-                style={{ width: '60%' }}
+                style={{ width: '60%', display: 'flex' }}
               ></Input>
             </div>
           </div>
@@ -608,19 +630,26 @@ const SearchBasic = () => {
             <div>
               <span>网格</span>：
               <Select
-                showSearch
+                mode="tags"
                 style={{ width: '60%' }}
-                placeholder="输入或选择网格号"
+                placeholder="输入网格编号或选择网格"
                 optionFilterProp="children"
                 value={gridSelect}
-                // onSearch={(value) => {
-                //   //console.log('sdfdsfs', value);
-                //   setGridSelect(value);
-                // }}
                 onChange={(e) => {
-                  // console.log('e', e);
-                  setGridSelect(e);
-                  handleFliterDataSelect(e, 'grid_id');
+                  if (e?.length > 0 && e?.length < 2) {
+                    setGridSelect(e);
+                    let grid = Number(e[0]);
+                    handleFliterDataSelect(grid, 'grid_id');
+                    console.log(typeof e);
+                  }
+                }}
+                onClear={() => {
+                  setGridSelect(undefined);
+                  handleFliterDataSelect(undefined, 'grid_id');
+                }}
+                onDeselect={() => {
+                  handleFliterDataSelect(undefined, 'grid_id');
+                  setGridSelect(undefined);
                 }}
                 allowClear
                 options={gridData?.getSelectGrid?.selectGrid?.map((item: any) => {

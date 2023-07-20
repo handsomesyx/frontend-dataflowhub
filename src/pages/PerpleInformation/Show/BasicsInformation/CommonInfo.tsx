@@ -1,9 +1,10 @@
-import { useMutation } from '@apollo/client';
-import { Button, Form, message, Modal, Select } from 'antd';
+import { useMutation, useQuery } from '@apollo/client';
+import { Button, Form, message, Modal, Select, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { DeletePeopleInfo } from '@/apis';
+import { DeletePeopleInfo, getChangeRecordByPersonalId } from '@/apis';
 
 import styles from './style.module.less';
 
@@ -13,11 +14,19 @@ interface Props {
 }
 const { Option } = Select;
 
+interface ChangeWhat {
+  id: any;
+  change_item: string;
+  content_before: string;
+  content_after: string;
+}
+
 /**
  * @description 基础信息接口
  */
 
 export type CommonPeopleBasics = {
+  age?: string;
   img?: string;
   name?: string;
   card?: string;
@@ -54,6 +63,27 @@ const Common: React.FC<Props> = ({ peopleData }) => {
   const id = window.localStorage.getItem('userIdNum');
   const [form] = Form.useForm();
   const [deleteVisible, setDeleteVisible] = useState<boolean>();
+  const [recordVisible, setRecordVisible] = useState<boolean>();
+  // const [changesShow, setChangesShow] = useState<dataChange[]>([]);
+  const [changedata, setChangedata] = useState<ChangeWhat[]>([]);
+  const changecolumns: ColumnsType<ChangeWhat> = [
+    {
+      title: '变更属性',
+      dataIndex: 'value',
+      key: 'value',
+      width: '15%',
+    },
+    {
+      title: '变更前',
+      dataIndex: 'before',
+      key: 'before',
+    },
+    {
+      title: '变更后',
+      dataIndex: 'after',
+      key: 'after',
+    },
+  ];
   const navigate = useNavigate();
 
   const [deletePeopleInfo] = useMutation(DeletePeopleInfo);
@@ -74,6 +104,38 @@ const Common: React.FC<Props> = ({ peopleData }) => {
       });
   };
 
+  useQuery(getChangeRecordByPersonalId, {
+    // client,
+    variables: { personalId: Number(id) },
+    onCompleted: (data) => {
+      // console.log(data.getChangeRecord); // 控制台结果
+      const changewhat = data.getChangeRecordByPersonalId.map((item: ChangeWhat) => ({
+        after: item?.content_after,
+        before: item?.content_before,
+        value: item?.change_item,
+        key: item?.id,
+      }));
+
+      // console.log(changewhat);
+      setChangedata(changewhat);
+    },
+  });
+
+  // useEffect(() => {
+  //   if (changeData) {
+  //     console.log(changeData);
+
+  //     const changewhat = changeData?.data?.getChangeRecord.map((item: ChangeWhat) => ({
+  //       after: item?.content_after,
+  //       before: item?.content_before,
+  //       value: item?.change_item,
+  //       key: item?.id,
+  //     }));
+
+  //     setChangedata(changewhat);
+  //   }
+  // }, [changeData]);
+
   return (
     <div className={styles.CommonBox}>
       <div className={styles.TopSelf}>
@@ -93,7 +155,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span></span>曾用名：<span>{peopleData?.formerName}</span>
           </div>
           <div>
-            <span>*</span>人员分级类别：<span>{peopleData?.level}</span>
+            <span></span>身高：<span>{peopleData?.height}</span>
           </div>
           <div style={{ width: '100%' }}>
             <span>*</span>所属派出所：
@@ -103,7 +165,7 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span>*</span> 所属网格：<span>{peopleData?.gridding}</span>
           </div>
           <div>
-            <span>*</span>身高<span>{peopleData?.height}</span>
+            <span>*</span>人员分级类别：<span>{peopleData?.level}</span>
           </div>
         </div>
         <div>
@@ -121,10 +183,6 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span></span> 何时来本地居住：<span>{peopleData?.liveComeTime}</span>
           </div>
           <div>
-            <span>*</span>所属社区：
-            <span>{peopleData?.community}</span>
-          </div>
-          <div>
             <span>*</span>户籍所在地：<span>{peopleData?.placeDomicile}</span>
           </div>
           <div>
@@ -132,6 +190,10 @@ const Common: React.FC<Props> = ({ peopleData }) => {
             <span>
               {peopleData?.sex === false ? '男' : peopleData?.sex === true ? '女' : ''}
             </span>
+          </div>
+          <div>
+            <span></span>年龄：
+            <span>{peopleData?.age}</span>
           </div>
         </div>
       </div>
@@ -160,6 +222,15 @@ const Common: React.FC<Props> = ({ peopleData }) => {
       </div>
 
       <div style={{ position: 'absolute', right: '1px', top: '-40px' }}>
+        <Button
+          style={{ marginRight: '10px' }}
+          type="primary"
+          onClick={() => {
+            setRecordVisible(true);
+          }}
+        >
+          查看历史记录
+        </Button>
         <Button
           style={{ marginRight: '10px' }}
           type="primary"
@@ -204,6 +275,25 @@ const Common: React.FC<Props> = ({ peopleData }) => {
               </Select>
             </Form.Item>
           </Form>
+        </Modal>
+
+        <Modal
+          // okText="确认"
+          // cancelText="取消"
+          title="历史变更记录"
+          open={recordVisible}
+          maskClosable
+          footer={null}
+          // width={1000}
+          // onOk={deletePeople}
+          onCancel={() => setRecordVisible(false)}
+        >
+          <Table
+            pagination={false}
+            columns={changecolumns}
+            dataSource={changedata}
+            // size="middle"
+          />
         </Modal>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import 'dayjs/locale/zh-cn';
+
 import { useMutation, useQuery } from '@apollo/client';
 import type { FormInstance } from 'antd';
 import { Button, Col, Divider, Form, Input, message, Modal, Row, Select } from 'antd';
@@ -9,6 +11,7 @@ import { CreateFamilyInfo, DeleteFamilyInfo, FindFamilyMember } from '@/apis';
 // import type { CommonPeopleBasics } from '../../Show/BasicsInformation/CommonInfo';
 import { relation } from '../Option';
 import type { familyInfo, getbasicInfo } from '../types';
+import DownloadSmaple from './downloadSample';
 import ImageUpload from './imageUpload';
 import ManyDataUpload from './manyDataUplaod';
 import styles from './styles.module.less';
@@ -87,7 +90,7 @@ const BasicInfo = ({
         currentAddress: basicUpdateData.current_address,
         formerName: basicUpdateData.former_name,
         nickname: basicUpdateData.nickname,
-        dateOfResidence: basicUpdateData.date_of_residence,
+        dateOfResidence: basicUpdateData?.date_of_residence,
         height: basicUpdateData?.height,
         age: basicUpdateData?.age,
         gender: basicUpdateData?.gender,
@@ -183,9 +186,22 @@ const BasicInfo = ({
       <div className={styles.Container}>
         <div className={styles.Basic}>
           {/* <h3>基本信息</h3> */}
-          <Button className={styles.Btn} onClick={() => setManyVisible(true)}>
-            批量导入
-          </Button>
+          {update ? (
+            <></>
+          ) : (
+            <>
+              <div className={styles.Btn}>
+                <DownloadSmaple />
+                <Button
+                  style={{ marginLeft: '1vw' }}
+                  type="primary"
+                  onClick={() => setManyVisible(true)}
+                >
+                  批量导入
+                </Button>
+              </div>
+            </>
+          )}
           <div className={styles.FormInput}>
             <Row>
               <Col span={2}>
@@ -233,7 +249,8 @@ const BasicInfo = ({
                           rules={[
                             {
                               required: true,
-                              message: '请输入身份证号或护照！',
+                              pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+                              message: '请输入正确的身份证号或护照！',
                             },
                           ]}
                         >
@@ -289,6 +306,7 @@ const BasicInfo = ({
                             {
                               required: true,
                               message: '请输入联系方式！',
+                              pattern: /^1[3-9][0-9]{9}$/,
                             },
                           ]}
                         >
@@ -330,13 +348,26 @@ const BasicInfo = ({
                       </Col>
                       <Col span={8}>
                         <Form.Item name="dateOfResidence" label="何时来本地居住:">
-                          <Input placeholder="请填写" style={{ width: '15vw' }} />
+                          <Input
+                            placeholder="请填写(格式:YYYY-MM-DD)"
+                            style={{ width: '15vw' }}
+                          />
                         </Form.Item>
                       </Col>
                     </Row>
                     <Row>
                       <Col span={8}>
-                        <Form.Item name="age" label="年龄:">
+                        <Form.Item
+                          name="age"
+                          label="年龄:"
+                          rules={[
+                            {
+                              // required: true,
+                              message: '请输入正确的年龄！',
+                              pattern: /^(0?[1-9]|[1-9][0-9])|^120/,
+                            },
+                          ]}
+                        >
                           <Input placeholder="请填写" style={{ width: '15vw' }} />
                         </Form.Item>
                       </Col>
@@ -346,7 +377,16 @@ const BasicInfo = ({
                         </Form.Item>
                       </Col>
                       <Col span={8}>
-                        <Form.Item name="gender" label="性别:">
+                        <Form.Item
+                          name="gender"
+                          label="性别:"
+                          rules={[
+                            {
+                              required: true,
+                              message: '请选择性别！',
+                            },
+                          ]}
+                        >
                           <Select style={{ width: '15vw' }}>
                             <Option key={1} value={false}>
                               男
@@ -409,7 +449,7 @@ const BasicInfo = ({
                             <Button
                               onClick={() => {
                                 setDeleteVisible(true);
-                                setMemberId(item.personalId);
+                                setMemberId(item.memberId);
                                 setPersonalId(item.personalId);
                               }}
                             >
@@ -443,12 +483,30 @@ const BasicInfo = ({
         <Form labelCol={{ span: 8 }} form={formFamily}>
           <Row>
             <Col span={12}>
-              <Form.Item name="idCard" label="成员身份证号:" required>
-                <Input placeholder="请填写" style={{ width: '15vw' }} />
+              <Form.Item
+                name="idCard"
+                label="成员身份证号:"
+                rules={[
+                  {
+                    required: true,
+                    message: '请填写成员身份证号！',
+                  },
+                ]}
+              >
+                <Input placeholder="请填写" style={{ width: '300px' }} />
               </Form.Item>
             </Col>
             <Col span={11}>
-              <Form.Item name="relationship" label="成员与本人关系:" required>
+              <Form.Item
+                name="memberRelation"
+                label="成员与本人关系:"
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择成员与本人关系！',
+                  },
+                ]}
+              >
                 <Select placeholder="请选择">
                   {relation.map((item) => (
                     <Option key={item.index} value={item.relation}>
@@ -462,7 +520,7 @@ const BasicInfo = ({
           <Row>
             <Col span={12}>
               <Form.Item name="hId" label="户号:">
-                <Input placeholder="请输入" style={{ width: '15vw' }} />
+                <Input placeholder="请输入" style={{ width: '300px' }} />
               </Form.Item>
             </Col>
             <Col span={11}>
@@ -476,7 +534,7 @@ const BasicInfo = ({
                   },
                 ]}
               >
-                <Select placeholder="请选择紧急程度" style={{ width: '15vw' }}>
+                <Select placeholder="请选择紧急程度">
                   <Option key={1} value={1}>
                     紧急
                   </Option>

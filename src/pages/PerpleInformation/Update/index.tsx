@@ -61,26 +61,26 @@ function InformationUpdate() {
     }
   }, [data, data?.getPeopleData?.peopleData.head_url, imgSrc]);
 
-  // function formatLocalDate(aa: any) {
-  //     if (aa) {
-  //         let timestamp = parseInt(aa);
-  //         const date = new Date(timestamp);
-  //         const year = date.getFullYear();
-  //         const month = String(date.getMonth() + 1).padStart(2, '0');
-  //         const day = String(date.getDate()).padStart(2, '0');
+  function formatLocalDate(aa: any) {
+    if (aa) {
+      let timestamp = parseInt(aa);
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
 
-  //         return `${year}-${month}-${day}`;
-  //     } else return '--';
-  // }
+      return `${year}-${month}-${day}`;
+    } else return '--';
+  }
 
-  const objJson = (obj: any) => {
-    let output = '';
-    for (let key in obj) {
-      let value = obj[key];
-      output = key + ': ' + value;
-    }
-    return output;
-  };
+  // const objJson = (obj: any) => {
+  //   let output = '';
+  //   for (let key in obj) {
+  //     let value = obj[key];
+  //     output = key + ': ' + value;
+  //   }
+  //   return output;
+  // };
   const dataAll = data?.getPeopleData?.peopleData;
 
   // 基础信息配置
@@ -96,7 +96,7 @@ function InformationUpdate() {
     current_address: dataAll?.current_address,
     former_name: dataAll?.former_name,
     nickname: dataAll?.nickname,
-    date_of_residence: dataAll?.date_of_residence,
+    date_of_residence: formatLocalDate(dataAll?.date_of_residence),
     age: dataAll?.age,
     height: dataAll?.height,
     gender: dataAll?.gender,
@@ -105,7 +105,7 @@ function InformationUpdate() {
   // 专群结合数据
   const CombinationData: CombinationType = {
     level: dataAll?.person_classification,
-    reason: objJson(dataAll?.classification_reason),
+    reason: dataAll?.classification_reason,
     petition: dataAll?.petition,
   };
 
@@ -143,7 +143,7 @@ function InformationUpdate() {
   };
   const EducationData: EducationType = {
     work_unit: dataAll?.politicalData?.work_unit,
-    position: dataAll?.politicalData?.work_unit,
+    position: dataAll?.politicalData?.position,
 
     religion: dataAll?.politicalData?.religion,
     political_status: dataAll?.politicalData?.political_status,
@@ -158,16 +158,16 @@ function InformationUpdate() {
     planting_breeding: '', // 种植养殖情况
     plant_type: dataAll?.economicData[0]?.plant_type, // 种植种类
     plant_quantity: dataAll?.economicData[0]?.plant_quantity, // 种植数量
-    plant_area: dataAll?.economicData[0]?.plant_quantity, // 种植面积
+    plant_area: dataAll?.economicData[0]?.plant_area, // 种植面积
     breeding_type: dataAll?.economicData[0]?.breeding_type, // 养殖种类
     breeding_quantity: dataAll?.economicData[0]?.breeding_quantity, // 养殖数量
     business_info: dataAll?.economicData[0]?.business_info, // 营商情况(商户名称)
     business_location: dataAll?.economicData[0]?.business_location, // 门面位置
-    license_number: dataAll?.economicData[0]?.plant_type, // 营业执照编号
-    fire_equipment_type: dataAll?.economicData[0]?.plant_type, // 门面消防设备类型
-    fire_equipment_quantity: dataAll?.economicData[0]?.plant_type, // 门面消防设备数量
-    surveillance_status: dataAll?.economicData[0]?.plant_type, // 门面电子监控状态
-    surveillance_quantity: dataAll?.economicData[0]?.plant_type, // 门面电子监控数量
+    license_number: dataAll?.economicData[0]?.license_number, // 营业执照编号
+    fire_equipment_type: dataAll?.economicData[0]?.fire_equipment_type, // 门面消防设备类型
+    fire_equipment_quantity: dataAll?.economicData[0]?.fire_equipment_quantity, // 门面消防设备数量
+    surveillance_status: dataAll?.economicData[0]?.surveillance_status, // 门面电子监控状态
+    surveillance_quantity: dataAll?.economicData[0]?.surveillance_quantity, // 门面电子监控数量
   };
 
   const OtherInfoData: OtherInfoType = {

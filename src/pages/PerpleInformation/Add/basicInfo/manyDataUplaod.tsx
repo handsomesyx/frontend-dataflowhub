@@ -104,7 +104,7 @@ const ManyDataUpload = ({
         // const headerRow: string[] = jsonData[0];
         // 提取数据（去掉表头）
         // const dataRows = jsonData.slice(2);
-        // //console.log('数据:', dataRows);
+        jsonData.shift();
         jsonData.shift();
         const porData: propertyInfo[] = [];
         const baiscData: basicInfo[] = [];
@@ -116,7 +116,7 @@ const ManyDataUpload = ({
         jsonData.map((row: string[]) => {
           let gender;
           let ss;
-          if (row[7] === '男') {
+          if (row[6] === '男') {
             gender = false;
           } else {
             gender = true;
@@ -134,7 +134,7 @@ const ManyDataUpload = ({
             gender: gender,
             height: parseFloat(row[7]),
             age: Number(row[8]),
-            certificateType: parseInt(row[10]),
+            // certificateType: parseInt(row[10]),
             phone: row[10]?.toString(),
             currentAddress: row[12],
             formerName: row[3],
@@ -144,64 +144,64 @@ const ManyDataUpload = ({
           healthData.push({
             childNumber: parseInt(row[13]),
             specialGroup: row[14],
-            healthInsurance: row[23],
-            pensionInsurance: row[24],
-            vaccinationStatus: row[26],
-            proofContraindication: row[27],
-            marriageStatus: row[25],
-            supervisorName: row[19],
-            otherConditions: row[28],
+            healthInsurance: row[21],
+            pensionInsurance: row[22],
+            vaccinationStatus: row[24],
+            proofContraindication: row[25],
+            marriageStatus: row[23],
+            supervisorName: row[15],
+            otherConditions: row[26],
             // creatorId:row[1],
           });
           politicalData.push({
-            workUnit: row[29],
-            position: row[30],
-            politicalStatus: row[31],
-            party: row[32],
-            religion: row[33],
-            nationality: row[34],
-            education: row[35],
-            militaryService: row[36],
-            school: row[37],
+            workUnit: row[27],
+            position: row[28],
+            politicalStatus: row[29],
+            party: row[30],
+            religion: row[31],
+            nationality: row[32],
+            education: row[33],
+            militaryService: row[34],
+            school: row[35],
           });
           ecoData.push({
             // plantingBreeding: row[55],
-            plantType: row[38],
-            plantQuantity: parseInt(row[39]),
-            plantArea: parseFloat(row[40]),
-            breedingType: row[41],
-            breedingQuantity: parseInt(row[42]),
-            bussinessInfo: row[43],
-            businessLocation: row[44],
-            licenseNum: row[45],
-            fireEquipmentType: row[46],
-            fireEquipmentQuantity: parseInt(row[47]),
-            surStatus: row[48],
-            surQuantity: parseInt(row[49]),
+            plantType: row[36],
+            plantQuantity: parseInt(row[37]),
+            plantArea: parseFloat(row[38]),
+            breedingType: row[39],
+            breedingQuantity: parseInt(row[40]),
+            bussinessInfo: row[41],
+            businessLocation: row[42],
+            licenseNum: row[43].toString(),
+            fireEquipmentType: row[44],
+            fireEquipmentQuantity: parseInt(row[45]),
+            surStatus: row[46],
+            surQuantity: parseInt(row[47]),
           });
           porData.push({
-            houseInfo: row[50],
-            houseOwner: row[51],
-            houseArea: parseFloat(row[52]),
-            houseCondition: row[54],
-            hobbies: row[55],
-            carModal: row[57],
-            carPlate: row[59],
-            carOwner: row[60],
-            carColor: row[58],
-            houseType: row[53],
+            houseInfo: row[48],
+            houseOwner: row[49],
+            houseArea: parseFloat(row[50]),
+            houseCondition: row[52],
+            hobbies: row[53],
+            carModal: row[55],
+            carPlate: row[57].toString(),
+            carOwner: row[58],
+            carColor: row[56],
+            houseType: row[51],
             smokingStatus: ss,
             // VolunteerStatus: row[66],
             // SocialWorker: row[66],
-            drivingLicenseType: row[61],
+            drivingLicenseType: row[59].toString(),
           });
           if (row[15] === '残疾人') {
             disData.push({
-              disabilityId: row[16],
-              disabilitySubsidy: parseFloat(row[20]),
-              servereDisabilitySub: parseFloat(row[21]),
-              disabilityType: row[17],
-              disabilityLevel: Number(row[22]),
+              disabilityId: row[17],
+              disabilitySubsidy: parseFloat(row[19]),
+              servereDisabilitySub: parseFloat(row[20]),
+              disabilityType: row[18],
+              disabilityLevel: Number(row[21]),
               // disabilityId:row[68],
             });
           }
@@ -298,7 +298,9 @@ const ManyDataUpload = ({
         message.success('已为您创建审核记录');
         // 跳回上一页面
       },
-      onError: () => {
+      onError: (e) => {
+        console.log(e);
+
         message.error('创建审核记录失败');
       },
     });
@@ -320,7 +322,9 @@ const ManyDataUpload = ({
         <Row>
           <Col span={12}>
             <Upload {...infoProps}>
-              <Button icon={<UploadOutlined />}>人员信息上传</Button>
+              <Button icon={<UploadOutlined />} style={{ textAlign: 'center' }}>
+                人员信息上传
+              </Button>
             </Upload>
           </Col>
           <Col span={12}>
@@ -328,28 +332,30 @@ const ManyDataUpload = ({
                             {...familyProps}>
                             <Button icon={<UploadOutlined />}>人员家庭成员信息上传</Button>
                         </Upload> */}
-            <Form.Item
-              name="priority"
-              label="紧急程度："
-              rules={[
-                {
-                  required: true,
-                  message: '请选择紧急程度！',
-                },
-              ]}
-            >
-              <Select placeholder="请选择紧急程度" style={{ width: '15vw' }}>
-                <Option key={1} value={1}>
-                  紧急
-                </Option>
-                <Option key={2} value={2}>
-                  加急
-                </Option>
-                <Option key={3} value={3}>
-                  一般
-                </Option>
-              </Select>
-            </Form.Item>
+            <Form form={form}>
+              <Form.Item
+                name="priority"
+                // label="紧急程度："
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择紧急程度！',
+                  },
+                ]}
+              >
+                <Select placeholder="请选择紧急程度" style={{ width: '200px' }}>
+                  <Option key={1} value={1}>
+                    紧急
+                  </Option>
+                  <Option key={2} value={2}>
+                    加急
+                  </Option>
+                  <Option key={3} value={3}>
+                    一般
+                  </Option>
+                </Select>
+              </Form.Item>
+            </Form>
           </Col>
         </Row>
       </Modal>

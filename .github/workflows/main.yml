@@ -1,0 +1,74 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - newdev
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [16.20.1]
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: 安装依赖
+        run: yarn install
+
+      - name: 代码格式检查
+        run: yarn run lint
+
+      - name: 类型检查
+        run: yarn run type-check
+
+      - name: 构建
+        run: yarn run build:prod
+
+      - name: 打包构建工件
+        run: |
+          mkdir artifact
+          mv dist artifact/
+        shell: bash
+
+      - name: 上传构建工件
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact
+          path: artifact/
+
+  deploy:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v2
+
+      - name: 下载构建工件
+        uses: actions/download-artifact@v2
+        with:
+          name: artifact
+
+      - name: 安装 SSH 私钥
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.DEPLOY_KEY }}
+
+      - name: 添加服务器到 known_hosts
+        run: |
+          mkdir -p ~/.ssh/
+          ssh-keyscan -t rsa ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 构建部署
+        run: |
+         rsync -avz --delete ./dist/ ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}:/opt/mohe/front-end-mohe/dist/

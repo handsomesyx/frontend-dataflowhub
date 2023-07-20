@@ -160,7 +160,6 @@ export const GET_AUDIT_CHANGE = gql`
         head_url
         id_card
         name
-
       }
       update_time
       updater_id
@@ -169,8 +168,16 @@ export const GET_AUDIT_CHANGE = gql`
 `;
 //  修改审核信息
 export const UPDATE_AUDIT = gql`
-  mutation UpdateAudit($class_data:personClassInput,$new_data: auditCreateInput!, $rightnow_auditrecords_id: Int!) {
-    updateAudit(class_data:$class_data,new_data: $new_data, rightnow_auditrecords_id: $rightnow_auditrecords_id)
+  mutation UpdateAudit(
+    $class_data: personClassInput
+    $new_data: auditCreateInput!
+    $rightnow_auditrecords_id: Int!
+  ) {
+    updateAudit(
+      class_data: $class_data
+      new_data: $new_data
+      rightnow_auditrecords_id: $rightnow_auditrecords_id
+    )
   }
 `;
 
@@ -956,6 +963,7 @@ export const login = gql`
       refreshToken
       user {
         role
+        id_card
         username
         id
       }
@@ -978,17 +986,14 @@ export const RefreshToken = gql`
 // 增加人员
 export const CreatePerson = gql`
   mutation create($input: personCreateInput!, $input2: role_userCreateInput!) {
-    createPerson(input: $input, input2: $input2) {
-      username
-      id
-    }
+    createPerson(input: $input, input2: $input2)
   }
 `;
 
 // 删除人员
 export const DeletePerson = gql`
-  mutation deletePerson($id: Int!) {
-    deletePerson(id: $id) {
+  mutation deletePerson($id: Int!, $user_role: Int!) {
+    deletePerson(id: $id, user_role: $user_role) {
       id
     }
   }
@@ -997,20 +1002,30 @@ export const DeletePerson = gql`
 // 修改人员信息
 export const UpdatePerson = gql`
   mutation update($id: Int!, $input: personCreateInput!, $input2: role_userCreateInput!) {
-    updatePerson(id: $id, input: $input, input2: $input2) {
-      id
-      username
-    }
+    updatePerson(id: $id, input: $input, input2: $input2)
   }
 `;
 
 // 查询人员信息
 export const GetPerson = gql`
-  query getPerson($skip: Int!, $take: Int!, $selectOption: selectOptionInput!) {
-    getPerson(skip: $skip, take: $take, selectOption: $selectOption) {
+  query getPerson(
+    $skip: Int!
+    $take: Int!
+    $selectOption: selectOptionInput!
+    $user_role: String!
+    $user_name: String!
+  ) {
+    getPerson(
+      skip: $skip
+      take: $take
+      selectOption: $selectOption
+      user_role: $user_role
+      user_name: $user_name
+    ) {
       data {
         id
         username
+        real_name
         role_name
         grid_name
         create_time
@@ -1022,6 +1037,7 @@ export const GetPerson = gql`
         mobile
         grid_id
         police_user_id
+        policestation
       }
       total
     }
@@ -1030,8 +1046,8 @@ export const GetPerson = gql`
 
 // 查询角色表
 export const GetRole = gql`
-  query getRole {
-    getRole {
+  query getRole($user_role: String!) {
+    getRole(user_role: $user_role) {
       id
       name
       remark
@@ -1041,18 +1057,19 @@ export const GetRole = gql`
 
 // 查询警员
 export const GetPolice = gql`
-  query getPolice {
-    getPolice {
+  query getPolice($username: String!, $role: String!) {
+    getPolice(username: $username, role: $role) {
       police_user_id
-      username
+      real_name
+      areaid
     }
   }
 `;
 
 // 查询网格
 export const GetGrid = gql`
-  query getGrid {
-    getGrid {
+  query getGrid($username: String!, $role: String!) {
+    getGrid(username: $username, role: $role) {
       id
       name
       area_id
@@ -1060,9 +1077,19 @@ export const GetGrid = gql`
   }
 `;
 
+// 查询派出所信息
+export const GetPolicestation = gql`
+  query getPolicestation($username: String!, $role: String!) {
+    getPolicestation(username: $username, role: $role) {
+      id
+      name
+    }
+  }
+`;
+
 export const GetArea = gql`
-  query getArea {
-    getArea {
+  query getArea($username: String!, $role: String!) {
+    getArea(username: $username, role: $role) {
       id
       name
       parent_id
@@ -1157,6 +1184,73 @@ export const GetAllUnhandledEvents = gql`
       status
       update_time
       updater_id
+    }
+  }
+`;
+
+export const getChangeRecordByPersonalId = gql`
+  query getChangeRecordByPersonalId($personalId: Int!) {
+    getChangeRecordByPersonalId(personalId: $personalId) {
+      change_item
+      content_after
+      content_before
+      creator_id
+      id
+      is_delete
+    }
+  }
+`;
+
+export const eventManagementGetsAListOfEvents = gql`
+  query queryReportInfoList($processing_status: String, $skip: Int, $take: Int) {
+    queryReportInfoList(processing_status: $processing_status, skip: $skip, take: $take) {
+      data {
+        id
+        classification_basis
+        create_time
+        creator_id
+        image_url
+        is_delete
+        issue_level
+        police_id
+        police_opinion
+        priority
+        processing_status
+        processing_time
+        public_demand
+        public_opinion
+        report_address
+        report_time
+        report_user {
+          real_name
+        }
+        reporter_evaluate
+        reporter_id
+        reporter_star_rating
+        update_time
+        updater_id
+      }
+      total
+    }
+  }
+`;
+
+export const addAnEventGridMember = gql`
+  mutation addReportInfo($addReportInput: AddReportInput!) {
+    addReportInfo(addReportInput: $addReportInput) {
+      id
+      classification_basis
+      create_time
+      creator_id
+      image_url
+    }
+  }
+`;
+
+export const modifyTheEventInformation = gql`
+  mutation modifyReportInfo($ModifyReportInput: ModifyReportInput!) {
+    modifyReportInfo(modifyReportInput: $ModifyReportInput) {
+      id
     }
   }
 `;

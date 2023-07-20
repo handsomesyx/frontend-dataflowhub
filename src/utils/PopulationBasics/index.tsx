@@ -1,6 +1,8 @@
 import Watermark from 'antd/es/watermark';
 import type { ReactElement } from 'react';
 
+import { getUserIdCard, getUserName } from '@/store/SaveToken';
+
 import styles from './style.module.less';
 import LeftTimeLine from './TimeLine/LeftTimeLine';
 
@@ -38,6 +40,8 @@ const AnchorHome: React.FC<Props> = ({ itemData }) => {
       };
     });
   };
+  const name = getUserName();
+  const id_card = getUserIdCard();
 
   return (
     <div style={{ display: 'flex', width: '100%', height: '100%' }}>
@@ -48,9 +52,9 @@ const AnchorHome: React.FC<Props> = ({ itemData }) => {
 
       {/* 如果想要去除水印环衬div就行*/}
       <Watermark
-        content="漠河市基层社会治理智管平台"
-        rotate={-40}
-        gap={[40, 120]}
+        content={`${name} ${id_card}`}
+        // rotate={-20}
+        // gap={[50, 120]}
         className={styles.WaterMarkBox}
       >
         <div id="informationBasics" className={styles.RightBox}>

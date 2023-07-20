@@ -1,10 +1,11 @@
 import 'dayjs/locale/zh-cn';
 
 import { useQuery } from '@apollo/client';
-import { Input, Radio, type RadioChangeEvent, Select } from 'antd';
+import { Input, message, Radio, type RadioChangeEvent, Select } from 'antd';
 import { ConfigProvider } from 'antd';
 import DatePicker from 'antd/es/date-picker';
 import zhCN from 'antd/locale/zh_CN';
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -169,8 +170,44 @@ const HomeSearch = () => {
             <div className={styles.TimeBox}>
               <div className={styles.Timetitle}>时间筛选</div>
               <ConfigProvider locale={zhCN}>
-                <DatePicker className={styles.TimeOne} onChange={TimeonChangeUp} />
-                <DatePicker className={styles.TimeTwo} onChange={TimeonChangeDown} />
+                <DatePicker
+                  disabledDate={(current) => {
+                    const choose2day = optiondata.timeup;
+                    if (choose2day) {
+                      if (dayjs.unix(choose2day / 1000).endOf('day') < current) {
+                        return true;
+                      }
+                      if (current > dayjs().endOf('day')) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    } else {
+                      return current && current > dayjs().endOf('day');
+                    }
+                  }}
+                  className={styles.TimeOne}
+                  onChange={TimeonChangeDown}
+                />
+                <DatePicker
+                  disabledDate={(current) => {
+                    const choose1day = optiondata.timedown;
+                    if (choose1day) {
+                      if (dayjs.unix(choose1day / 1000).startOf('day') > current) {
+                        return true;
+                      }
+                      if (current > dayjs().endOf('day')) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    } else {
+                      return current && current > dayjs().endOf('day');
+                    }
+                  }}
+                  className={styles.TimeTwo}
+                  onChange={TimeonChangeUp}
+                />
               </ConfigProvider>
             </div>
           </>
@@ -178,7 +215,7 @@ const HomeSearch = () => {
       case 2:
         return (
           <div className={styles.TimeBox}>
-            <div className={styles.Agetitle}>姓名首字母筛选</div>
+            <div className={styles.Agetitle}>是否按照姓名首字母排序</div>
             <div className={styles.ContentName}>
               <Radio.Group
                 defaultValue={0}
@@ -202,13 +239,13 @@ const HomeSearch = () => {
                   placeholder="输入最小年龄"
                   style={{ color: '#000' }}
                   className={styles.TimeOne}
-                  onChange={ageonChangeUp}
+                  onChange={ageonChangeDown}
                 />
                 <Input
                   placeholder="输入最大年龄"
                   style={{ color: '#000' }}
                   className={styles.TimeTwo}
-                  onChange={ageonChangeDown}
+                  onChange={ageonChangeUp}
                 />
               </ConfigProvider>
             </div>
@@ -256,14 +293,14 @@ const HomeSearch = () => {
                 <Input
                   placeholder="输入身高最小值"
                   style={{ color: '#000' }}
+                  onChange={heightonChangeDown}
                   className={styles.TimeOne}
-                  onChange={heightonChangeUp}
                 />
                 <Input
                   placeholder="输入身高最大值"
                   style={{ color: '#000' }}
                   className={styles.TimeTwo}
-                  onChange={heightonChangeDown}
+                  onChange={heightonChangeUp}
                 />
               </ConfigProvider>
             </div>
@@ -320,15 +357,22 @@ const HomeSearch = () => {
   };
   const navigate = useNavigate();
   const handleSearch = () => {
-    const option = {
-      content: inputvalue,
-      option: optiondata,
-    };
-    saveSearchData(option);
+    // 判断是否都是空格
+    const isAllSpacesRegex = /^\s*$/;
+    const flag = isAllSpacesRegex.test(inputvalue);
+    if ((!flag && inputvalue) || isshowSearch) {
+      const option = {
+        content: inputvalue,
+        option: optiondata,
+      };
+      saveSearchData(option);
 
-    setTimeout(() => {
-      navigate('/search-info');
-    }, 200);
+      setTimeout(() => {
+        navigate('/search-info');
+      }, 200);
+    } else {
+      message.warning('搜索内容不能为空');
+    }
   };
 
   return (

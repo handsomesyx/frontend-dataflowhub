@@ -105,6 +105,7 @@ export default function PoliceStation() {
         <Space size="middle">
           <Button
             onClick={() => {
+              setSearch(true);
               setSearchName('');
               setUserID(value.id);
               if (searchRole === '民警') {
@@ -129,6 +130,7 @@ export default function PoliceStation() {
   const [formupdatePoliceStation] = Form.useForm();
   const [formAddPoliceStation] = Form.useForm();
   const [onSearchForm] = Form.useForm();
+  const [search, setSearch] = useState(false);
   // 获取的警局信息
   const [policeStation, setPoliceStation] = useState([]);
   // 查看具体信息
@@ -153,6 +155,7 @@ export default function PoliceStation() {
   const [policeState, setPoliceState] = useState(false);
   // 所长信息
   const [policeLeaderStation, setPoliceLeaderStation] = useState(false);
+  const [policeStationLeaderName, setPoliceStationLeaderName] = useState();
   // 筛选的镇的条件
   // const [town, setTown] = useState([]);
   // const [townID, setTownID] = useState<number>();
@@ -294,6 +297,11 @@ export default function PoliceStation() {
   };
   // 增加警员
   const AddPolice_handleOk = () => {
+    if (!search) {
+      message.info('请根据您输入的警员姓名进行搜索选择！');
+      return;
+    }
+    setSearch(false);
     setAddPolice(false);
     setPoliceStationLoading(true);
     setupdateLoading(true);
@@ -344,6 +352,11 @@ export default function PoliceStation() {
   };
   // 确认增加派出所
   const AddPoliceStation_handleOk = () => {
+    if (!search) {
+      message.info('请根据您输入的所长姓名进行搜索选择！');
+      return;
+    }
+    setSearch(false);
     let administrative_area_idArr = formAddPoliceStation.getFieldValue('area');
     let administrative_area_id: any = [];
     administrative_area_idArr.map((item: any) => {
@@ -525,6 +538,7 @@ export default function PoliceStation() {
                       area: area,
                     });
                     setUserID(item.user_id);
+                    setPoliceStationLeaderName(item.policeleader_name);
                     setPoliceStationId(parseInt(item.id));
                     setUpdateState(true);
                   }}
@@ -725,7 +739,14 @@ export default function PoliceStation() {
         cancelText="取消"
       >
         <Form form={formAddPolice} layout="vertical">
-          <Form.Item name="nameInfo">
+          <Form.Item
+            name="nameInfo"
+            extra={
+              <div style={{ color: 'red' }}>
+                注意：输入完请点击搜索进行警员信息查询并选择
+              </div>
+            }
+          >
             <Input
               placeholder="请输入搜索关键字"
               suffix={
@@ -789,6 +810,11 @@ export default function PoliceStation() {
                     message: '请输入所长名称',
                   },
                 ]}
+                extra={
+                  <div style={{ color: 'red' }}>
+                    注意：输入完请点击搜索进行所长信息查询并选择
+                  </div>
+                }
               >
                 <Input
                   placeholder="请输入所长名称"
@@ -865,6 +891,13 @@ export default function PoliceStation() {
         open={updateState}
         getContainer={false}
         onOk={async () => {
+          if (policeStationLeaderName !== formupdatePoliceStation.getFieldValue('policeStationLeader')) {
+            if (!search) {
+              message.info('请根据您输入的所长姓名进行搜索选择！');
+              return;
+            }
+          }
+          setSearch(false);
           setPoliceStationLoading(true);
           setupdateLoading(true);
           setUpdateState(false);
@@ -927,6 +960,11 @@ export default function PoliceStation() {
             name="policeStationLeader"
             label="所长名称"
             rules={[{ required: true, message: '请输入所长名称' }]}
+            extra={
+              <div style={{ color: 'red' }}>
+                注意：输入完请点击搜索进行所长信息查询并选择
+              </div>
+            }
           >
             <Input
               placeholder="请输入所长名称"
