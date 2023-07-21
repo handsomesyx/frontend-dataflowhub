@@ -170,6 +170,8 @@ const ManyDataUpload = ({
             nickname: row[2],
             dateOfResidence: ExcelDateToJSDate(Number(row[4]))?.toString() ?? '',
           });
+          console.log(baiscData);
+
           healthData.push({
             childNumber: parseInt(row[13]),
             specialGroup: row[14],

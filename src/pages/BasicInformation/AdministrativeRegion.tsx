@@ -14,6 +14,7 @@ import {
   message,
   Modal,
   Row,
+  // Select,
   Space,
   Table,
   Tree,
@@ -30,6 +31,7 @@ import {
   DeleteGrid,
   FindManyArea,
   FindManyGrid,
+  FindManyPolicestation,
   FindUser,
   UpdateArea,
   UpdateGrid,
@@ -77,8 +79,13 @@ const AdministrativeRegion: React.FC = () => {
   const [level, setLevel] = useState<number>(1);
   // 网格区域数据
   const [griddata, setGriddata] = useState([]);
+  // 获取的警局信息
+  const [policeStation, setPoliceStation] = useState('');
   // 网格ID
   const [GridId, setGridId] = useState();
+  // 网格ID
+  const [SelectGridId, setSelectGridId] = useState<number[]>();
+  const [selectGird, setSelectGrid] = useState(false);
   // 用户ID
   const [userid, setUserID] = useState();
   // 用户名字
@@ -159,6 +166,16 @@ const AdministrativeRegion: React.FC = () => {
       key: 'area_leader_name',
     },
     {
+      title: '所属派出所',
+      dataIndex: 'policeStation',
+      key: 'policeStation',
+    },
+    {
+      title: '所属民警',
+      dataIndex: 'policeStation_leader_name',
+      key: 'policeStation_leader_name',
+    },
+    {
       title: '操作',
       key: 'action',
       render: (text) => (
@@ -173,6 +190,7 @@ const AdministrativeRegion: React.FC = () => {
               // setGridName(text.name);
               // setGridleaderName(text.grid_leader_name);
               setUpdate_Open(true);
+              setPoliceStation(text?.policeStation);
               setAreaId(parseInt(text.area_id));
               setUserID(text.grid_leader_id);
               // setAreaName(text.area_name);
@@ -267,6 +285,17 @@ const AdministrativeRegion: React.FC = () => {
     },
   });
 
+  // 查询警局信息
+  const { data: Policestationdata } = useQuery(FindManyPolicestation, {
+    fetchPolicy: 'network-only',
+    notifyOnNetworkStatusChange: true,
+    variables: {
+      select: { area_id: SelectGridId, role: 2 },
+      take: 2000,
+      skip: 0,
+    },
+  });
+
   useEffect(() => {
     if (Griddata) {
       let grid_data = Griddata.findManyGrid.data;
@@ -286,6 +315,8 @@ const AdministrativeRegion: React.FC = () => {
             area_id: area_id,
             area_leader_name: area_leader_name,
             grid_leader_id: grid_leader_id,
+            policeStation: item?.policeStation ?? ' ',
+            policeStation_leader_name: item?.policeStation_leader_name ?? ' ',
             id: id,
           };
         } else {
@@ -301,6 +332,8 @@ const AdministrativeRegion: React.FC = () => {
             area_id: area_id,
             area_leader_name: area_leader_name,
             grid_leader_id: ' ',
+            policeStation: item?.policeStation ?? ' ',
+            policeStation_leader_name: item?.policeStation_leader_name ?? ' ',
             id: id,
           };
         }
@@ -341,6 +374,13 @@ const AdministrativeRegion: React.FC = () => {
       setGridleaderName(gridleaderName);
     }
   }, [gridleaderName]);
+
+  useEffect(() => {
+    if (Policestationdata) {
+      setPoliceStation(Policestationdata.findManyPolicestation?.data[0]?.name);
+    }
+  }, [Policestationdata]);
+  console.log(policeStation);
 
   // 删除
   const [deleteArea] = useMutation(DeleteArea);
@@ -469,6 +509,7 @@ const AdministrativeRegion: React.FC = () => {
   };
   const onClose = () => {
     setOpen(false);
+    setSelectGrid(false);
     formSubmit.resetFields();
   };
   const onupdate_Close = () => {
@@ -520,6 +561,7 @@ const AdministrativeRegion: React.FC = () => {
           area_id: areaid,
           name: formSubmit.getFieldValue('Gridname'),
           grid_leader_id: userid,
+          policeStation_id: formSubmit.getFieldValue('policeStation_id'),
         },
       },
       awaitRefetchQueries: true,
@@ -632,7 +674,15 @@ const AdministrativeRegion: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col style={{ backgroundColor: 'white', borderRadius: '4px', height: '100%', overflow: 'auto' }} span={19}>
+        <Col
+          style={{
+            backgroundColor: 'white',
+            borderRadius: '4px',
+            height: '100%',
+            overflow: 'auto',
+          }}
+          span={19}
+        >
           <div
             style={{
               display: 'flex',
@@ -727,6 +777,14 @@ const AdministrativeRegion: React.FC = () => {
               fieldNames={{ label: 'title', value: 'key', children: 'children' }}
               options={Areadata ? flatToTree(Areadata.findManyArea) : []}
               placeholder="请选择所属社区"
+              onChange={(e) => {
+                if (e) {
+                  setSelectGridId([Number(e[e.length - 1])]);
+                  setSelectGrid(true);
+                } else {
+                  setSelectGrid(false);
+                }
+              }}
             />
           </Form.Item>
           <Form.Item
@@ -758,6 +816,21 @@ const AdministrativeRegion: React.FC = () => {
               }
             />
           </Form.Item>
+          {/* <Form.Item
+            name="policeStation_id"
+            label="所属派出所"
+            rules={[{ required: true, message: '请选择所属派出所' }]}
+          > */}
+          {/* <Select placeholder='请选择所属派出所'>
+              {policeStation?.map((item: any) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select> */}
+          <>所属派出所：{selectGird ? policeStation : ''}</>
+
+          {/* </Form.Item> */}
         </Form>
       </Drawer>
       <Drawer
@@ -815,6 +888,14 @@ const AdministrativeRegion: React.FC = () => {
               fieldNames={{ label: 'title', value: 'key', children: 'children' }}
               options={Areadata ? flatToTree(Areadata.findManyArea) : []}
               placeholder="请选择所属社区"
+              onChange={(e) => {
+                if (e) {
+                  setSelectGridId([Number(e[e.length - 1])]);
+                  setSelectGrid(true);
+                } else {
+                  setSelectGrid(false);
+                }
+              }}
             />
           </Form.Item>
           <Form.Item
@@ -846,6 +927,20 @@ const AdministrativeRegion: React.FC = () => {
               }
             />
           </Form.Item>
+          {/* <Form.Item
+            name="policeStation_id"
+            label="所属派出所"
+            rules={[{ required: true, message: '请选择所属派出所' }]}
+          > */}
+          {/* <Select placeholder='请选择所属派出所'>
+              {policeStation?.map((item: any) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select> */}
+          <>所属派出所：{policeStation}</>
+          {/* </Form.Item> */}
         </Form>
       </Drawer>
       <Modal
@@ -997,7 +1092,6 @@ const AdministrativeRegion: React.FC = () => {
                 },
               ]}
             >
-
               <Input style={{ width: '350px' }} placeholder="请输入行政区域" />
             </Form.Item>
             {level === 2 ? (
