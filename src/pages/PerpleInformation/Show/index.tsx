@@ -64,25 +64,25 @@ function InformationShow() {
     spell: dataAll?.pinyin,
     phone: dataAll?.phone,
     formerName: dataAll?.former_name,
-    level: dataAll?.person_classification,
+    placeDomicile: dataAll?.residence,
+    sex: dataAll?.gender,
+    height: dataAll?.height,
+    age: dataAll?.age,
+    currentAddress: dataAll?.current_address,
     liveComeTime: formatLocalDate(dataAll?.date_of_residence),
+    level: dataAll?.person_classification,
     police: dataAll?.policeStation,
     community: dataAll?.community,
     gridding: dataAll?.grid,
-    placeDomicile: dataAll?.residence,
-    currentAddress: dataAll?.current_address,
     history: dataAll?.history,
-    height: dataAll?.height,
-    sex: dataAll?.gender,
-    age: dataAll?.age,
   };
 
   // 家庭成员信息配置;
   const familyData: familyDataType[] = dataAll?.family?.map((item: any) => {
     return {
       name: item?.name,
-      card: item?.id_card,
       relationship: item?.member_relation,
+      card: item?.id_card,
       phone: item?.phone,
       household_id: item?.household_id,
     };
@@ -106,19 +106,19 @@ function InformationShow() {
   // 民政卫健数据
   const HealthInfoData: HealthInfoType = {
     child_number: dataAll?.healthData?.child_number,
-    special_group: dataAll?.healthData?.special_group,
+    marriage_status: dataAll?.healthData?.marriage_status,
     health_insurance: dataAll?.healthData?.health_insurance,
     pension_insurance: dataAll?.healthData?.pension_insurance,
     vaccination_status: dataAll?.healthData?.vaccination_status,
     proof_contraindication: dataAll?.healthData?.proof_contraindication,
-    marriage_status: dataAll?.healthData?.marriage_status,
     other_conditions: dataAll?.healthData?.other_conditions,
+    special_group: dataAll?.healthData?.special_group,
+    supervisor: dataAll?.healthData?.supervisor, // 监管
     disability_id: dataAll?.disableData?.disability_id, // 残疾证编号
     disability_type: dataAll?.disableData?.disability_type, // 残疾类型
     disability_subsidy: dataAll?.disableData?.disability_subsidy, // 困难残疾补贴用0代表空
     severe_disability_subsidy: dataAll?.disableData?.severe_disability_subsidy, // 重度残疾补贴
     disability_level: dataAll?.disableData?.disability_level, // 残疾级别
-    supervisor: dataAll?.healthData?.supervisor, // 监管
   };
   // 民生
   const WellbeingData: WellbeingType = {
@@ -164,16 +164,16 @@ function InformationShow() {
     house_area: dataAll?.propertyData[0]?.house_area, // 建筑面积 平方米
     house_type: dataAll?.propertyData[0]?.house_type, // 房屋类型
     house_condition: dataAll?.propertyData[0]?.house_condition, // 危房等级
-    smoking_status: dataAll?.propertyData[0]?.smoking_status, // 吸烟是否  必选
     hobbies: dataAll?.propertyData[0]?.hobbies, // 兴趣爱好
+    smoking_status: dataAll?.propertyData[0]?.smoking_status, // 吸烟是否  必选
     car_model: dataAll?.propertyData[0]?.car_model, // 车型号（可选）
-    car_owner: dataAll?.propertyData[0]?.car_owner, // 车辆所有人（可选）
-    car_plate: dataAll?.propertyData[0]?.car_plate, // 车牌照（可选）
     car_color: dataAll?.propertyData[0]?.car_color, // 车身颜色（可选）
+    car_plate: dataAll?.propertyData[0]?.car_plate, // 车牌照（可选）
+    car_owner: dataAll?.propertyData[0]?.car_owner, // 车辆所有人（可选）
+    driving_license_type: dataAll?.propertyData[0]?.driving_license_type, // 驾驶证类型（可选）
     volunteer_status:
       JSON.stringify(dataAll?.propertyData[0]?.volunteer_status) ?? '[{}]', // 志愿者{ } json里边写字符数组，来记录志愿者
     social_worker: JSON.stringify(dataAll?.propertyData[0]?.social_worker) ?? '[{}]', // 社工{ }  json里边写字符数组，来记录社工
-    driving_license_type: dataAll?.propertyData[0]?.driving_license_type, // 驾驶证类型（可选）
   };
 
   const WarrantorData: WarrantorType = {
@@ -190,7 +190,19 @@ function InformationShow() {
       id: 1,
       name: '基础信息',
       href: 'basicsInformation1',
-      elem: <BasicsInfomation peopleData={peopleData} familyData={familyData} />,
+      elem: (
+        <BasicsInfomation
+          peopleData={peopleData}
+          familyData={familyData}
+          CombinationData={CombinationData}
+          WellbeingData={WellbeingData}
+          HealthInfoData={HealthInfoData}
+          EducationData={EducationData}
+          ProductionData={ProductionData}
+          OtherInfoData={OtherInfoData}
+          WarrantorData={WarrantorData}
+        />
+      ),
     },
     {
       id: 2,
