@@ -24,18 +24,22 @@ let socailArr: string[];
 const OtherInfo = ({ OtherInfoData }: any) => {
   if (OtherInfoData?.volunteer_status) {
     const jsonObj = JSON.parse(OtherInfoData?.volunteer_status);
-    volunteerArr = Object.values(jsonObj);
-    volunteerArr = volunteerArr.map((item, index) => {
-      return item[index + 1];
-    });
+    if (jsonObj) {
+      volunteerArr = Object.values(jsonObj);
+      volunteerArr = volunteerArr.map((item, index) => {
+        return item[index + 1];
+      });
+    }
   }
 
   if (OtherInfoData?.social_worker) {
     const jsonObjsocial = JSON.parse(OtherInfoData?.social_worker);
-    socailArr = Object.values(jsonObjsocial);
-    socailArr = socailArr.map((item, index) => {
-      return item[index + 1];
-    });
+    if (jsonObjsocial) {
+      socailArr = Object.values(jsonObjsocial);
+      socailArr = socailArr.map((item, index) => {
+        return item[index + 1];
+      });
+    }
   }
 
   // return OtherInfoData?.map((item: any, index: number) => {

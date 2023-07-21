@@ -55,9 +55,9 @@ const PorpertyInfo = ({
   useEffect(() => {
     if (porData) {
       const jsonObj = JSON.parse(porData.volunteer_status);
-      const volunteerArr: string[] = Object.values(jsonObj);
+
       const jsonObjsocial = JSON.parse(porData.social_worker);
-      const socailArr: string[] = Object.values(jsonObjsocial);
+
       porform.setFieldsValue({
         houseInfo: porData?.house_info,
         // personalId: porData?.personalId,
@@ -76,26 +76,32 @@ const PorpertyInfo = ({
         drivingLicenseType: porData?.driving_license_type,
       });
       porData.volunteer_status;
-      if (volunteerArr.length !== 0) {
-        const resultVolunteer = volunteerArr.map((item, index) => {
-          return {
-            VolunteerStatus: item[index + 1],
-          };
-        });
-        if (resultVolunteer[0].VolunteerStatus) {
-          setVolunteerStatus(resultVolunteer);
-          setVolunteerOn(true);
+      if (jsonObj) {
+        const volunteerArr: string[] = Object.values(jsonObj);
+        if (volunteerArr.length !== 0) {
+          const resultVolunteer = volunteerArr.map((item, index) => {
+            return {
+              VolunteerStatus: item[index + 1],
+            };
+          });
+          if (resultVolunteer[0].VolunteerStatus) {
+            setVolunteerStatus(resultVolunteer);
+            setVolunteerOn(true);
+          }
         }
       }
-      if (socailArr.length !== 0) {
-        const resultSocial = socailArr.map((item, index) => {
-          return {
-            SocialWorker: item[index + 1],
-          };
-        });
-        if (resultSocial[0].SocialWorker) {
-          setSocialWorker(resultSocial);
-          setSocialWorkOn(true);
+      if (jsonObjsocial) {
+        const socailArr: string[] = Object.values(jsonObjsocial);
+        if (socailArr.length !== 0) {
+          const resultSocial = socailArr.map((item, index) => {
+            return {
+              SocialWorker: item[index + 1],
+            };
+          });
+          if (resultSocial[0].SocialWorker) {
+            setSocialWorker(resultSocial);
+            setSocialWorkOn(true);
+          }
         }
       }
     }

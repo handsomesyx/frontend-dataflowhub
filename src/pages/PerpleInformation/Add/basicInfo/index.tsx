@@ -74,7 +74,7 @@ const BasicInfo = ({
   useEffect(() => {
     if (family?.findFamilyMemberInfo.length !== 0) {
       setFamilyData(family?.findFamilyMemberInfo);
-      setNoDataVisible(false);
+      // setNoDataVisible(false);
     }
   }, [family]);
 
@@ -461,6 +461,8 @@ const BasicInfo = ({
                     </div>
                   );
                 })
+              ) : update ? (
+                <></>
               ) : (
                 <div>请先完成所有人的信息创建，在修改信息页面中再添加家庭成员</div>
               )}
