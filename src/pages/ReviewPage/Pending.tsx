@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import type { RadioChangeEvent } from 'antd';
 import {
   Button,
@@ -27,10 +27,10 @@ import {
 } from '@/apis';
 import { getUserName, getUserType } from '@/store/SaveToken';
 
-const client = new ApolloClient({
-  uri: 'http://127.0.0.1:7000/graphql',
-  cache: new InMemoryCache(),
-});
+// const client = new ApolloClient({
+//   uri: 'http://127.0.0.1:7000/graphql',
+//   cache: new InMemoryCache(),
+// });
 const { Title } = Typography;
 interface ChangeWhat {
   id: any;
@@ -125,7 +125,7 @@ const App: React.FC = () => {
   const [changedata, setChangedata] = useState<ChangeWhat[]>([]);
   const [rightnowAuditrecordsId, setrightnowAuditrecordsId] = useState(0);
   const [updateAudit] = useMutation(UPDATE_AUDIT, {
-    client,
+    // client,
     onCompleted: (data) => {
       // console.log(data);
       if (data.updateAudit) message.info('操作成功');
@@ -139,7 +139,7 @@ const App: React.FC = () => {
     },
   });
   const { refetch } = useQuery(GET_AUDIT_CHANGE, {
-    client,
+    // client,
     variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
     onCompleted: (data) => {
       // console.log(data.getChangeRecord); // 控制台结果
@@ -162,7 +162,7 @@ const App: React.FC = () => {
   });
 
   const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, {
-    client,
+    // client,
     onCompleted: () => {
       listrefetch();
     },
@@ -508,8 +508,14 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Table pagination={{defaultPageSize:9,
-        pageSizeOptions: ['9', '10', '20', '50']}} columns={columns} dataSource={dataSource} />
+      <Table
+        pagination={{
+          defaultPageSize: 9,
+          pageSizeOptions: ['9', '10', '20', '50'],
+        }}
+        columns={columns}
+        dataSource={dataSource}
+      />
       <Modal
         title="查看具体信息"
         open={open}
