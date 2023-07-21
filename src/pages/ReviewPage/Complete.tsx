@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Card, message, Modal, Popconfirm, Space, Table } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import type { ColumnsType } from 'antd/es/table';
@@ -37,10 +37,10 @@ interface Audi {
   user_name: string;
 }
 
-const client = new ApolloClient({
-  uri: 'http://127.0.0.1:7000/graphql',
-  cache: new InMemoryCache(),
-});
+// const client = new ApolloClient({
+//   uri: 'http://127.0.0.1:7000/graphql',
+//   cache: new InMemoryCache(),
+// });
 
 const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,9 +49,9 @@ const App: React.FC = () => {
   const [isModal2Open, setIsModal2Open] = useState(false);
   const [datashow, setDataShow] = useState<Audi[]>([]);
   const [suggestion, setSuggestion] = useState('未设置处理意见');
-  const { data: re, refetch: refetch1 } = useQuery(QUERY_REFUSE, { client });
-  const { data: ok, refetch: refetch2 } = useQuery(QUERY_OK, { client });
-  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION, { client });
+  const { data: re, refetch: refetch1 } = useQuery(QUERY_REFUSE);
+  const { data: ok, refetch: refetch2 } = useQuery(QUERY_OK);
+  const [deleteAuditMutation] = useMutation(DELETE_AUDIT_MUTATION);
 
   const confirm = async (id: any) => {
     const tmp = parseInt(id);
@@ -265,8 +265,14 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Table pagination={{ defaultPageSize:9  ,
-        pageSizeOptions: ['9', '10', '20', '50']}} columns={columns} dataSource={datashow} />
+      <Table
+        pagination={{
+          defaultPageSize: 9,
+          pageSizeOptions: ['9', '10', '20', '50'],
+        }}
+        columns={columns}
+        dataSource={datashow}
+      />
       <Modal
         okText="确认"
         cancelText="取消"
