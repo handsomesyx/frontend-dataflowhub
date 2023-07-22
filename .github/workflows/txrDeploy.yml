@@ -1,4 +1,4 @@
-name: 开发：自动构建/自动部署部署流程
+name: 自动构建/自动部署部署流程
 
 on:
   push:
@@ -50,6 +50,7 @@ jobs:
     needs: build_and_test
     runs-on: ubuntu-latest
 
+
     steps:
       - name: 检出代码
         uses: actions/checkout@v2
@@ -65,6 +66,6 @@ jobs:
           switches: -avzr --delete
           path: dist/
           remote_path: /opt/mohe/front/dist/
-          remote_host: ${{ secrets.DEPLOY_HOST_TXR }}
-          remote_user: ${{ secrets.DEPLOY_USER_TXR }}
-          remote_key: ${{ secrets.DEPLOY_KEY_TXR }}
+          remote_host: ${{ secrets.DEPLOY_HOST_DEV }}
+          remote_user: ${{ secrets.DEPLOY_USER_DEV }}
+          remote_key: ${{ secrets.DEPLOY_KEY_DEV }}

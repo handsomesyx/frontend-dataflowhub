@@ -423,7 +423,7 @@ const App: React.FC = () => {
       key: 'action_type1',
       render: (_, text) => {
         let content = '编辑';
-        let name = '未提交姓名';
+        let name = text?.person_info?.name?text?.person_info?.name:'未提交姓名';
         switch (text?.action_type) {
           case '1':
             content = '新增';
