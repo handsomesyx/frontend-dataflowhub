@@ -98,6 +98,7 @@ const App: React.FC = () => {
   const [refuseopen, setRefuseOpen] = useState(false);
   const [showClass, setShowClass] = useState(true);
   const [modalText, setModalText] = useState<DataType>();
+  const [actionType, setActionType] = useState<string>();
   const { data, refetch: listrefetch } = useQuery(QUERY_AUDITS, {
     // client,
     fetchPolicy: 'no-cache',
@@ -138,11 +139,12 @@ const App: React.FC = () => {
       message.info('操作失败');
     },
   });
-  const { refetch } = useQuery(GET_AUDIT_CHANGE, {
+  const { loading } = useQuery(GET_AUDIT_CHANGE, {
     // client,
+    fetchPolicy: 'no-cache',
     variables: { rightnow_auditrecords_id: rightnowAuditrecordsId },
     onCompleted: (data) => {
-      // console.log(data.getChangeRecord); // 控制台结果
+      // console.log('b', data.getChangeRecord); // 控制台结果
       setChangesShow(data.getChangeRecord);
       const changewhat = data.getChangeRecord.map((item: ChangeWhat) => ({
         after: item?.content_after,
@@ -151,7 +153,6 @@ const App: React.FC = () => {
         key: item?.id,
       }));
 
-      // console.log(changewhat);
       setChangedata(changewhat);
 
       if (rightnowAuditrecordsId !== 0) {
@@ -312,9 +313,9 @@ const App: React.FC = () => {
   };
 
   const showModal = (e: any) => {
-    setIdcardnow(e.request_data.id_card);
-    setNamecardnow(e.request_data.name);
-    console.log(e);
+    setIdcardnow(e.request_data?.id_card);
+    setNamecardnow(e.request_data?.name);
+    setActionType(e?.action_type);
     if (e.action_type === '1') {
       setShowClass(true);
       setChangecolumns([
@@ -350,17 +351,20 @@ const App: React.FC = () => {
       ]);
     }
 
-    const tmp = parseInt(e.id);
-    setrightnowAuditrecordsId(tmp);
-    refetch();
-    message.loading('加载中...', 1000);
+    // const tmp = parseInt(e.id);
+    // setrightnowAuditrecordsId(tmp);
+    // refetch();
+    // message.loading('加载中...', 1000);
+    // if (changedata.length !== 0) {
+    //   message.destroy();
+    // }
     setModalText(e);
     setOpen(true);
   };
 
   const handleCancel = () => {
     setOpen(false);
-    setChangedata([]);
+    // setChangedata([]);
     setChangesShow([]);
   };
 
@@ -379,13 +383,23 @@ const App: React.FC = () => {
       classification_reason: checkedList_string,
       person_classification: classabcd,
     };
-    updateAudit({
-      variables: {
-        class_data: classData,
-        new_data: newData,
-        rightnow_auditrecords_id: rightnowAuditrecordsId,
-      },
-    });
+    if (actionType === '1') {
+      updateAudit({
+        variables: {
+          class_data: classData,
+          new_data: newData,
+          rightnow_auditrecords_id: rightnowAuditrecordsId,
+        },
+      });
+    } else {
+      updateAudit({
+        variables: {
+          // class_data: classData,
+          new_data: newData,
+          rightnow_auditrecords_id: rightnowAuditrecordsId,
+        },
+      });
+    }
   };
 
   const handlerefuseCancel = () => {
@@ -420,6 +434,14 @@ const App: React.FC = () => {
             name = text?.person_info?.name;
             break;
           case '3':
+            content = '修改';
+            name = text?.person_info?.name;
+            break;
+          case '4':
+            content = '修改';
+            name = text?.person_info?.name;
+            break;
+          case '5':
             content = '修改';
             name = text?.person_info?.name;
             break;
@@ -489,7 +511,14 @@ const App: React.FC = () => {
       key: 'action',
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => showModal(record)}>查看具体信息</a>
+          <a
+            onClick={() => {
+              showModal(record);
+              setrightnowAuditrecordsId(Number(record.id));
+            }}
+          >
+            查看具体信息
+          </a>
           <Popconfirm
             placement="topRight"
             title="你确定要删除吗？"
@@ -567,6 +596,7 @@ const App: React.FC = () => {
           columns={changecolumns}
           dataSource={changedata}
           size="middle"
+          loading={loading}
         />
         <Divider />
 

@@ -72,7 +72,7 @@ const ManyDataUpload = ({
 
   function ExcelDateToJSDate(serial: number) {
     // Deal with time zone
-    if (serial) {
+    if (!Number.isNaN(serial)) {
       var step = new Date().getTimezoneOffset() <= 0 ? 25567 + 2 : 25567 + 1;
       var utc_days = Math.floor(serial - step);
       var utc_value = utc_days * 86400;
@@ -97,6 +97,8 @@ const ManyDataUpload = ({
         minutes,
         seconds,
       )?.toLocaleDateString();
+    } else {
+      return undefined;
     }
   }
   // const familyProps: UploadProps = {
@@ -168,10 +170,8 @@ const ManyDataUpload = ({
             currentAddress: row[12],
             formerName: row[3],
             nickname: row[2],
-            dateOfResidence: ExcelDateToJSDate(Number(row[4]))?.toString() ?? '',
+            dateOfResidence: new Date(ExcelDateToJSDate(Number(row[4])) ?? ''),
           });
-          console.log(baiscData);
-
           healthData.push({
             childNumber: parseInt(row[13]),
             specialGroup: row[14],
@@ -222,8 +222,8 @@ const ManyDataUpload = ({
             carColor: row[56],
             houseType: row[51],
             smokingStatus: ss,
-            // VolunteerStatus: row[66],
-            // SocialWorker: row[66],
+            VolunteerStatus: JSON.parse(JSON.stringify([])),
+            SocialWorker: JSON.parse(JSON.stringify([])),
             drivingLicenseType: row[59]?.toString(),
           });
           if (row[15] === '残疾人') {
@@ -251,7 +251,7 @@ const ManyDataUpload = ({
         setOkDisable(false);
       }
 
-      reader.readAsArrayBuffer(file);
+      // reader.readAsArrayBuffer(file);
     };
     reader.readAsArrayBuffer(file);
   };

@@ -8,7 +8,7 @@ export type basicInfo = {
   pinyin: string;
   nickname: string;
   formerName: string;
-  dateOfResidence: string;
+  dateOfResidence?: Date;
   age: number;
   height: number;
   headUrl?: string;
