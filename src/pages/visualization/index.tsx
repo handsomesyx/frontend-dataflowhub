@@ -162,8 +162,14 @@ function Visualization() {
             name={'包保基础信息'}
             data={basicInformationAboutTheWarranty}
             loading={loading}
+            route="/basic-information/administrativeRegion"
           />
-          <Left name={'党建引领'} data={partyBuildingLeads} loading={loading} />
+          <Left
+            name={'党建引领'}
+            data={partyBuildingLeads}
+            loading={loading}
+            route="/population-manager/person-search"
+          />
         </div>
 
         <div
@@ -199,12 +205,19 @@ function Visualization() {
             name={'专群信息'}
             data={combinationOfSpecializedGroupsData}
             loading={loading}
+            route="/population-manager/person-search"
           />
-          <Right name="基础信息" data={basicInformationData} loading={loading} />
+          <Right
+            name="基础信息"
+            data={basicInformationData}
+            loading={loading}
+            route="/population-manager/person-search"
+          />
           <Right
             name={'矛盾纠纷情况'}
             data={contradictoryDisputeSituationsData}
             loading={loading}
+            route="/event-management"
           />
         </div>
       </div>

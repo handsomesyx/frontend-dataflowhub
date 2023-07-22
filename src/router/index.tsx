@@ -374,7 +374,7 @@ const routeConfig: routerConfigType[] = [
               {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
                 <PersonManage />
               ) : (
-                '无权访问,只有超级管理员可对人员进行管理'
+                '无权访问'
               )}
             </div>
           </Suspense>
