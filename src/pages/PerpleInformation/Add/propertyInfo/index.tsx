@@ -194,7 +194,7 @@ const PorpertyInfo = ({
           pinyin: data?.pinyin,
           nickname: data?.nickname, //
           formerName: data?.formerName,
-          dateOfResidence: new Date(data?.dateOfResidence), //
+          dateOfResidence: new Date(data?.dateOfResidence ?? ''), //
           height: parseFloat(data?.height?.toString()),
           age: parseInt(data?.age?.toString()),
           gender: data?.gender,
