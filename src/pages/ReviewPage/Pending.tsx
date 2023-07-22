@@ -312,8 +312,8 @@ const App: React.FC = () => {
   };
 
   const showModal = (e: any) => {
-    setIdcardnow(e.request_data.id_card);
-    setNamecardnow(e.request_data.name);
+    setIdcardnow(e.request_data?.id_card);
+    setNamecardnow(e.request_data?.name);
     console.log(e);
     if (e.action_type === '1') {
       setShowClass(true);
@@ -409,7 +409,7 @@ const App: React.FC = () => {
       key: 'action_type1',
       render: (_, text) => {
         let content = '编辑';
-        let name = '未提交姓名';
+        let name = text?.person_info?.name?text?.person_info?.name:'未提交姓名';
         switch (text?.action_type) {
           case '1':
             content = '新增';
