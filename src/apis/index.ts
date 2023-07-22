@@ -252,6 +252,10 @@ export const FindManyGrid = gql`
         is_delete
         updater_id
         name
+        policeStation
+        policeStation_leader_name
+        gridMan
+        policeMan
         grid_leader_info {
           gender
           head_url
