@@ -254,6 +254,8 @@ export const FindManyGrid = gql`
         name
         policeStation
         policeStation_leader_name
+        gridMan
+        policeMan
         grid_leader_info {
           gender
           head_url

@@ -13,6 +13,7 @@ import {
   Input,
   message,
   Modal,
+  Popover,
   Row,
   // Select,
   Space,
@@ -40,6 +41,7 @@ import {
 // import wanggeyuan from '../../assets/wanggeyuan_bianji.svg';
 
 interface DataType {
+  [x: string]: any;
   key: string;
   name: string;
   age: string;
@@ -142,18 +144,30 @@ const AdministrativeRegion: React.FC = () => {
       dataIndex: 'name',
       key: 'name',
     },
-    // {
-    //   title: '网格员名称',
-    //   dataIndex: 'user_name',
-    //   key: 'user_name',
-    //   // render: (text) => <a style={{ color: 'black' }}>{text}
-    //   //   <Image src={wanggeyuan}
-    //   //     preview={false} /></a>
-    // },
     {
       title: '所属网格长',
       dataIndex: 'grid_leader_name',
       key: 'grid_leader_name',
+    },
+    {
+      title: '所属网格员',
+      dataIndex: 'gridMan',
+      key: 'gridMan',
+      render: (_t, v) => {
+        // let content;
+        if (v?.gridMan) {
+          let content = v?.gridMan?.substring(0, 10) + '...';
+          return (
+            <Popover
+              // overlayClassName={styles.Pop}
+              content={v?.gridMan}
+              title="所属网格员"
+            >
+              {content}
+            </Popover>
+          );
+        }
+      },
     },
     {
       title: '所属社区',
@@ -171,9 +185,29 @@ const AdministrativeRegion: React.FC = () => {
       key: 'policeStation',
     },
     {
-      title: '所属民警',
+      title: '所属所长',
       dataIndex: 'policeStation_leader_name',
       key: 'policeStation_leader_name',
+    },
+    {
+      title: '所属民警',
+      dataIndex: 'policeMan',
+      key: 'policeMan',
+      render: (_t, v) => {
+        // let content;
+        if (v?.policeMan) {
+          let content = v?.policeMan?.substring(0, 10) + '...';
+          return (
+            <Popover
+              // overlayClassName={styles.Pop}
+              content={v?.policeMan}
+              title="所属民警"
+            >
+              {content}
+            </Popover>
+          );
+        }
+      },
     },
     {
       title: '操作',
@@ -308,6 +342,8 @@ const AdministrativeRegion: React.FC = () => {
           let area_leader_name = item.area_leader_info.real_name;
           let id = item.id;
           let area_id = item.area_info.id;
+          let gridMan = item?.gridMan?.toString();
+          let policeMan = item?.policeMan?.toString();
           return {
             name: grid_name,
             grid_leader_name: grid_leader_name,
@@ -318,6 +354,8 @@ const AdministrativeRegion: React.FC = () => {
             policeStation: item?.policeStation ?? ' ',
             policeStation_leader_name: item?.policeStation_leader_name ?? ' ',
             id: id,
+            gridMan: gridMan,
+            policeMan: policeMan,
           };
         } else {
           let grid_name = item.name;
@@ -325,6 +363,8 @@ const AdministrativeRegion: React.FC = () => {
           let area_leader_name = item.area_leader_info.real_name;
           let id = item.id;
           let area_id = item.area_info.id;
+          let gridMan = item?.gridMan?.toString();
+          let policeMan = item?.policeMan?.toString();
           return {
             name: grid_name,
             grid_leader_name: ' ',
@@ -335,6 +375,8 @@ const AdministrativeRegion: React.FC = () => {
             policeStation: item?.policeStation ?? ' ',
             policeStation_leader_name: item?.policeStation_leader_name ?? ' ',
             id: id,
+            gridMan: gridMan,
+            policeMan: policeMan,
           };
         }
       });
