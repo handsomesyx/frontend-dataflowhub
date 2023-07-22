@@ -65,6 +65,6 @@ jobs:
           switches: -avzr --delete
           path: dist/
           remote_path: /opt/mohe/front/dist/
-          remote_host: ${{ secrets.DEPLOY_HOST_DEV }}
-          remote_user: ${{ secrets.DEPLOY_USER_DEV }}
-          remote_key: ${{ secrets.DEPLOY_KEY_DEV }}
+          remote_host: ${{ secrets.DEPLOY_HOST_TXR }}
+          remote_user: ${{ secrets.DEPLOY_USER_TXR }}
+          remote_key: ${{ secrets.DEPLOY_KEY_TXR }}
