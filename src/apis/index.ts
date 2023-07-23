@@ -1169,6 +1169,36 @@ export const GetAllHandledEvents = gql`
       status
       update_time
       updater_id
+      audit_records_id
+      auditrecords {
+        request_data
+        action_type
+        create_time
+        creator_id
+        id
+        is_delete
+        officer_info {
+          real_name
+          username
+        }
+        priority
+        request_time
+        review_comments
+        review_time
+        status
+        person_info {
+          name
+          grid_user_id
+          person_classification
+        }
+        update_time
+        updater_id
+        user_info {
+          real_name
+          id
+          username
+        }
+      }
     }
   }
 `;
@@ -1188,6 +1218,36 @@ export const GetAllUnhandledEvents = gql`
       status
       update_time
       updater_id
+      audit_records_id
+      auditrecords {
+        request_data
+        action_type
+        create_time
+        creator_id
+        id
+        is_delete
+        officer_info {
+          real_name
+          username
+        }
+        priority
+        request_time
+        review_comments
+        review_time
+        status
+        person_info {
+          name
+          grid_user_id
+          person_classification
+        }
+        update_time
+        updater_id
+        user_info {
+          real_name
+          id
+          username
+        }
+      }
     }
   }
 `;

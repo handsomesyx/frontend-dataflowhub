@@ -165,14 +165,14 @@ export function LoginLog() {
           id: i + 1,
           username: datas[i].username,
           operation: datas[i].operation === 1 ? '用户登录' : '',
-          status:
-            datas[i].status === 0
-              ? '失败'
-              : datas[i].status === 1
-              ? '成功'
-              : datas[i].status === 2
-              ? '账号已锁定'
-              : '',
+          // status:
+          //   datas[i].status === 0
+          //     ? '失败'
+          //     : datas[i].status === 1
+          //     ? '成功'
+          //     : datas[i].status === 2
+          //     ? '账号已锁定'
+          //     : '',
           ip: datas[i].ip,
           create_time: datas[i].create_time,
         });
