@@ -2,6 +2,7 @@ type LeftType = {
   name: string;
   data: MapData[];
   loading: boolean;
+  route?: string;
 };
 type MapData = {
   url: string;
@@ -12,6 +13,7 @@ type RightType = {
   name: string;
   data: RightMapData[];
   loading: boolean;
+  route?: string;
 };
 
 type RightMapData = {

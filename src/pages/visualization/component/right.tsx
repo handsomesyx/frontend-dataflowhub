@@ -1,8 +1,17 @@
 import './index.css';
+
+import { useNavigate } from 'react-router-dom';
+
 function Right(Props: RightType) {
+  const navigate = useNavigate();
+  const changeRoute = () => {
+    if (Props.route) {
+      navigate(Props.route);
+    }
+  };
   return (
     <div className="ComponentRight">
-      <div className="Header">
+      <div className="Header" onClick={changeRoute}>
         <div className="HeaderText">{Props.name}</div>
         <img className="HeaderLeft" alt="箭头" src="/》.png" />
         <img className="HeaderRight" alt="header-right" src="/header-right.png" />
