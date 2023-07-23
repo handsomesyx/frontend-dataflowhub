@@ -117,6 +117,10 @@ const PorpertyInfo = ({
     const politicalData: politicalInfo[] = [];
     const ecoData: economicInfo[] = [];
     let errVisible: boolean = false;
+    let porok: boolean = false;
+    let basicok: boolean = false;
+    let ecook: boolean = false;
+    let eduok: boolean = false;
     setUrgencyVisible(false);
     porform
       ?.validateFields()
@@ -152,6 +156,7 @@ const PorpertyInfo = ({
           SocialWorker: JSON.parse(JSON.stringify(social)),
           drivingLicenseType: data?.drivingLicenseType,
         });
+        porok = true;
       })
       .catch(() => {
         errVisible = true;
@@ -175,6 +180,7 @@ const PorpertyInfo = ({
           surStatus: data?.surStatus,
           surQuantity: parseInt(data?.surQuantity?.toString()),
         });
+        ecook = true;
       })
       .catch(() => {
         errVisible = true;
@@ -183,6 +189,7 @@ const PorpertyInfo = ({
       ?.validateFields()
       .then(() => {
         const data: basicInfo = basicform.getFieldsValue();
+        console.log('b');
 
         baiscData.push({
           name: data?.name,
@@ -200,6 +207,7 @@ const PorpertyInfo = ({
           gender: data?.gender,
           headUrl: imgSrc ?? '', //
         });
+        basicok = true;
       })
       .catch(() => {
         errVisible = true;
@@ -231,10 +239,30 @@ const PorpertyInfo = ({
             servereDisabilitySub: parseFloat(disaility.servereDisabilitySub.toString()),
           });
         }
+        eduok = true;
+      })
+      .catch(() => {
+        errVisible = true;
+        message.error('您有未完成填写的必填项');
+      });
 
-        if (errVisible) {
-          message.error('您有未完成填写的必填项');
-        } else {
+    eduform
+      .validateFields()
+      .then(() => {
+        const data: politicalInfo = eduform.getFieldsValue();
+        politicalData.push({
+          workUnit: data?.workUnit,
+          position: data?.position,
+          politicalStatus: data?.politicalStatus,
+          party: data?.partyOrganization,
+          religion: data?.religion,
+          nationality: data?.nationality,
+          education: data?.education,
+          militaryService: data?.militaryService,
+          school: data?.school,
+        });
+
+        if (porok && basicok && ecook && eduok && !errVisible) {
           createPeopleInfo({
             variables: {
               createBasicInfoInput: {
@@ -266,28 +294,9 @@ const PorpertyInfo = ({
               message.error('创建审核记录失败');
             },
           });
+        } else {
+          message.error('您有未完成填写的必填项');
         }
-      })
-      .catch(() => {
-        errVisible = true;
-        message.error('您有未完成填写的必填项');
-      });
-
-    eduform
-      .validateFields()
-      .then(() => {
-        const data: politicalInfo = eduform.getFieldsValue();
-        politicalData.push({
-          workUnit: data?.workUnit,
-          position: data?.position,
-          politicalStatus: data?.politicalStatus,
-          party: data?.partyOrganization,
-          religion: data?.religion,
-          nationality: data?.nationality,
-          education: data?.education,
-          militaryService: data?.militaryService,
-          school: data?.school,
-        });
       })
       .catch(() => {
         errVisible = true;
