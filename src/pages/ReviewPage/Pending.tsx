@@ -233,7 +233,7 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('getUserType', getUserType());
+    // console.log('getUserType', getUserType());
     let tmp = 7;
     if (getUserType() === 'superAdmin') {
       setRole(1);
@@ -250,7 +250,7 @@ const App: React.FC = () => {
     // console.log('身份验证完成');
 
     if (data) {
-      console.log(data);
+      // console.log(data);
       const username = getUserName();
       const filtered = data.findManyAudit.data.filter((item: any) => {
         if (
@@ -273,7 +273,7 @@ const App: React.FC = () => {
         return false;
       });
       message.info('列表加载完成');
-      console.log(filtered);
+      // console.log(filtered);
 
       const formattedData = filtered.map((item: any) => {
         const date = new Date(item.create_time);
@@ -284,8 +284,8 @@ const App: React.FC = () => {
           create_time: formattedDate,
         };
       });
-      console.log('显示结果');
-      console.log(formattedData);
+      // console.log('显示结果');
+      // console.log(formattedData);
       setDataSource(formattedData);
     }
   }, [data]);
@@ -423,7 +423,7 @@ const App: React.FC = () => {
       key: 'action_type1',
       render: (_, text) => {
         let content = '编辑';
-        let name = text?.person_info?.name?text?.person_info?.name:'未提交姓名';
+        let name = text?.person_info?.name ? text?.person_info?.name : '未提交姓名';
         switch (text?.action_type) {
           case '1':
             content = '新增';
@@ -490,7 +490,7 @@ const App: React.FC = () => {
       render: (_, text) => <div>{text?.person_info?.person_classification}</div>,
     },
     {
-      title: '所属网格员',
+      title: '所属操作人员',
       dataIndex: 'user_name',
       key: 'user_name',
       render: (_, text) => <div>{text.user_info.real_name}</div>,
