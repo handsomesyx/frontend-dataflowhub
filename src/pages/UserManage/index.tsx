@@ -313,6 +313,7 @@ export default function PersonManage() {
   }, [police]);
   // 获取网格信息
   const { data: grid } = useQuery(GetGrid, {
+    fetchPolicy: 'no-cache',
     variables: {
       username: user_name,
       role: user_role,
@@ -386,7 +387,7 @@ export default function PersonManage() {
       if (value.role_id === 6) {
         ipt2 = {
           role_id: value.role_id,
-          grid_id: gridIdInput,
+          grid_id: -1,
         };
       }
       if (value.role_id === 3) {
@@ -441,7 +442,9 @@ export default function PersonManage() {
           message.success('添加成功');
           form.resetFields();
         })
-        .catch(() => {
+        .catch((e) => {
+          console.log(e);
+
           message.error('重复添加');
           // form.resetFields();
         });
@@ -1088,7 +1091,7 @@ export default function PersonManage() {
                 <Input placeholder="请输入手机号码" />
               </Form.Item>
 
-              {(role_id === 4 || role_id === 6) && (
+              {role_id === 4 && (
                 <Form.Item
                   name="area_id"
                   label="请选择行政区域"
@@ -1114,7 +1117,7 @@ export default function PersonManage() {
                 </Form.Item>
               )}
 
-              {(role_id === 4 || role_id === 6) && (
+              {role_id === 4 && (
                 <Form.Item
                   name="community_id"
                   label="请选择社区"
@@ -1140,7 +1143,7 @@ export default function PersonManage() {
                 </Form.Item>
               )}
 
-              {(role_id === 4 || role_id === 6) && (
+              {/* {(role_id === 6) && (
                 <Form.Item
                   name="grid_id"
                   label="请选择网格"
@@ -1156,6 +1159,7 @@ export default function PersonManage() {
                     placeholder="请选择网格"
                     onChange={selectGridInput}
                     value={gridIdInput}
+                    mode="multiple"
                   >
                     {createGridList?.map((item: any) => (
                       <Option key={item.id} value={item.id}>
@@ -1164,28 +1168,53 @@ export default function PersonManage() {
                     ))}
                   </Select>
                 </Form.Item>
-              )}
+              )} */}
 
               {role_id === 4 && (
-                <Form.Item
-                  name="police"
-                  label="请选择警员"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: '请选择警员',
-                    },
-                  ]}
-                >
-                  <Select placeholder="请选择警员" onChange={selectPoliceInput}>
-                    {createPoliceList?.map((item: any) => (
-                      <Option key={item.police_user_id} value={item.police_user_id}>
-                        {item.real_name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
+                <>
+                  <Form.Item
+                    name="grid_id"
+                    label="请选择网格"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: '请选择网格',
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="请选择网格"
+                      onChange={selectGridInput}
+                      value={gridIdInput}
+                    >
+                      {createGridList?.map((item: any) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    name="police"
+                    label="请选择警员"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: '请选择警员',
+                      },
+                    ]}
+                  >
+                    <Select placeholder="请选择警员" onChange={selectPoliceInput}>
+                      {createPoliceList?.map((item: any) => (
+                        <Option key={item.police_user_id} value={item.police_user_id}>
+                          {item.real_name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </>
               )}
 
               {role_id === 2 && (
@@ -1392,7 +1421,7 @@ export default function PersonManage() {
             {/* <span>手机号：</span><br/> */}
             <Input placeholder="请输入手机号码" />
           </Form.Item>
-          {(role_id === 4 || role_id === 6) && (
+          {role_id === 4 && (
             <Form.Item
               name="area_id"
               label="请选择行政区域"
@@ -1418,7 +1447,7 @@ export default function PersonManage() {
             </Form.Item>
           )}
 
-          {(role_id === 4 || role_id === 6) && (
+          {role_id === 4 && (
             <Form.Item
               name="community_id"
               label="请选择社区"
@@ -1444,7 +1473,7 @@ export default function PersonManage() {
             </Form.Item>
           )}
 
-          {(role_id === 4 || role_id === 6) && (
+          {/* {(role_id === 6) && (
             <Form.Item
               name="grid_id"
               label="请选择网格"
@@ -1460,6 +1489,7 @@ export default function PersonManage() {
                 placeholder="请选择网格"
                 onChange={selectGridInput}
                 value={gridIdInput}
+                mode="multiple"
               >
                 {createGridList?.map((item: any) => (
                   <Option key={item.id} value={item.id}>
@@ -1468,28 +1498,55 @@ export default function PersonManage() {
                 ))}
               </Select>
             </Form.Item>
-          )}
+          )} */}
 
           {role_id === 4 && (
-            <Form.Item
-              name="police_user_id"
-              label="请选择警员"
-              labelCol={{ span: 6 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请选择警员',
-                },
-              ]}
-            >
-              <Select placeholder="请选择警员" onChange={selectPoliceInput}>
-                {createPoliceList?.map((item: any) => (
-                  <Option key={item.police_user_id} value={item.police_user_id}>
-                    {item.real_name}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
+            <>
+              {' '}
+              <Form.Item
+                name="grid_id"
+                label="请选择网格"
+                labelCol={{ span: 6 }}
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择网格',
+                  },
+                ]}
+              >
+                <Select
+                  placeholder="请选择网格"
+                  onChange={selectGridInput}
+                  value={gridIdInput}
+                  mode="multiple"
+                >
+                  {createGridList?.map((item: any) => (
+                    <Option key={item.id} value={item.id}>
+                      {item.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item
+                name="police_user_id"
+                label="请选择警员"
+                labelCol={{ span: 6 }}
+                rules={[
+                  {
+                    required: true,
+                    message: '请选择警员',
+                  },
+                ]}
+              >
+                <Select placeholder="请选择警员" onChange={selectPoliceInput}>
+                  {createPoliceList?.map((item: any) => (
+                    <Option key={item.police_user_id} value={item.police_user_id}>
+                      {item.real_name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+            </>
           )}
 
           {role_id === 2 && (
