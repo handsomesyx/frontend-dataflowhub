@@ -300,6 +300,7 @@ export default function PersonManage() {
   });
   // 获取警员信息
   const { data: police, refetch: refetch2 } = useQuery(GetPolice, {
+    fetchPolicy: 'no-cache',
     variables: {
       username: user_name,
       role: user_role,
@@ -1518,7 +1519,7 @@ export default function PersonManage() {
                   placeholder="请选择网格"
                   onChange={selectGridInput}
                   value={gridIdInput}
-                  mode="multiple"
+                  // mode="multiple"
                 >
                   {createGridList?.map((item: any) => (
                     <Option key={item.id} value={item.id}>
