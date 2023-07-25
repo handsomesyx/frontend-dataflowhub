@@ -91,8 +91,8 @@ export default function PersonManage() {
   const [createAreaList, setcreateAreaList] = useState<[Area]>();
   // 创建网格员时社区下拉框
   const [createCommunityList, setCreateCommunityList] = useState<[Area]>();
-  const [createGridList, setCreateGridList] = useState<[Grid]>();
-  const [createPoliceList, setCreatePoliceList] = useState<[Police]>();
+  const [createGridList, setCreateGridList] = useState<Grid[]>();
+  const [createPoliceList, setCreatePoliceList] = useState<Police[]>();
 
   // 增加和修改时的gridid
   const [gridIdInput, setGridIdInput] = useState<number>();
@@ -326,6 +326,7 @@ export default function PersonManage() {
       setCreateGridList(grid?.getGrid);
     }
   }, [grid]);
+  // console.log(createAreaList);
 
   // 获取行政区域信息（三级）
   const { data: area } = useQuery(GetArea, {
@@ -622,6 +623,8 @@ export default function PersonManage() {
     const newCommunityList = area?.getArea.filter((item: Area) => {
       return item.parent_id === value;
     });
+    console.log(newCommunityList);
+
     if (newCommunityList.length > 0) {
       setCommunityList(newCommunityList);
       // setFirstCommunity(newCommunityList[0].id);
@@ -668,25 +671,35 @@ export default function PersonManage() {
     setAdministrionAreaIdCreate(value);
     setFirstCommunityCreate(undefined);
     // setP(value);
-    const newPoliceList = police?.getPolice.filter((item: Police) => {
-      if (item.areaid.includes(value)) {
-        return item;
-      }
-    });
     const newCommunityList = area?.getArea.filter((item: Area) => {
       return item.parent_id === value;
     });
-    if (newPoliceList.length > 0) {
-      setCreatePoliceList(newPoliceList);
-    } else {
-      setCreatePoliceList(undefined);
-      message.error('行政区域下无警员');
-    }
+    const community = newCommunityList.map((item: any) => item.id);
     if (newCommunityList.length > 0) {
+      let newPoliceList: Police[] = [];
+      police?.getPolice.filter((item: Police) => {
+        community.map((itemc: number) => {
+          if (item.areaid.includes(itemc)) {
+            newPoliceList.push(item);
+          }
+        });
+      });
+      if (newPoliceList.length > 0) {
+        setCreatePoliceList(newPoliceList);
+      } else {
+        setCreatePoliceList(undefined);
+        message.error('该行政区域无警员');
+      }
       setCreateCommunityList(newCommunityList);
       setFirstCommunityCreate(newCommunityList[0].id);
-      const newGridList = grid?.getGrid.filter((item: any) => {
-        return item.area_id === value || item.area_id === newCommunityList[0].id;
+      let newGridList: Grid[] = [];
+      grid?.getGrid.filter((item: Grid) => {
+        community.map((itemc: number) => {
+          if (item.area_id === itemc || item.area_id === newCommunityList[0].id) {
+            newGridList.push(item);
+          }
+        });
+        return;
       });
       setCreateGridList(newGridList);
       // 联级
