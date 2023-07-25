@@ -54,7 +54,8 @@ const HomeSearch = () => {
   // 时间处理事件
   const TimeonChangeUp = (value: any) => {
     if (value) {
-      const time = new Date(value.$d);
+      // const time = new Date(value.$d);
+      const time = new Date(value.$y, value.$M, value.$D, 23, 59, 59, 59);
       setOption((pre: any) => {
         return {
           ...pre,
@@ -72,7 +73,8 @@ const HomeSearch = () => {
   };
   const TimeonChangeDown = (value: any) => {
     if (value) {
-      const time = new Date(value.$d);
+      const time = new Date(value.$y, value.$M, value.$D, 0, 0, 0, 0);
+      // const time = new Date(value.$d);
       setOption((pre: any) => {
         return {
           ...pre,
