@@ -57,6 +57,7 @@ export const QUERY_AUDITS = gql`
           id
           username
         }
+        police_leader_name
       }
     }
   }
