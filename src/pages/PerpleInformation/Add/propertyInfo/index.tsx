@@ -347,14 +347,7 @@ const PorpertyInfo = ({
             <Row>
               <Col span={8}>
                 <Form.Item name="houseType" label="房屋类型:">
-                  <Select style={{ width: '11vw' }}>
-                    <Option key={1} value="危房">
-                      危房
-                    </Option>
-                    <Option key={2} value="非危房">
-                      不是危房
-                    </Option>
-                  </Select>
+                  <Input placeholder="请填写" style={{ width: '11vw' }} />
                 </Form.Item>
               </Col>
               <Col span={8}>

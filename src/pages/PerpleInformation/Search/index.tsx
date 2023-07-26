@@ -355,6 +355,9 @@ const SearchBasic = () => {
   // 数据输出到fliter中代码  针对input组件
   const handleFliterData = (a: any, dataName: string) => {
     let e = a.target.value;
+    if (dataName === 'age' && e !== '') {
+      e = Number(e);
+    }
     if (e === '') {
       e = undefined;
     }
@@ -666,7 +669,7 @@ const SearchBasic = () => {
                 onChange={(a) => {
                   handleFliterData(a, 'age');
                 }}
-                value={filterData?.age}
+                // value={filterData?.age}
                 style={{ width: '60%', display: 'flex' }}
               ></Input>
             </div>
