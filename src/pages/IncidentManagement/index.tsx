@@ -40,7 +40,7 @@ function IncidentManagement() {
     },
   ];
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: '100%', overflowY: 'auto' }}>
       <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
     </div>
   );
