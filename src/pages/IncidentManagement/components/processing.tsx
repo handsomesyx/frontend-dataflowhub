@@ -8,7 +8,7 @@ import type { eventData, user } from '@/pages/IncidentManagement/type';
 import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 
 /* 处理中 */
-function Processing(Props: { role: number; updata: Function }) {
+function Processing(Props: { role: number; updata: Function; level: number }) {
   const [visible, setVisible] = useState(false);
   const { role, updata } = Props; // 这个用来判断是民警还是网格员
   const [id, setId] = useState<number>(-1);
@@ -91,7 +91,7 @@ function Processing(Props: { role: number; updata: Function }) {
         data={ModelData}
         updata={updata}
       />
-      <CaseRating columns={columns} level={2} reloading={reloading} />
+      <CaseRating columns={columns} level={Props.level} reloading={reloading} />
     </div>
   );
 }

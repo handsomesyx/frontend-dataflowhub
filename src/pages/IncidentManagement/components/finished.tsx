@@ -7,7 +7,7 @@ import FinishModal from '@/pages/IncidentManagement/components/Model/finishModal
 import type { eventData, user } from '@/pages/IncidentManagement/type';
 import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 
-function Finished(Props: { role: number }) {
+function Finished(Props: { role: number; level: number }) {
   const [visible, setVisible] = useState(false);
   const [ModelData, setModelData] = useState<eventData>({} as eventData);
   const { role } = Props; // 这个用来判断是民警还是网格员
@@ -85,7 +85,7 @@ function Finished(Props: { role: number }) {
 
   return (
     <div>
-      <CaseRating columns={columns} level={4} />
+      <CaseRating columns={columns} level={Props.level} />
       <FinishModal
         role={role}
         level={4}

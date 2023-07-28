@@ -283,7 +283,11 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>
+            <div
+              style={{
+                overflowY: 'scroll',
+              }}
+            >
               <IncidentManagement />
             </div>
           </Suspense>
