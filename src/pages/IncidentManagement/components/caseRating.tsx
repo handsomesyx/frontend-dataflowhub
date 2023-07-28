@@ -20,6 +20,8 @@ function CaseRating(Props: {
   const [total, setTotal] = useState<number>(0);
   const [page, setPage] = useState<number>(1);
   let Levelstate = '';
+  let take = 10;
+  let skip = (page - 1) * take;
   switch (Props.level) {
     case 1:
       Levelstate = '已上报';
@@ -48,6 +50,8 @@ function CaseRating(Props: {
       },
       variables: {
         processing_status: Levelstate,
+        skip,
+        take,
       },
     },
   );
@@ -62,7 +66,7 @@ function CaseRating(Props: {
     GetList({
       processing_status: Levelstate,
     });
-    console.log(e.current);
+    // console.log(e.current);
     setPage(e.current || 1);
   }
 
