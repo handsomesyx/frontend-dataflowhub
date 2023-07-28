@@ -30,8 +30,8 @@ function returnTokenDependingOnOperation(operation: GraphQLRequest) {
 }
 
 const httpLink = createHttpLink({
-  // uri: `http://${window.location.hostname}:7000/graphql`,
-  uri: '/graphql',
+  uri: `http://${window.location.hostname}:7000/graphql`,
+  // uri: '/graphql',
 });
 
 const authLink = setContext((operation, { headers }) => {
@@ -98,8 +98,8 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
 });
 
 export const apolloClient = new ApolloClient({
-  // uri: `http://${window.location.hostname}:7000/graphql`,
-  uri: '/graphql',
+  uri: `http://${window.location.hostname}:7000/graphql`,
+  // uri: '/graphql',
   link: ApolloLink.from([errorLink, authLink, httpLink]),
   cache: new InMemoryCache({
     addTypename: false,

@@ -61,6 +61,7 @@ export function OperateLog() {
     pageSize: 10,
     total: total,
     showTotal: (total) => `共 ${total} 条`,
+    pageSizeOptions: ['5', '10', '15', '20'],
   });
   // 当前页数
   const current: any = pagination.current;
@@ -130,6 +131,7 @@ export function OperateLog() {
       pageSize: pagination.pageSize,
       total: total,
       showTotal: (total) => `共 ${total} 条`,
+      pageSizeOptions: ['5', '10', '15', '20'],
     });
   };
   // 查找操作
