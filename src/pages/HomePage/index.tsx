@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
+// Card,  Row
 import { useQuery } from '@apollo/client';
 import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
-// Card,  Row
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { GetAllHandledEvents, GetAllUnhandledEvents } from '@/apis';
@@ -171,7 +171,7 @@ function HomePage() {
                   <Row>
                     消息描述:
                     {item.auditrecords?.action_type === '1'
-                      ? `新增姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                      ? `新增姓名为 ${item.auditrecords.request_data?.name} 的群众信息`
                       : item.auditrecords?.action_type === '2'
                       ? `删除姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
                       : item.auditrecords?.action_type === '3'
