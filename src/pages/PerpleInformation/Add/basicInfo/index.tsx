@@ -181,6 +181,26 @@ const BasicInfo = ({
     }
   }, 300); // 设置防抖延迟时间为300毫秒
 
+  // 根据身份证号自动填写年龄和性别
+  const idcard_age_gender = () => {
+    const formData = form.getFieldsValue();
+    if (formData.idCard && formData.idCard.length === 18) {
+      const idCard = formData.idCard;
+      const birthYear = Number(idCard.substr(6, 4));
+      const currentYear = Number(new Date().getFullYear());
+      const calculatedAge = currentYear - birthYear;
+
+      // 假设身份证号的第17位表示性别，奇数为男性，偶数为女性
+      const genderCode = idCard.substr(16, 1);
+      const calculatedGender = genderCode % 2 === 0 ? true : false;
+
+      // 更新表单项的值和状态
+      form.setFieldsValue({ age: calculatedAge, gender: calculatedGender });
+    } else {
+      form.setFieldsValue({ age: undefined, gender: undefined });
+    }
+  };
+
   return (
     <>
       <div className={styles.Container}>
@@ -260,7 +280,11 @@ const BasicInfo = ({
                                                         <label className={styles.Require}>*</label>
                                                         身份证号(护照)：
                                                     </label> */}
-                          <Input placeholder="请填写" style={{ width: '15vw' }} />
+                          <Input
+                            placeholder="请填写"
+                            style={{ width: '15vw' }}
+                            onBlur={idcard_age_gender}
+                          />
                         </Form.Item>
                       </Col>
                       <Col span={8}>
