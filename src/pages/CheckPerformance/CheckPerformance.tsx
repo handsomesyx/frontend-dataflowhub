@@ -167,7 +167,7 @@ const CheckPerformance: React.FC = () => {
   // 设置分页，获取当前的页码
   // 按需修改pageSizeSet
   const pageSizeSet = 5;
-  const pageSizeOptions = ['5', '10', '20', '30']; // 自定义每页显示条数选项
+  const pageSizeOptions = ['5', '10', '15', '20']; // 自定义每页显示条数选项
   const [pagination, setPagination] = useState<any>({
     current: 1, // 默认为第一页
     pageSize: pageSizeSet, // 测试用的页大小，按需修改
@@ -495,7 +495,7 @@ const CheckPerformance: React.FC = () => {
               setGrid(0);
             }
           }}
-          onClear={()=> handleClear(0)}
+          onClear={() => handleClear(0)}
         />
         <Select
           allowClear
@@ -512,7 +512,7 @@ const CheckPerformance: React.FC = () => {
               setGrid(0);
             }
           }}
-          onClear={()=> handleClear(1)}
+          onClear={() => handleClear(1)}
           value={town !== 0 ? town : null || null}
         />
         <Select
@@ -529,7 +529,7 @@ const CheckPerformance: React.FC = () => {
               setGrid(selectedOption.value);
             }
           }}
-          onClear={()=> handleClear(2)}
+          onClear={() => handleClear(2)}
           value={grid !== 0 ? grid : null || null}
           // Set the value to the first option's value only if grid is not 'default'
           // 当重新选择上一个Select选项后，该选项需要重新选择

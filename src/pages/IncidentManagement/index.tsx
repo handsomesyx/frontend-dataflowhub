@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client';
 import type { TabsProps } from 'antd';
-import { Tabs } from 'antd';
+import { Layout, Tabs } from 'antd';
 import { useState } from 'react';
 
 import { modifyTheEventInformation } from '@/apis';
@@ -43,9 +43,11 @@ function IncidentManagement() {
     },
   ];
   return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
-    </div>
+    <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
+      <div style={{ width: '100%', height: '100%' }}>
+        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+      </div>
+    </Layout>
   );
 }
 export default IncidentManagement;

@@ -595,8 +595,8 @@ const App: React.FC = () => {
     <>
       <Table
         pagination={{
-          defaultPageSize: 9,
-          pageSizeOptions: ['9', '10', '20', '50'],
+          defaultPageSize: 10,
+          pageSizeOptions: ['5', '10', '15', '20'],
         }}
         columns={columns}
         dataSource={dataSource}
