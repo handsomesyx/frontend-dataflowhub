@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
 import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
+// Card,  Row
 import { useQuery } from '@apollo/client';
 import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
-// Card,  Row
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { GetAllHandledEvents, GetAllUnhandledEvents } from '@/apis';
@@ -47,7 +47,16 @@ type AuditRecords = {
 
 function HomePage() {
   const local = useLocation();
-
+  function transferTime(time: Date) {
+    const mysqlDate = new Date(time);
+    const year = mysqlDate.getFullYear();
+    const month = String(mysqlDate.getMonth() + 1).padStart(2, '0');
+    const day = String(mysqlDate.getDate()).padStart(2, '0');
+    const hours = String(mysqlDate.getHours()).padStart(2, '0');
+    const minutes = String(mysqlDate.getMinutes()).padStart(2, '0');
+    const seconds = String(mysqlDate.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day}   ${hours}:${minutes}:${seconds}`;
+  }
   useEffect(() => {
     if (local.pathname === '/home/index') {
       const elem = document.getElementById('headerBox');
@@ -152,7 +161,7 @@ function HomePage() {
             };
             const eventPageRoute = getEventPageRoute(item.event_type);
             // 将时间类型有String转换为Date
-            const timeDATE = new Date(item.create_time);
+            // const timeDATE = new Date(item.create_time);
             return (
               <Card key={index} hoverable style={{ margin: '1vh' }} size="small">
                 <Link
@@ -162,7 +171,7 @@ function HomePage() {
                   <Row>
                     消息描述:
                     {item.auditrecords?.action_type === '1'
-                      ? `新增姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                      ? `新增姓名为 ${item.auditrecords.request_data?.name} 的群众信息`
                       : item.auditrecords?.action_type === '2'
                       ? `删除姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
                       : item.auditrecords?.action_type === '3'
@@ -172,10 +181,11 @@ function HomePage() {
                   <Row>事件类型:{item.event_type}</Row>
                   <Row>
                     发起时间:
-                    {timeDATE
+                    {transferTime(item.create_time)}
+                    {/* {timeDATE
                       .toISOString()
                       .replace('T', ' ')
-                      .replace(/\.\d{3}Z/, '')}
+                      .replace(/\.\d{3}Z/, '')} */}
                   </Row>
                   {/* <Row justify="end">{item.sender_id}</Row> */}
                 </Link>
@@ -202,7 +212,7 @@ function HomePage() {
             // };
 
             // const eventPageRoute = getEventPageRoute(item.event_type);
-            const timeDATE = new Date(item.create_time);
+            // const timeDATE = new Date(item.create_time);
             return (
               <Card
                 key={index}
@@ -222,7 +232,7 @@ function HomePage() {
                 <Row>
                   消息描述:
                   {item.auditrecords?.action_type === '1'
-                    ? `新增姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                    ? `新增姓名为 ${item.auditrecords.request_data?.name} 的群众信息`
                     : item.auditrecords?.action_type === '2'
                     ? `删除姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
                     : item.auditrecords?.action_type === '3'
@@ -232,11 +242,13 @@ function HomePage() {
                 <Row>事件类型:{item?.event_type}</Row>
                 <Row>
                   发起时间:
-                  {timeDATE
+                  {/* {timeDATE
                     .toISOString()
                     .replace('T', ' ')
-                    .replace(/\.\d{3}Z/, '')}
+                    .replace(/\.\d{3}Z/, '')} */}
+                  {transferTime(item.create_time)}
                 </Row>
+
                 {/* <Row justify="end">{item.sender_id}</Row> */}
                 {/* </Link> */}
               </Card>
