@@ -371,7 +371,7 @@ const Detail = React.memo(
           <Descriptions
             title={
               currentEventData?.auditrecords.action_type === '1'
-                ? `新增姓名为 ${currentEventData?.auditrecords.person_info?.name} 的群众信息`
+                ? `新增姓名为 ${currentEventData?.auditrecords.request_data?.name} 的群众信息`
                 : currentEventData?.auditrecords.action_type === '2'
                 ? `删除姓名为 ${currentEventData?.auditrecords.person_info?.name} 的群众信息`
                 : currentEventData?.auditrecords.action_type === '3'

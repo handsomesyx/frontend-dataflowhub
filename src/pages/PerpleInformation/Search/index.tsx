@@ -30,6 +30,7 @@ import city from './cities.json';
 import nationality from './nationality.json';
 import religion from './religion.json';
 import SearchIcon from './search.svg';
+import special_group from './special_group.json';
 import styles from './style.module.less';
 const { RangePicker } = DatePicker;
 type filterType = {
@@ -52,6 +53,8 @@ type filterType = {
   residence: string | undefined;
   updatetimedown: number | undefined;
   updatetimeup: number | undefined;
+  special_group: string | undefined;
+  house_info: string | undefined;
 };
 
 // 控制数据请求 筛选  筛选后的内容会传递给子组件BasicShowList展示
@@ -77,6 +80,8 @@ const SearchBasic = () => {
     residence: undefined,
     updatetimedown: undefined,
     updatetimeup: undefined,
+    special_group: undefined,
+    house_info: undefined,
   });
 
   // 记录旧的筛选数据  点击分页的时候使用   防止没有点击查询查询条件变更问题
@@ -100,6 +105,8 @@ const SearchBasic = () => {
     residence: undefined,
     updatetimedown: undefined,
     updatetimeup: undefined,
+    special_group: undefined,
+    house_info: undefined,
   });
   // 网格员筛选数据获取
   const { data: gridData } = useQuery(getSelectGrid, {
@@ -455,6 +462,21 @@ const SearchBasic = () => {
                 />
               </ConfigProvider>
             </div>
+            <div>
+              <span>房屋类型：</span>
+              <Select
+                allowClear
+                onChange={(e) => {
+                  handleFliterDataSelect(e, 'house_info');
+                }}
+                placeholder="选择房屋类型"
+                style={{ width: '60%' }}
+                options={[
+                  { id: 1, label: '出租户', value: '出租' },
+                  { id: 2, label: '常驻', value: '常驻' },
+                ]}
+              ></Select>
+            </div>
           </div>
           <div>
             <div>
@@ -672,6 +694,18 @@ const SearchBasic = () => {
                 // value={filterData?.age}
                 style={{ width: '60%', display: 'flex' }}
               ></Input>
+            </div>
+            <div>
+              <span>特殊群体</span>：
+              <Select
+                allowClear
+                onChange={(e) => {
+                  handleFliterDataSelect(e, 'special_group');
+                }}
+                placeholder="选择群体"
+                style={{ width: '60%' }}
+                options={special_group}
+              ></Select>
             </div>
             <div style={{ justifyContent: 'end' }}>
               <button onClick={handleSearch}>
