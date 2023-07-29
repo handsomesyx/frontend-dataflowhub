@@ -1,16 +1,17 @@
 /* eslint-disable max-len */
 import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
-// Card,  Row
 import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
+// Card,  Row
 import { Link, Outlet, useLocation } from 'react-router-dom';
 
 import { GetAllHandledEvents, GetAllUnhandledEvents } from '@/apis';
 import { getRefreshToken, getUserId, getUserName, logout } from '@/store/SaveToken';
 
 import TopIcon from '../../assets/top.svg';
+import Detail from '../ReviewPage/Detail';
 import styles from './HomePage.module.less';
 import Time from './Time';
 import Menu from './TopMenuItem';
@@ -27,6 +28,21 @@ type EventData = {
   status: string;
   update_time: Date;
   updater_id: number;
+  audit_records_id: number;
+  auditrecords: AuditRecords;
+};
+
+type AuditRecords = {
+  action_type: string;
+  create_time: Date;
+  creatod_id: number;
+  id: string;
+  is_delete: Boolean;
+  officer_info: any;
+  person_info: any;
+  priority: number;
+  request_data: any;
+  description: string;
 };
 
 function HomePage() {
@@ -58,13 +74,13 @@ function HomePage() {
   // _HandledNumber,
   const [unHandleSource, setUnhandleSource] = useState<EventData[]>([]);
   const [handleSource, setHandleSource] = useState<EventData[]>([]);
-  // 获取当前用户信息
-  // const { data: currentUser } = useQuery(GetCurrentUser, {
-  //   onCompleted: (data: number) => {
-  //     setUserId(data);
-  //     console.log(currentUser);
-  //   },
-  // });
+
+  // 点击card弹窗显示状态
+  const [visibleDetail, setVisibleDetail] = useState(false);
+  // 设置当前点击的card的auditrecordsId
+  const [rightnowAuditrecordsId, setRightnowAuditrecordsId] = useState(0);
+  // 设置当前点击的事件数据
+  const [currentEventData, setCurrentEventData] = useState<EventData>();
   // 获取未处理数据
   const { data: unhandleData, refetch: unhandledDataRefetch } = useQuery(
     GetAllUnhandledEvents,
@@ -104,7 +120,7 @@ function HomePage() {
     }, 5000); // 每隔5秒发送一次查询
     setInterval(() => {
       handledDataRefetch(); // 重新发起查询
-    }, 5000); // 每隔5秒发送一次查询
+    }, 60000); // 每隔60秒发送一次查询
   }, [unhandledDataRefetch, handledDataRefetch]);
 
   useEffect(() => {
@@ -128,7 +144,7 @@ function HomePage() {
               switch (eventType) {
                 case '事件上报':
                   return '/event-management';
-                case '人员变更':
+                case '人口变更':
                   return '/population-manager/pending';
                 default:
                   return '/default-route'; // 默认的路由
@@ -143,6 +159,16 @@ function HomePage() {
                   to={eventPageRoute}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
+                  <Row>
+                    消息描述:
+                    {item.auditrecords?.action_type === '1'
+                      ? `新增姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                      : item.auditrecords?.action_type === '2'
+                      ? `删除姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                      : item.auditrecords?.action_type === '3'
+                      ? `修改姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                      : ''}
+                  </Row>
                   <Row>事件类型:{item.event_type}</Row>
                   <Row>
                     发起时间:
@@ -164,35 +190,55 @@ function HomePage() {
     <>
       {unHandleSource.length !== 0
         ? unHandleSource?.map((item: EventData, index: any) => {
-            const getEventPageRoute = (eventType: string) => {
-              switch (eventType) {
-                case '事件上报':
-                  return '/event-management';
-                case '人员变更':
-                  return '/population-manager/pending';
-                default:
-                  return '/default-route'; // 默认的路由
-              }
-            };
+            // const getEventPageRoute = (eventType: string) => {
+            //   switch (eventType) {
+            //     case '事件上报':
+            //       return '/event-management';
+            //     case '人口变更':
+            //       return '/population-manager/pending';
+            //     default:
+            //       return '/default-route'; // 默认的路由
+            //   }
+            // };
 
-            const eventPageRoute = getEventPageRoute(item.event_type);
+            // const eventPageRoute = getEventPageRoute(item.event_type);
             const timeDATE = new Date(item.create_time);
             return (
-              <Card key={index} hoverable style={{ margin: '1vh' }} size="small">
-                <Link
+              <Card
+                key={index}
+                hoverable
+                style={{ margin: '1vh' }}
+                size="small"
+                onClick={() => {
+                  setVisibleDetail(true);
+                  setRightnowAuditrecordsId(item.audit_records_id);
+                  setCurrentEventData(item);
+                }}
+              >
+                {/* <Link
                   to={eventPageRoute}
                   style={{ textDecoration: 'none', color: 'inherit' }}
-                >
-                  <Row>事件类型:{item.event_type}</Row>
-                  <Row>
-                    发起时间:
-                    {timeDATE
-                      .toISOString()
-                      .replace('T', ' ')
-                      .replace(/\.\d{3}Z/, '')}
-                  </Row>
-                  {/* <Row justify="end">{item.sender_id}</Row> */}
-                </Link>
+                > */}
+                <Row>
+                  消息描述:
+                  {item.auditrecords?.action_type === '1'
+                    ? `新增姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                    : item.auditrecords?.action_type === '2'
+                    ? `删除姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                    : item.auditrecords?.action_type === '3'
+                    ? `修改姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                    : ''}
+                </Row>
+                <Row>事件类型:{item?.event_type}</Row>
+                <Row>
+                  发起时间:
+                  {timeDATE
+                    .toISOString()
+                    .replace('T', ' ')
+                    .replace(/\.\d{3}Z/, '')}
+                </Row>
+                {/* <Row justify="end">{item.sender_id}</Row> */}
+                {/* </Link> */}
               </Card>
             );
           })
@@ -299,6 +345,13 @@ function HomePage() {
       ) : (
         ''
       )}
+      <Detail
+        visibleDetail={visibleDetail}
+        setVisibleDetail={setVisibleDetail}
+        rightnowAuditrecordsId={rightnowAuditrecordsId}
+        setRightnowAuditrecordsId={setRightnowAuditrecordsId}
+        currentEventData={currentEventData}
+      />
     </>
   );
 }

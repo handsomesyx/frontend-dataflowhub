@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import type { TabsProps } from 'antd';
 import { Layout, Tabs } from 'antd';
+import { useState } from 'react';
 
 import { modifyTheEventInformation } from '@/apis';
 import Finished from '@/pages/IncidentManagement/components/finished';
@@ -13,30 +14,32 @@ function IncidentManagement() {
   const role = getUserType() === 'gridMember' ? 2 : 1; // 1表示民警，2表示网格员
   console.log(role, 'getUserType(');
   const [modifyReportInfo] = useMutation(modifyTheEventInformation); // 除了添加以为，包括删除在内的函数均为此函数触发
+  const [level, setLevel] = useState(1);
   const onChange = (key: string) => {
     console.log(key);
+    setLevel(Number(key));
   };
 
   const items: TabsProps['items'] = [
     {
       key: '1',
       label: '已上报',
-      children: <Reported role={role} updata={modifyReportInfo} />,
+      children: <Reported role={role} updata={modifyReportInfo} level={level} />,
     },
     {
       key: '2',
       label: '处理中',
-      children: <Processing role={role} updata={modifyReportInfo} />,
+      children: <Processing role={role} updata={modifyReportInfo} level={level} />,
     },
     {
       key: '3',
       label: '待评价',
-      children: <ToBeEvaluated role={role} updata={modifyReportInfo} />,
+      children: <ToBeEvaluated role={role} updata={modifyReportInfo} level={level} />,
     },
     {
       key: '4',
       label: '已完结',
-      children: <Finished role={role} />,
+      children: <Finished role={role} level={level} />,
     },
   ];
   return (

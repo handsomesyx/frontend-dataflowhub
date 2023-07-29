@@ -11,14 +11,16 @@ import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 import IncidentsAreReportedModal from '../components/Model/incidentsAreReportedModal';
 
 /* 已上报表格信息 */
-function Reported(Props: { role: number; updata: Function }) {
+function Reported(Props: { role: number; updata: Function; level: number }) {
   const [visible, setVisible] = useState(false);
   const [id, setId] = useState<number>(-1);
   const [disable, setdisable] = useState<boolean>(false);
   const [ModelData, setModelData] = useState<eventData>();
   const [reloading, setReloading] = useState<boolean>(false);
   const { role, updata } = Props; // 这个用来判断是民警还是网格员
-  useMount(() => {});
+  useMount(() => {
+    console.log('useMount', 'Reported');
+  });
   // const [modifyReportInfo] = useMutation(modifyTheEventInformation, {
   //   onCompleted: (data) => {
   //     console.log(data);
@@ -192,7 +194,7 @@ function Reported(Props: { role: number; updata: Function }) {
         setReloading={setReloading}
         updata={updata}
       />
-      <CaseRating columns={columns} level={1} reloading={reloading} />
+      <CaseRating columns={columns} level={Props.level} reloading={reloading} />
     </div>
   );
 }

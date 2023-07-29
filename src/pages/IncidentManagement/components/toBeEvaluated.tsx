@@ -7,7 +7,7 @@ import TobeEvaluatedViewModal from '@/pages/IncidentManagement/components/Model/
 import type { eventData, user } from '@/pages/IncidentManagement/type';
 import { timestampToTime } from '@/utils/commonFunctions/timestampToTime';
 
-function ToBeEvaluated(Props: { role: number; updata: Function }) {
+function ToBeEvaluated(Props: { role: number; updata: Function; level: number }) {
   const [visible, setVisible] = useState(false);
   const { role, updata } = Props; // 这个用来判断是民警还是网格员
   const [id, setId] = useState<number>(-1);
@@ -83,7 +83,7 @@ function ToBeEvaluated(Props: { role: number; updata: Function }) {
   ];
   return (
     <div>
-      <CaseRating columns={columns} level={3} reloading={reloading} />
+      <CaseRating columns={columns} level={Props.level} reloading={reloading} />
       <TobeEvaluatedViewModal
         reloading={reloading}
         setReloading={setReloading}

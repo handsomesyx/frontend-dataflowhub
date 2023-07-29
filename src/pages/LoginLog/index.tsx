@@ -166,14 +166,14 @@ export function LoginLog() {
           id: i + 1,
           username: datas[i].username,
           operation: datas[i].operation === 1 ? '用户登录' : '',
-          status:
-            datas[i].status === 0
-              ? '失败'
-              : datas[i].status === 1
-              ? '成功'
-              : datas[i].status === 2
-              ? '账号已锁定'
-              : '',
+          // status:
+          //   datas[i].status === 0
+          //     ? '失败'
+          //     : datas[i].status === 1
+          //     ? '成功'
+          //     : datas[i].status === 2
+          //     ? '账号已锁定'
+          //     : '',
           ip: datas[i].ip,
           create_time: datas[i].create_time,
         });
@@ -257,6 +257,16 @@ export function LoginLog() {
       key: 'create_time',
       title: '创建时间',
       width: 200,
+      render: (_value: any, record: any) => {
+        const mysqlDate = new Date(record.create_time);
+        const year = mysqlDate.getFullYear();
+        const month = String(mysqlDate.getMonth() + 1).padStart(2, '0');
+        const day = String(mysqlDate.getDate()).padStart(2, '0');
+        const hours = String(mysqlDate.getHours()).padStart(2, '0');
+        const minutes = String(mysqlDate.getMinutes()).padStart(2, '0');
+        const seconds = String(mysqlDate.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day}   ${hours}:${minutes}:${seconds}`;
+      },
       dataIndex: 'create_time',
       align: 'center' as 'center',
     },

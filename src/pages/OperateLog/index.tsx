@@ -348,6 +348,16 @@ export function OperateLog() {
       key: 'create_time',
       title: '创建时间',
       width: 200,
+      render: (_value: any, record: any) => {
+        const mysqlDate = new Date(record.create_time);
+        const year = mysqlDate.getFullYear();
+        const month = String(mysqlDate.getMonth() + 1).padStart(2, '0');
+        const day = String(mysqlDate.getDate()).padStart(2, '0');
+        const hours = String(mysqlDate.getHours()).padStart(2, '0');
+        const minutes = String(mysqlDate.getMinutes()).padStart(2, '0');
+        const seconds = String(mysqlDate.getSeconds()).padStart(2, '0');
+        return `${year}-${month}-${day}   ${hours}:${minutes}:${seconds}`;
+      },
       dataIndex: 'create_time',
       align: 'center' as 'center',
     },

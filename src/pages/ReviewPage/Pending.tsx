@@ -83,6 +83,7 @@ interface DataType {
   creattime: string;
   emergency: string;
   key: string;
+  police_leader_name: string;
 }
 interface personinfo {
   name: ReactNode;
@@ -93,10 +94,11 @@ interface dataChange {
   personal_info: personinfo;
 }
 const App: React.FC = () => {
+  // const [record, setRecord] = useState<DataType>();
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState(7); //  1超管2警察4网格员7无权限
   const [refuseopen, setRefuseOpen] = useState(false);
-  const [showClass, setShowClass] = useState(true);
+  // const [showClass, setShowClass] = useState(true);
   const [modalText, setModalText] = useState<DataType>();
   const [actionType, setActionType] = useState<string>();
   const { data, refetch: listrefetch } = useQuery(QUERY_AUDITS, {
@@ -247,6 +249,10 @@ const App: React.FC = () => {
       setRole(4);
       tmp = 4;
     }
+    if (getUserType() === 'Director') {
+      setRole(5);
+      tmp = 5;
+    }
     // console.log('身份验证完成');
 
     if (data) {
@@ -268,6 +274,13 @@ const App: React.FC = () => {
           return true;
         }
         if (item.is_delete === false && tmp === 1) {
+          return true;
+        }
+        if (
+          item.is_delete === false &&
+          tmp === 5 &&
+          item.police_leader_name === username
+        ) {
           return true;
         }
         return false;
@@ -313,11 +326,54 @@ const App: React.FC = () => {
   };
 
   const showModal = (e: any) => {
+    let newPlainOptions: string[] | ((prevState: never[]) => never[]) = [];
+
+    switch (e.person_info.person_classification) {
+      case 'A':
+        setClassabcd('A');
+        newPlainOptions = [
+          '涉政、恐、毒、重大刑事犯罪前科人员',
+          '肇事肇祸精神病人',
+          '潜在社会危害性人员',
+          '其他重点人员',
+        ];
+        break;
+      case 'B':
+        setClassabcd('B');
+        newPlainOptions = [
+          '一般违法和其他刑满释放人员',
+          '社区矫正、取保候审监视居住、境外居留人员',
+          '旅游人员',
+          '涉枪涉爆涉危化、现实表现差等重点人员',
+          '其他重点人员',
+        ];
+        break;
+      case 'C':
+        setClassabcd('C');
+        newPlainOptions = [
+          '其他流动人口',
+          '涉访人员和独居老人',
+          '生活困难等无人监管的鳏寡孤独残障病幼等特殊人员',
+          '其他特殊人员',
+        ];
+        break;
+      default:
+        setClassabcd('D');
+        newPlainOptions = [];
+    }
+
+    setPlainOptions(newPlainOptions);
+
+    console.log(e.person_info.classification_reason);
+    const reason_str: string = e.person_info.classification_reason;
+    setCheckedList(reason_str.split(' '));
+    // setRecord(e);
+    setClassabcd(e.person_info.person_classification);
     setIdcardnow(e.request_data?.id_card);
     setNamecardnow(e.request_data?.name);
     setActionType(e?.action_type);
     if (e.action_type === '1') {
-      setShowClass(true);
+      // setShowClass(true);
       setChangecolumns([
         {
           key: 'new',
@@ -331,7 +387,7 @@ const App: React.FC = () => {
         },
       ]);
     } else {
-      setShowClass(false);
+      // setShowClass(false);
       setChangecolumns([
         {
           key: 'cvalue',
@@ -600,7 +656,7 @@ const App: React.FC = () => {
         />
         <Divider />
 
-        {showClass && (role === 1 || role === 2) ? (
+        {/* {showClass && (role === 1 || role === 2) ? (
           <>
             <Title level={5}>人员分级类别</Title>
             <Radio.Group
@@ -616,7 +672,19 @@ const App: React.FC = () => {
           </>
         ) : (
           <></>
-        )}
+        )} */}
+        <Title level={5}>人员分级类别</Title>
+        <Radio.Group
+          style={{ marginTop: 10, marginBottom: 10 }}
+          options={options}
+          value={classabcd}
+          onChange={checkonChange}
+        />
+        <Checkbox.Group
+          options={plainOptions}
+          value={checkedList}
+          onChange={onsubChange}
+        />
       </Modal>
       <Modal
         okText="确认"
