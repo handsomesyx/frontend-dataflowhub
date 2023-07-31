@@ -277,8 +277,8 @@ const SearchBasic = () => {
   // console.log('filter', filterData);
   const handleTimeChange = (value: any) => {
     if (value) {
-      const timeup = new Date(value[0].$d);
-      const timedown = new Date(value[1].$d);
+      const timeup = new Date(value[1].$d);
+      const timedown = new Date(value[0].$d);
       setFilterData((pre) => {
         return {
           ...pre,
@@ -299,8 +299,8 @@ const SearchBasic = () => {
 
   const handleinTimeChange = (value: any) => {
     if (value) {
-      const timeup = new Date(value[0].$d);
-      const timedown = new Date(value[1].$d);
+      const timeup = new Date(value[1].$d);
+      const timedown = new Date(value[0].$d);
       setFilterData((pre) => {
         return {
           ...pre,
@@ -472,8 +472,8 @@ const SearchBasic = () => {
                 placeholder="选择房屋类型"
                 style={{ width: '60%' }}
                 options={[
-                  { id: 1, label: '出租户', value: '出租' },
-                  { id: 2, label: '常驻', value: '常驻' },
+                  { id: 1, label: '出租户', value: '出租户' },
+                  { id: 2, label: '常住户', value: '常住户' },
                 ]}
               ></Select>
             </div>

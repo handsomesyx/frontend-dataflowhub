@@ -100,7 +100,7 @@ const App: React.FC = () => {
   const [refuseopen, setRefuseOpen] = useState(false);
   // const [showClass, setShowClass] = useState(true);
   const [modalText, setModalText] = useState<DataType>();
-  const [actionType, setActionType] = useState<string>();
+  // const [actionType, setActionType] = useState<string>();
   const { data, refetch: listrefetch } = useQuery(QUERY_AUDITS, {
     // client,
     fetchPolicy: 'no-cache',
@@ -328,7 +328,7 @@ const App: React.FC = () => {
   const showModal = (e: any) => {
     let newPlainOptions: string[] | ((prevState: never[]) => never[]) = [];
 
-    switch (e.person_info.person_classification) {
+    switch (e.person_info?.person_classification) {
       case 'A':
         setClassabcd('A');
         newPlainOptions = [
@@ -364,14 +364,13 @@ const App: React.FC = () => {
 
     setPlainOptions(newPlainOptions);
 
-    console.log(e.person_info.classification_reason);
-    const reason_str: string = e.person_info.classification_reason;
-    setCheckedList(reason_str.split(' '));
+    const reason_str: string = e?.person_info?.classification_reason;
+    setCheckedList(reason_str?.split(' '));
     // setRecord(e);
-    setClassabcd(e.person_info.person_classification);
-    setIdcardnow(e.request_data?.id_card);
-    setNamecardnow(e.request_data?.name);
-    setActionType(e?.action_type);
+    setClassabcd(e?.person_info?.person_classification);
+    setIdcardnow(e?.request_data?.id_card);
+    setNamecardnow(e?.request_data?.name);
+    // setActionType(e?.action_type);
     if (e.action_type === '1') {
       // setShowClass(true);
       setChangecolumns([
@@ -439,23 +438,23 @@ const App: React.FC = () => {
       classification_reason: checkedList_string,
       person_classification: classabcd,
     };
-    if (actionType === '1') {
-      updateAudit({
-        variables: {
-          class_data: classData,
-          new_data: newData,
-          rightnow_auditrecords_id: rightnowAuditrecordsId,
-        },
-      });
-    } else {
-      updateAudit({
-        variables: {
-          // class_data: classData,
-          new_data: newData,
-          rightnow_auditrecords_id: rightnowAuditrecordsId,
-        },
-      });
-    }
+    // if (actionType === '1') {
+    updateAudit({
+      variables: {
+        class_data: classData,
+        new_data: newData,
+        rightnow_auditrecords_id: rightnowAuditrecordsId,
+      },
+    });
+    // } else {
+    //   updateAudit({
+    //     variables: {
+    //       // class_data: classData,
+    //       new_data: newData,
+    //       rightnow_auditrecords_id: rightnowAuditrecordsId,
+    //     },
+    //   });
+    // }
   };
 
   const handlerefuseCancel = () => {
