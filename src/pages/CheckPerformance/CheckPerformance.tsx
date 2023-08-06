@@ -47,6 +47,7 @@ const items: MenuProps['items'] = [
 ];
 
 // Query查找查询
+// 获取用户操作日志
 const GET_USER_LOG_OPERATIONS = gql`
   query GetUserLogOperations(
     $role_id: Int!
@@ -74,6 +75,7 @@ const GET_USER_LOG_OPERATIONS = gql`
         login_count
         modify_person_count
         query_count
+        delete_count
         submit_event_count
         add_person_count
         begin_time
@@ -98,6 +100,7 @@ const GET_DEFAULT_TABLEDATA = gql`
         login_count
         modify_person_count
         query_count
+        delete_count
         submit_event_count
         add_person_count
         begin_time
@@ -363,6 +366,7 @@ const CheckPerformance: React.FC = () => {
         '姓名',
         '登陆次数',
         '查找次数',
+        '删除次数',
         '新增群众数',
         '提交事件数',
         '群众信息变更数',
@@ -376,14 +380,29 @@ const CheckPerformance: React.FC = () => {
       const data = ExcelData;
 
       data.forEach((item: any, index: any) => {
+        // worksheet.getCell(`A${index + 2}`).value = index + 1;
+        // worksheet.getCell(`B${index + 2}`).value = item.name;
+        // worksheet.getCell(`C${index + 2}`).value = item.login_count;
+        // worksheet.getCell(`D${index + 2}`).value = item.query_count;
+        // worksheet.getCell(`J${index + 2}`).value = item.delete_count;
+        // worksheet.getCell(`E${index + 2}`).value = item.add_person_count;
+        // worksheet.getCell(`F${index + 2}`).value = item.submit_event_count;
+        // worksheet.getCell(`G${index + 2}`).value = item.modify_person_count;
+        // worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
+        //   item.begin_time,
+        // ).toFormat('yyyy-MM-dd HH:mm:ss');
+        // worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
+        //   item.end_time,
+        // ).toFormat('yyyy-MM-dd HH:mm:ss');
+
         worksheet.getCell(`A${index + 2}`).value = index + 1;
         worksheet.getCell(`B${index + 2}`).value = item.name;
         worksheet.getCell(`C${index + 2}`).value = item.login_count;
         worksheet.getCell(`D${index + 2}`).value = item.query_count;
-        worksheet.getCell(`E${index + 2}`).value = item.add_person_count;
-        worksheet.getCell(`F${index + 2}`).value = item.submit_event_count;
-        worksheet.getCell(`G${index + 2}`).value = item.modify_person_count;
-
+        worksheet.getCell(`E${index + 2}`).value = item.delete_count;
+        worksheet.getCell(`F${index + 2}`).value = item.add_person_count;
+        worksheet.getCell(`G${index + 2}`).value = item.submit_event_count;
+        worksheet.getCell(`H${index + 2}`).value = item.modify_person_count;
         // 这里的后端代码没有统一，有时间戳格式的，有年月日格式的，非常吊诡
         // 这是默认直接输出
         // worksheet.getCell(`H${index + 2}`).value = item.begin_time;
@@ -391,10 +410,10 @@ const CheckPerformance: React.FC = () => {
 
         // 这是时间戳模式的，不要忘记解锁import luxon
         // luxon这小玩意确实有用
-        worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
+        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
           item.begin_time,
         ).toFormat('yyyy-MM-dd HH:mm:ss');
-        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
+        worksheet.getCell(`J${index + 2}`).value = DateTime.fromMillis(
           item.end_time,
         ).toFormat('yyyy-MM-dd HH:mm:ss');
 
@@ -467,9 +486,9 @@ const CheckPerformance: React.FC = () => {
     setName(''); // 重置姓名
     setTown(0); // 重置乡镇
     setGrid(0); // 重置网格
-    setBeginTime(undefined);
+    setBeginTime(undefined); // 重置RangePicker 的日期范围
     setEndTime(undefined);
-    setRangeValue(null); // 重置RangePicker 的日期范围
+    setRangeValue(null);
     message.success('重置完成');
   };
   return (
@@ -630,6 +649,12 @@ const CheckPerformance: React.FC = () => {
             title={<div style={{ textAlign: 'center' }}>查找次数</div>}
             dataIndex="query_count"
             key="query_count"
+            align="center"
+          />
+          <Column
+            title={<div style={{ textAlign: 'center' }}>删除次数</div>}
+            dataIndex="delete_count"
+            key="delete_count"
             align="center"
           />
           <Column
