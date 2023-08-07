@@ -11,12 +11,10 @@ import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    {/* <div> */}
     <ErrorBoundary>
       <ApolloProvider client={apolloClient}>
         <App />
       </ApolloProvider>
     </ErrorBoundary>
-    {/* </div>, */}
   </React.StrictMode>,
 );

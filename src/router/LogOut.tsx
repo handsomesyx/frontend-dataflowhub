@@ -1,27 +1,40 @@
 import { Modal } from 'antd';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { logout } from '@/store/SaveToken';
-
 const LogOut = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const showConfirm = () => {
-    Modal.confirm({
-      title: '确认退出登录',
-      content: '您确定要退出登录吗？',
-      okText: '确定',
-      cancelText: '取消',
-      onOk: () => {
-        logout();
-      },
-      onCancel: () => {
-        window.history.back(); // 回退到上一个页面
-      },
-    });
+    setIsOpen(true);
   };
+
+  const handleOk = () => {
+    logout();
+    setIsOpen(false);
+  };
+
+  const handleCancel = () => {
+    window.history.back();
+    setIsOpen(false);
+  };
+
   useEffect(() => {
     showConfirm();
     console.log('测试');
   }, []);
-  return null;
+
+  return (
+    <Modal
+      title="确认退出登录"
+      okText="确定"
+      cancelText="取消"
+      open={isOpen}
+      onOk={handleOk}
+      onCancel={handleCancel}
+    >
+      <p>您确定要退出登录吗?</p>
+    </Modal>
+  );
 };
 export default LogOut;
