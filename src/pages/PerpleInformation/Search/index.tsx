@@ -25,10 +25,12 @@ import {
   getSelectPolicer,
   getSelectPoliceStation,
 } from '@/apis';
+import { getUserType } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 
 import BasicShowList from './BasicShowList';
 import city from './cities.json';
+import classificationReason from './classificatonReason.json';
 import nationality from './nationality.json';
 import religion from './religion.json';
 import SearchIcon from './search.svg';
@@ -122,6 +124,7 @@ const SearchBasic = () => {
   });
 
   const [isshowSearch, setShowSearch] = useState(true);
+  const [isPolice, setIsPolice] = useState(false);
   // 获取派出所内容
   const { data: policeStationData } = useQuery(getSelectPoliceStation);
 
@@ -184,6 +187,10 @@ const SearchBasic = () => {
 
   // 首次加载
   useEffect(() => {
+    const role = getUserType();
+    if (role === 'filmPolice' || role === 'Director') {
+      setIsPolice(true);
+    }
     getFilterPeopleData({
       variables: {
         isDelete: false,
@@ -778,6 +785,21 @@ const SearchBasic = () => {
                 />
               </ConfigProvider>
             </div>
+            {isPolice && (
+              <div>
+                <span>AB类人员分类依据</span>：
+                <Select
+                  showSearch
+                  allowClear
+                  onChange={(e) => {
+                    handleFliterDataSelect(e, 'classification_reason');
+                  }}
+                  placeholder="输入或选择分类依据"
+                  style={{ width: '60%' }}
+                  options={classificationReason}
+                ></Select>
+              </div>
+            )}
           </div>
           <div>
             <div>

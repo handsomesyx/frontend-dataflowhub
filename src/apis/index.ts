@@ -1439,3 +1439,17 @@ export const modifyTheEventInformation = gql`
     }
   }
 `;
+
+export const UpdateClassification = gql`
+  mutation updatePeopleClassification(
+    $personalId: Int!
+    $person_classification: String!
+    $classification_reason: String!
+  ) {
+    updatePeopleClassification(
+      personalId: $personalId
+      person_classification: $person_classification
+      classification_reason: $classification_reason
+    )
+  }
+`;
