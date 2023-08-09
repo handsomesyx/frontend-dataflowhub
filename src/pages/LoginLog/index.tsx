@@ -130,6 +130,18 @@ export function LoginLog() {
     });
   };
   // 查找操作
+  const success = () => {
+    messageApi.open({
+      type: 'success',
+      content: '查找完毕',
+    });
+  };
+  // const error = () => {
+  //   messageApi.open({
+  //     type: 'error',
+  //     content: '查找失败',
+  //   });
+  // };
   const handleSearch = () => {
     setSearchContent(form.getFieldValue('searchContent'));
     setPagination({
@@ -138,6 +150,9 @@ export function LoginLog() {
       total: total,
       showTotal: (total) => `共 ${total} 条`,
     });
+    if (pagination) {
+      success();
+    }
   };
   const onModalClose = () => {
     setModalOpen(false);
