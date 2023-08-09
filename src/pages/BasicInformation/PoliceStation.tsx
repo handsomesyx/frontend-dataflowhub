@@ -852,7 +852,7 @@ export default function PoliceStation() {
                   multiple
                   showCheckedStrategy={SHOW_CHILD}
                   placeholder="请选择所属行政区域"
-                // changeOnSelect
+                  // changeOnSelect
                 />
               </Form.Item>
             </Col>
@@ -891,7 +891,10 @@ export default function PoliceStation() {
         open={updateState}
         getContainer={false}
         onOk={async () => {
-          if (policeStationLeaderName !== formupdatePoliceStation.getFieldValue('policeStationLeader')) {
+          if (
+            policeStationLeaderName !==
+            formupdatePoliceStation.getFieldValue('policeStationLeader')
+          ) {
             if (!search) {
               message.info('请根据您输入的所长姓名进行搜索选择！');
               return;
@@ -1002,7 +1005,7 @@ export default function PoliceStation() {
               multiple
               showCheckedStrategy={SHOW_CHILD}
               placeholder="请选择所属行政区域"
-            // changeOnSelect
+              // changeOnSelect
             />
           </Form.Item>
         </Form>
