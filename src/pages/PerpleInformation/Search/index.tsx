@@ -34,7 +34,7 @@ import classificationReason from './classificatonReason.json';
 import nationality from './nationality.json';
 import religion from './religion.json';
 import SearchIcon from './search.svg';
-// import special_group from './special_group.json';
+import special_group from './special_group.json';
 import styles from './style.module.less';
 const { RangePicker } = DatePicker;
 type filterType = {
@@ -706,7 +706,7 @@ const SearchBasic = () => {
                 />
               </ConfigProvider>
             </div>
-            {/* <div>
+            <div>
               <span>房屋类型：</span>
               <Select
                 allowClear
@@ -720,7 +720,7 @@ const SearchBasic = () => {
                   { id: 2, label: '常住户', value: '常住户' },
                 ]}
               ></Select>
-            </div> */}
+            </div>
           </div>
           <div>
             <div>
@@ -954,7 +954,7 @@ const SearchBasic = () => {
                 style={{ width: '60%', display: 'flex' }}
               ></Input>
             </div>
-            {/* <div>
+            <div>
               <span>特殊群体</span>：
               <Select
                 allowClear
@@ -965,7 +965,7 @@ const SearchBasic = () => {
                 style={{ width: '60%' }}
                 options={special_group}
               ></Select>
-            </div> */}
+            </div>
             <div style={{ justifyContent: 'end' }}>
               <button onClick={handleSearch}>
                 <img src={SearchIcon} />
