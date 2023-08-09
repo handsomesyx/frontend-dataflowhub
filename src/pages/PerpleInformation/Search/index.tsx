@@ -14,6 +14,7 @@ import {
 import type { RangePickerProps } from 'antd/es/date-picker';
 import zhCN from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
+import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,9 +25,12 @@ import {
   getSelectPolicer,
   getSelectPoliceStation,
 } from '@/apis';
+import { getUserType } from '@/store/SaveToken';
+import { saveWorkbook } from '@/utils/ExportExcel';
 
 import BasicShowList from './BasicShowList';
 import city from './cities.json';
+import classificationReason from './classificatonReason.json';
 import nationality from './nationality.json';
 import religion from './religion.json';
 import SearchIcon from './search.svg';
@@ -120,6 +124,7 @@ const SearchBasic = () => {
   });
 
   const [isshowSearch, setShowSearch] = useState(true);
+  const [isPolice, setIsPolice] = useState(false);
   // 获取派出所内容
   const { data: policeStationData } = useQuery(getSelectPoliceStation);
 
@@ -178,8 +183,14 @@ const SearchBasic = () => {
   const [getFilterPeopleData, { data: peopleData, loading, error }] =
     useLazyQuery(getPeopleDataFilter);
 
+  const [getFilterPeopleDataExport] = useLazyQuery(getPeopleDataFilter);
+
   // 首次加载
   useEffect(() => {
+    const role = getUserType();
+    if (role === 'filmPolice' || role === 'Director') {
+      setIsPolice(true);
+    }
     getFilterPeopleData({
       variables: {
         isDelete: false,
@@ -384,6 +395,236 @@ const SearchBasic = () => {
     return current && current > dayjs().endOf('day');
   };
 
+  function formatLocalDate(aa: any) {
+    if (aa) {
+      let timestamp = parseInt(aa);
+      const date = new Date(timestamp);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    } else return '--';
+  }
+
+  const exportInfo = () => {
+    getFilterPeopleDataExport({
+      variables: {
+        isDelete: false,
+        content: { ...filterData },
+        pagingOption: {
+          skip: 0,
+          take: Number(pagination?.total),
+        },
+      },
+    }).then(({ data }) => {
+      console.log(data);
+      const Data = data.getPeopleDataFilter.data;
+      let volunteerArr: string[];
+      let socailArr: string[];
+      let exportData: any = [];
+      Data.map((item: any, index: number) => {
+        let people = item?.detail?.peopleData;
+        let por = item?.detail?.peopleData?.propertyData[0];
+        let sex = people.gender ? '女' : '男';
+        console.log(por);
+
+        let smoking_status = por.smoking_status === 0 ? '否' : '是';
+        if (por?.volunteer_status) {
+          volunteerArr = Object.values(por?.volunteer_status);
+          volunteerArr = volunteerArr.map((item, index) => {
+            return item[index + 1];
+          });
+        } else {
+          volunteerArr = [];
+        }
+
+        if (por?.social_worker) {
+          socailArr = Object.values(por?.social_worker);
+          socailArr = socailArr.map((item, index) => {
+            return item[index + 1];
+          });
+        } else {
+          socailArr = [];
+        }
+
+        exportData.push({
+          id: index,
+          // 基础信息
+          name: item?.detail?.peopleData?.name,
+          card: item?.detail?.peopleData?.id_card,
+          residence: item?.detail?.peopleData?.residence,
+          spell: item?.detail?.peopleData?.pinyin,
+          phone: item?.detail?.peopleData?.phone,
+          currentAddress: item?.detail?.peopleData?.current_address,
+          formerName: item?.detail?.peopleData?.former_name,
+          nickName: item?.detail?.peopleData?.nickname,
+          liveComeTime: formatLocalDate(item?.detail?.peopleData?.date_of_residence),
+          age: item?.detail?.peopleData?.age,
+          height: item?.detail?.peopleData?.height,
+          sex: sex,
+          // 专群结合
+          level: item?.detail?.peopleData?.person_classification,
+          reason: item?.detail?.peopleData?.classification_reason,
+          petition: item?.detail?.peopleData?.petition,
+          // 民政卫健
+          child_number: item?.detail?.peopleData?.healthData?.child_number,
+          marriage_status: item?.detail?.peopleData?.healthData?.marriage_status,
+          health_insurance: item?.detail?.peopleData?.healthData?.health_insurance,
+          pension_insurance: item?.detail?.peopleData?.healthData?.pension_insurance,
+          vaccination_status: item?.detail?.peopleData?.healthData?.vaccination_status,
+          proof_contraindication:
+            item?.detail?.peopleData?.healthData?.proof_contraindication,
+          other_conditions: item?.detail?.peopleData?.healthData?.other_conditions,
+          special_group: item?.detail?.peopleData?.healthData?.special_group,
+          supervisor: item?.detail?.peopleData?.healthData?.supervisor, // 监管
+          disability_id: item?.detail?.peopleData?.disableData?.disability_id, // 残疾证编号
+          disability_type: item?.detail?.peopleData?.disableData?.disability_type, // 残疾类型
+          disability_subsidy: item?.detail?.peopleData?.disableData?.disability_subsidy, // 困难残疾补贴用0代表空
+          severe_disability_subsidy:
+            item?.detail?.peopleData?.disableData?.severe_disability_subsidy, // 重度残疾补贴
+          disability_level: item?.detail?.peopleData?.disableData?.disability_level, // 残疾级别
+          // 民生
+          issue_level: item?.detail?.peopleData?.reportInfoArr?.issue_level,
+          classification_basis:
+            item?.detail?.peopleData?.reportInfoArr?.classification_basis,
+          public_demand: item?.detail?.peopleData?.reportInfoArr?.public_demand,
+          public_opinion: item?.detail?.peopleData?.reportInfoArr?.public_opinion,
+          // 政治教育
+          work_unit: item?.detail?.peopleData?.politicalData?.work_unit,
+          position: item?.detail?.peopleData?.politicalData?.position,
+          political_status: item?.detail?.peopleData?.politicalData?.political_status,
+          party_organization: item?.detail?.peopleData?.politicalData?.party_organization,
+          religion: item?.detail?.peopleData?.politicalData?.religion,
+          nationality: item?.detail?.peopleData?.politicalData?.nationality,
+          education: item?.detail?.peopleData?.politicalData?.education,
+          military_service: item?.detail?.peopleData?.politicalData?.military_service,
+          school: item?.detail?.peopleData?.politicalData?.school,
+          // 种植
+          plant_type: item?.detail?.peopleData?.economicData[0]?.plant_type, // 种植种类
+          plant_quantity: item?.detail?.peopleData?.economicData[0]?.plant_quantity, // 种植数量
+          planting_area: item?.detail?.peopleData?.economicData[0]?.planting_area, // 种植面积
+          breeding_type: item?.detail?.peopleData?.economicData[0]?.breeding_type, // 养殖种类
+          breeding_quantity: item?.detail?.peopleData?.economicData[0]?.breeding_quantity, // 养殖数量
+          business_info: item?.detail?.peopleData?.economicData[0]?.business_info, // 营商情况(商户名称)
+          business_location: item?.detail?.peopleData?.economicData[0]?.business_location, // 门面位置
+          license_number: item?.detail?.peopleData?.economicData[0]?.license_number, // 营业执照编号
+          fire_equipment_type:
+            item?.detail?.peopleData?.economicData[0]?.fire_equipment_type, // 门面消防设备类型
+          fire_equipment_quantity:
+            item?.detail?.peopleData?.economicData[0]?.fire_equipment_quantity, // 门面消防设备数量
+          surveillance_status:
+            item?.detail?.peopleData?.economicData[0]?.surveillance_status, // 门面电子监控状态
+          surveillance_quantity:
+            item?.detail?.peopleData?.economicData[0]?.surveillance_quantity, //
+          // 其他
+          house_info: item?.detail?.peopleData?.propertyData[0]?.house_info, // 房子信息 开关没有暂时没用上
+          house_owner: item?.detail?.peopleData?.propertyData[0]?.house_owner, // 房子产权人
+          house_area: item?.detail?.peopleData?.propertyData[0]?.house_area, // 建筑面积 平方米
+          house_type: item?.detail?.peopleData?.propertyData[0]?.house_type, // 房屋类型
+          house_condition: item?.detail?.peopleData?.propertyData[0]?.house_condition, // 危房等级
+          hobbies: item?.detail?.peopleData?.propertyData[0]?.hobbies, // 兴趣爱好
+          smoking_status: smoking_status, // 吸烟是否  必选
+          car_model: item?.detail?.peopleData?.propertyData[0]?.car_model, // 车型号（可选）
+          car_color: item?.detail?.peopleData?.propertyData[0]?.car_color, // 车身颜色（可选）
+          car_plate: item?.detail?.peopleData?.propertyData[0]?.car_plate, // 车牌照（可选）
+          car_owner: item?.detail?.peopleData?.propertyData[0]?.car_owner, // 车辆所有人（可选）
+          driving_license_type:
+            item?.detail?.peopleData?.propertyData[0]?.driving_license_type, // 驾驶证类型（可选）
+          volunteer_status: volunteerArr?.toString(),
+          social_worker: socailArr?.toString(),
+          // 包保人员
+          gridPersonName: item?.detail?.peopleData?.bBData?.grid_user_name,
+          // gridPersonId: item?.detail?.peopleData?.bBData?.grid_user_name,
+          girdPersonPhone: item?.detail?.peopleData?.bBData?.grid_phone,
+          policeName: item?.detail?.peopleData?.bBData?.police_name,
+          policePhone: item?.detail?.peopleData?.bBData?.police_phone,
+        });
+      });
+      const workbook = new ExcelJs.Workbook();
+      const worksheet = workbook.addWorksheet('demo sheet');
+      worksheet.properties.defaultRowHeight = 20;
+      worksheet.columns = [
+        { header: '序号', key: 'id', width: 12 },
+        { header: '本人姓名', key: 'name', width: 12 },
+        { header: '身份证号', key: 'card', width: 12 },
+        { header: '绰号', key: 'nickName', width: 12 },
+        { header: '姓名拼音', key: 'spell', width: 12 },
+        { header: '联系方式', key: 'phone', width: 12 },
+        { header: '曾用名', key: 'formerName', width: 12 },
+        { header: '户籍所在地', key: 'residence', width: 12 },
+        { header: '性别', key: 'sex', width: 12 },
+        { header: '身高', key: 'height', width: 12 },
+        { header: '年龄', key: 'age', width: 12 },
+        { header: '现住址', key: 'currentAddress', width: 12 },
+        { header: '何时来本地居住', key: 'liveComeTime', width: 12 },
+        { header: '人员分级类别', key: 'level', width: 12 },
+        { header: '分类依据', key: 'reason', width: 12 },
+        { header: '上访诉求', key: 'petition', width: 12 },
+        { header: '事情分级类别', key: 'issue_level', width: 12 },
+        { header: '分类依据', key: 'classification_basis', width: 12 },
+        { header: '群众需求', key: 'public_demand', width: 12 },
+        { header: '群众意见建议', key: 'public_opinion', width: 12 },
+        { header: '生育儿女数量', key: 'child_number', width: 12 },
+        { header: '婚姻状态', key: 'marriage_status', width: 12 },
+        { header: '医疗保险情况', key: 'health_insurance', width: 12 },
+        { header: '养老保险情况', key: 'pension_insurance', width: 12 },
+        { header: '疫苗接种情况', key: 'vaccination_status', width: 12 },
+        { header: '禁忌证明', key: 'proof_contraindication', width: 12 },
+        { header: '民政卫健其他情况', key: 'other_conditions', width: 12 },
+        { header: '特殊群体', key: 'special_group', width: 12 },
+        { header: '监护人姓名', key: 'supervisor', width: 12 },
+        { header: '残疾证编号', key: 'disability_id', width: 12 },
+        { header: '残疾类型', key: 'disability_type', width: 12 },
+        { header: '困难残疾人生活补贴', key: 'disability_subsidy', width: 12 }, // ss
+        { header: '重度残疾人护理补贴', key: 'severe_disability_subsidy', width: 12 },
+        { header: '残疾等级', key: 'disability_level', width: 12 },
+        { header: '工作单位', key: 'work_unit', width: 12 },
+        { header: '职务', key: 'position', width: 12 },
+        { header: '政治面貌', key: 'political_status', width: 12 },
+        { header: '宗教信仰', key: 'religion', width: 12 },
+        { header: '所属党组织', key: 'party_organization', width: 12 },
+        { header: '民族', key: 'nationality', width: 12 },
+        { header: '文化程度', key: 'education', width: 12 },
+        { header: '入伍情况', key: 'military_service', width: 12 },
+        { header: '毕业院校', key: 'school', width: 12 },
+        { header: '种植种类', key: 'plant_type', width: 12 },
+        { header: '种植数量', key: 'plant_quantity', width: 12 },
+        { header: '种植面积', key: 'planting_area', width: 12 },
+        { header: '养殖种类', key: 'breeding_type', width: 12 },
+        { header: '养殖数量', key: 'breeding_quantity', width: 12 },
+        { header: '商户名称', key: 'business_info', width: 12 },
+        { header: '门面位置', key: 'business_location', width: 12 },
+        { header: '营业执照编号', key: 'license_number', width: 12 },
+        { header: '门面消防设备类型', key: 'fire_equipment_type', width: 12 },
+        { header: '门面消防设备数量', key: 'fire_equipment_quantity', width: 12 },
+        { header: '门面电子监控状态', key: 'surveillance_status', width: 12 },
+        { header: '门面电子监控数量', key: 'surveillance_quantity', width: 12 },
+        { header: '房子信息', key: 'house_info', width: 12 },
+        { header: '房子产权人', key: 'house_owner', width: 12 },
+        { header: '建筑面积', key: 'house_area', width: 12 },
+        { header: '房屋类型', key: 'house_type', width: 12 },
+        { header: '危房等级', key: 'house_condition', width: 12 },
+        { header: '兴趣爱好', key: 'hobbies', width: 12 },
+        { header: '吸烟与否', key: 'smoking_status', width: 12 },
+        { header: '车型号', key: 'car_model', width: 12 },
+        { header: '车身颜色', key: 'car_color', width: 12 },
+        { header: '车牌号', key: 'car_plate', width: 12 },
+        { header: '车辆所有人', key: 'car_owner', width: 12 },
+        { header: '驾驶证类型', key: 'driving_license_type', width: 12 },
+        { header: '志愿者', key: 'volunteer_status', width: 12 },
+        { header: '社工', key: 'social_worker', width: 12 },
+        { header: '网格员名称', key: 'gridPersonName', width: 12 },
+        // { header: '网格员编号', key: 'gridPersonId', width: 12 },
+        { header: '网格员联系方式', key: 'girdPersonPhone', width: 12 },
+        { header: '民警姓名', key: 'policeName', width: 12 },
+        { header: '民警联系方式', key: 'policePhone', width: 12 },
+      ];
+      worksheet.addRows(exportData);
+      saveWorkbook(workbook, '人员信息.xlsx');
+    });
+  };
+
   return (
     <div className={styles.FlexColomnBox}>
       <div className={styles.TopBox}>
@@ -395,6 +636,9 @@ const SearchBasic = () => {
           <button className={styles.AddPeople} onClick={showMadal}>
             <span style={{ transform: ' scale(1.5)', display: 'inline-block' }}>+</span>
             &nbsp;增加人员信息
+          </button>
+          <button className={styles.AddPeople} onClick={exportInfo}>
+            导出人员信息
           </button>
         </div>
       </div>
@@ -541,6 +785,21 @@ const SearchBasic = () => {
                 />
               </ConfigProvider>
             </div>
+            {isPolice && (
+              <div>
+                <span>AB类人员分类依据</span>：
+                <Select
+                  showSearch
+                  allowClear
+                  onChange={(e) => {
+                    handleFliterDataSelect(e, 'classification_reason');
+                  }}
+                  placeholder="输入或选择分类依据"
+                  style={{ width: '60%' }}
+                  options={classificationReason}
+                ></Select>
+              </div>
+            )}
           </div>
           <div>
             <div>
