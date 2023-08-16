@@ -15,6 +15,7 @@ import { Modal } from 'antd';
 import { Space } from 'antd';
 import { Button } from 'antd';
 import { Table } from 'antd';
+import Watermark from 'antd/es/watermark';
 // import type { UploadChangeParam } from 'antd/es/upload';
 // import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import type { ColumnsType } from 'antd/lib/table';
@@ -890,275 +891,281 @@ export default function PersonManage() {
 
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <div className="UserManage">
-        {/* 添加按钮 */}
-        <div>
-          <Row>
-            <Col span={12}>
-              <span style={{ fontWeight: '700', fontSize: '16px' }}>用户管理</span>
-            </Col>
-            {/* <Col span={2} offset={9}> */}
-            <Col span={12} style={{ textAlign: 'right' }}>
-              <Button
-                // style={{ marginRight: '-100px' }}
-                type="primary"
-                onClick={showModalAdd}
-              >
-                +添加用户信息
-              </Button>
-            </Col>
-          </Row>
-        </div>
-        <Divider />
-        {/* 筛选 */}
-        <div>
-          <Row>
-            <Col span={4}>
-              <span>数据总数({db?.getPerson.total})</span>
-            </Col>
-            <Col span={20} style={{ textAlign: 'right' }}>
-              <Space>
-                <Select
-                  placeholder="请选择行政区域"
-                  style={{ width: '150px', textAlign: 'left' }}
-                  onChange={selectAdministrionArea}
-                  value={administrionAreaId}
+      <Watermark
+        content={'漠河市基层社会治理智管平台'}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+      >
+        <div className="UserManage">
+          {/* 添加按钮 */}
+          <div>
+            <Row>
+              <Col span={12}>
+                <span style={{ fontWeight: '700', fontSize: '16px' }}>用户管理</span>
+              </Col>
+              {/* <Col span={2} offset={9}> */}
+              <Col span={12} style={{ textAlign: 'right' }}>
+                <Button
+                  // style={{ marginRight: '-100px' }}
+                  type="primary"
+                  onClick={showModalAdd}
                 >
-                  {administrationAreaList?.map((item: any) => (
-                    <Option key={item.id} value={item.id}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-
-                <Select
-                  placeholder="请选择社区"
-                  style={{ width: '150px', textAlign: 'left' }}
-                  onChange={selectCommunity}
-                  value={firstCommunity}
-                >
-                  {communityList?.map((item: any) => (
-                    <Option key={item.id} value={item.id}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-
-                <Select
-                  placeholder="请选择网格"
-                  style={{ width: '150px', textAlign: 'left' }}
-                  value={gridId}
-                  onChange={selectGrid}
-                >
-                  {gridList?.map((item: any) => (
-                    <Option key={item.id} value={item.id}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-
-                {user_role === 'superAdmin' ? (
-                  <Select
-                    placeholder="请选择角色"
-                    style={{ width: '150px', textAlign: 'left' }}
-                    onChange={selectRoleid}
-                    value={select_role_id}
-                  >
-                    {role?.getRole.map((item: any) => (
-                      <Option key={item.id} value={item.id}>
-                        {item.remark}
-                      </Option>
-                    ))}
-                  </Select>
-                ) : (
-                  <></>
-                )}
-
-                <Input
-                  style={{ width: '150px', textAlign: 'left' }}
-                  placeholder="请输入姓名"
-                  value={username}
-                  onChange={changeUsername}
-                />
-
-                <Button type="primary" onClick={selectClick}>
-                  {isSelected ? '取消' : '筛选'}
+                  +添加用户信息
                 </Button>
-              </Space>
-            </Col>
-          </Row>
-        </div>
-
-        {/* 主体部分 */}
-        <div className="UserBody">
-          {/* 添加用户信息的弹框 */}
-          <div className="addUser">
-            <Modal
-              title="添加用户信息"
-              open={visibleAdd}
-              onOk={handleOkAdd}
-              confirmLoading={confirmLoading}
-              onCancel={handleCancelAdd}
-              okText="确认"
-              cancelText="取消"
-            >
-              <Form form={form}>
-                <Form.Item
-                  name="role_id"
-                  label="请选择角色"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: '请选择角色',
-                    },
-                  ]}
-                >
-                  {/* <span>请选择角色：</span><br/> */}
-                  <Select placeholder="请选择" onChange={selectRole}>
-                    {role?.getRole.map((item: any) => (
+              </Col>
+            </Row>
+          </div>
+          <Divider />
+          {/* 筛选 */}
+          <div>
+            <Row>
+              <Col span={4}>
+                <span>数据总数({db?.getPerson.total})</span>
+              </Col>
+              <Col span={20} style={{ textAlign: 'right' }}>
+                <Space>
+                  <Select
+                    placeholder="请选择行政区域"
+                    style={{ width: '150px', textAlign: 'left' }}
+                    onChange={selectAdministrionArea}
+                    value={administrionAreaId}
+                  >
+                    {administrationAreaList?.map((item: any) => (
                       <Option key={item.id} value={item.id}>
-                        {item.remark}
+                        {item.name}
                       </Option>
                     ))}
                   </Select>
-                </Form.Item>
-                <Form.Item
-                  name="userName"
-                  label="用户名"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: '请输入用户名',
-                    },
-                  ]}
-                >
-                  {/* <span>用户名：</span><br/> */}
-                  <Input placeholder="请输入用户名" />
-                </Form.Item>
-                <Form.Item
-                  name="real_name"
-                  label="真实姓名"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: '请输入真实姓名',
-                    },
-                  ]}
-                >
-                  {/* <span>用户名：</span><br/> */}
-                  <Input placeholder="请输入真实姓名" />
-                </Form.Item>
-                <Form.Item
-                  name="id_card"
-                  label="身份证:"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      pattern: /^\d{17}[\dXx]$/,
-                      required: true,
-                      message: '请输入合法身份证号',
-                    },
-                  ]}
-                  validateTrigger={['onBlur']}
-                >
-                  {/* <span>身份证：</span><br/> */}
-                  <Input placeholder="请输入身份证号" />
-                </Form.Item>
-                <Form.Item
-                  name="password"
-                  label="密码:"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      required: true,
-                      // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                      min: 8,
-                      message: '密码长度不少于8位',
-                    },
-                  ]}
-                  validateTrigger={['onBlur']}
-                >
-                  {/* <span>密码：</span><br/> */}
-                  <Input.Password
-                    placeholder="请输入密码"
-                    iconRender={(visible) =>
-                      visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-                    }
+
+                  <Select
+                    placeholder="请选择社区"
+                    style={{ width: '150px', textAlign: 'left' }}
+                    onChange={selectCommunity}
+                    value={firstCommunity}
+                  >
+                    {communityList?.map((item: any) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+
+                  <Select
+                    placeholder="请选择网格"
+                    style={{ width: '150px', textAlign: 'left' }}
+                    value={gridId}
+                    onChange={selectGrid}
+                  >
+                    {gridList?.map((item: any) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+
+                  {user_role === 'superAdmin' ? (
+                    <Select
+                      placeholder="请选择角色"
+                      style={{ width: '150px', textAlign: 'left' }}
+                      onChange={selectRoleid}
+                      value={select_role_id}
+                    >
+                      {role?.getRole.map((item: any) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.remark}
+                        </Option>
+                      ))}
+                    </Select>
+                  ) : (
+                    <></>
+                  )}
+
+                  <Input
+                    style={{ width: '150px', textAlign: 'left' }}
+                    placeholder="请输入姓名"
+                    value={username}
+                    onChange={changeUsername}
                   />
-                </Form.Item>
-                <Form.Item
-                  name="mobile"
-                  label="手机号码:"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      pattern: /^1[3-9]\d{9}$/,
-                      required: true,
-                      message: '请输入合法手机号码',
-                    },
-                  ]}
-                  validateTrigger={['onBlur']}
-                >
-                  {/* <span>手机号：</span><br/> */}
-                  <Input placeholder="请输入手机号码" />
-                </Form.Item>
 
-                {role_id === 4 && (
+                  <Button type="primary" onClick={selectClick}>
+                    {isSelected ? '取消' : '筛选'}
+                  </Button>
+                </Space>
+              </Col>
+            </Row>
+          </div>
+
+          {/* 主体部分 */}
+          <div className="UserBody">
+            {/* 添加用户信息的弹框 */}
+            <div className="addUser">
+              <Modal
+                title="添加用户信息"
+                open={visibleAdd}
+                onOk={handleOkAdd}
+                confirmLoading={confirmLoading}
+                onCancel={handleCancelAdd}
+                okText="确认"
+                cancelText="取消"
+              >
+                <Form form={form}>
                   <Form.Item
-                    name="area_id"
-                    label="请选择行政区域"
+                    name="role_id"
+                    label="请选择角色"
                     labelCol={{ span: 6 }}
                     rules={[
                       {
-                        required: false,
-                        // message: '请选择行政区域',
+                        required: true,
+                        message: '请选择角色',
                       },
                     ]}
                   >
-                    <Select
-                      placeholder="请选择行政区域"
-                      onChange={selectAreaCreate}
-                      value={administrionAreaIdCreate}
-                    >
-                      {createAreaList?.map((item: any) => (
+                    {/* <span>请选择角色：</span><br/> */}
+                    <Select placeholder="请选择" onChange={selectRole}>
+                      {role?.getRole.map((item: any) => (
                         <Option key={item.id} value={item.id}>
-                          {item.name}
+                          {item.remark}
                         </Option>
                       ))}
                     </Select>
                   </Form.Item>
-                )}
-
-                {role_id === 4 && (
                   <Form.Item
-                    name="community_id"
-                    label="请选择社区"
+                    name="userName"
+                    label="用户名"
                     labelCol={{ span: 6 }}
                     rules={[
                       {
-                        required: false,
-                        // message: '请选择社区',
+                        required: true,
+                        message: '请输入用户名',
                       },
                     ]}
                   >
-                    <Select
-                      placeholder="请选择社区"
-                      onChange={selectCommunityCreate}
-                      value={firstCommunityCreate}
-                    >
-                      {createCommunityList?.map((item: any) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
-                    </Select>
+                    {/* <span>用户名：</span><br/> */}
+                    <Input placeholder="请输入用户名" />
                   </Form.Item>
-                )}
+                  <Form.Item
+                    name="real_name"
+                    label="真实姓名"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: '请输入真实姓名',
+                      },
+                    ]}
+                  >
+                    {/* <span>用户名：</span><br/> */}
+                    <Input placeholder="请输入真实姓名" />
+                  </Form.Item>
+                  <Form.Item
+                    name="id_card"
+                    label="身份证:"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        pattern: /^\d{17}[\dXx]$/,
+                        required: true,
+                        message: '请输入合法身份证号',
+                      },
+                    ]}
+                    validateTrigger={['onBlur']}
+                  >
+                    {/* <span>身份证：</span><br/> */}
+                    <Input placeholder="请输入身份证号" />
+                  </Form.Item>
+                  <Form.Item
+                    name="password"
+                    label="密码:"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        required: true,
+                        // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+                        min: 8,
+                        message: '密码长度不少于8位',
+                      },
+                    ]}
+                    validateTrigger={['onBlur']}
+                  >
+                    {/* <span>密码：</span><br/> */}
+                    <Input.Password
+                      placeholder="请输入密码"
+                      iconRender={(visible) =>
+                        visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                      }
+                    />
+                  </Form.Item>
+                  <Form.Item
+                    name="mobile"
+                    label="手机号码:"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        pattern: /^1[3-9]\d{9}$/,
+                        required: true,
+                        message: '请输入合法手机号码',
+                      },
+                    ]}
+                    validateTrigger={['onBlur']}
+                  >
+                    {/* <span>手机号：</span><br/> */}
+                    <Input placeholder="请输入手机号码" />
+                  </Form.Item>
 
-                {/* {(role_id === 6) && (
+                  {role_id === 4 && (
+                    <Form.Item
+                      name="area_id"
+                      label="请选择行政区域"
+                      labelCol={{ span: 6 }}
+                      rules={[
+                        {
+                          required: false,
+                          // message: '请选择行政区域',
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder="请选择行政区域"
+                        onChange={selectAreaCreate}
+                        value={administrionAreaIdCreate}
+                      >
+                        {createAreaList?.map((item: any) => (
+                          <Option key={item.id} value={item.id}>
+                            {item.name}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  )}
+
+                  {role_id === 4 && (
+                    <Form.Item
+                      name="community_id"
+                      label="请选择社区"
+                      labelCol={{ span: 6 }}
+                      rules={[
+                        {
+                          required: false,
+                          // message: '请选择社区',
+                        },
+                      ]}
+                    >
+                      <Select
+                        placeholder="请选择社区"
+                        onChange={selectCommunityCreate}
+                        value={firstCommunityCreate}
+                      >
+                        {createCommunityList?.map((item: any) => (
+                          <Option key={item.id} value={item.id}>
+                            {item.name}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  )}
+
+                  {/* {(role_id === 6) && (
                 <Form.Item
                   name="grid_id"
                   label="请选择网格"
@@ -1185,310 +1192,312 @@ export default function PersonManage() {
                 </Form.Item>
               )} */}
 
-                {role_id === 4 && (
-                  <>
+                  {role_id === 4 && (
+                    <>
+                      <Form.Item
+                        name="grid_id"
+                        label="请选择网格"
+                        labelCol={{ span: 6 }}
+                        rules={[
+                          {
+                            required: true,
+                            message: '请选择网格',
+                          },
+                        ]}
+                      >
+                        <Select
+                          placeholder="请选择网格"
+                          onChange={selectGridInput}
+                          value={gridIdInput}
+                        >
+                          {createGridList?.map((item: any) => (
+                            <Option key={item.id} value={item.id}>
+                              {item.name}
+                            </Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                      <Form.Item
+                        name="police"
+                        label="请选择警员"
+                        labelCol={{ span: 6 }}
+                        rules={[
+                          {
+                            required: true,
+                            message: '请选择警员',
+                          },
+                        ]}
+                      >
+                        <Select placeholder="请选择警员" onChange={selectPoliceInput}>
+                          {createPoliceList?.map((item: any) => (
+                            <Option key={item.police_user_id} value={item.police_user_id}>
+                              {item.real_name}
+                            </Option>
+                          ))}
+                        </Select>
+                      </Form.Item>
+                    </>
+                  )}
+
+                  {role_id === 2 && (
                     <Form.Item
-                      name="grid_id"
-                      label="请选择网格"
+                      name="policestation"
+                      label="请选择派出所"
                       labelCol={{ span: 6 }}
                       rules={[
                         {
                           required: true,
-                          message: '请选择网格',
+                          message: '请选择派出所',
                         },
                       ]}
                     >
-                      <Select
-                        placeholder="请选择网格"
-                        onChange={selectGridInput}
-                        value={gridIdInput}
-                      >
-                        {createGridList?.map((item: any) => (
+                      <Select placeholder="请选择派出所" onChange={selectPoliceInput}>
+                        {policestation?.getPolicestation.map((item: any) => (
                           <Option key={item.id} value={item.id}>
                             {item.name}
                           </Option>
                         ))}
                       </Select>
                     </Form.Item>
-                    <Form.Item
-                      name="police"
-                      label="请选择警员"
-                      labelCol={{ span: 6 }}
-                      rules={[
-                        {
-                          required: true,
-                          message: '请选择警员',
-                        },
-                      ]}
-                    >
-                      <Select placeholder="请选择警员" onChange={selectPoliceInput}>
-                        {createPoliceList?.map((item: any) => (
-                          <Option key={item.police_user_id} value={item.police_user_id}>
-                            {item.real_name}
-                          </Option>
-                        ))}
-                      </Select>
-                    </Form.Item>
-                  </>
-                )}
-
-                {role_id === 2 && (
+                  )}
                   <Form.Item
-                    name="policestation"
-                    label="请选择派出所"
+                    name="head_url"
+                    label="头像:"
                     labelCol={{ span: 6 }}
-                    rules={[
-                      {
-                        required: true,
-                        message: '请选择派出所',
-                      },
-                    ]}
+                    // rules={[
+                    // {
+                    //     required: true,
+                    //     message: '上传头像',
+                    // },
+                    // ]}
                   >
-                    <Select placeholder="请选择派出所" onChange={selectPoliceInput}>
-                      {policestation?.getPolicestation.map((item: any) => (
-                        <Option key={item.id} value={item.id}>
-                          {item.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </Form.Item>
-                )}
-                <Form.Item
-                  name="head_url"
-                  label="头像:"
-                  labelCol={{ span: 6 }}
-                  // rules={[
-                  // {
-                  //     required: true,
-                  //     message: '上传头像',
-                  // },
-                  // ]}
-                >
-                  {/* <span>头像：</span><br></br> */}
-                  <Upload
-                    customRequest={({ file }) => {
-                      handleUploadSuccess(file);
-                    }}
-                    showUploadList={false}
-                    beforeUpload={beforeUpload}
-                  >
-                    <div
-                      style={{
-                        border: '1px dashed',
-                        backgroundColor: '#F6F6F6',
-                        width: '120px',
-                        height: '90px',
-                        textAlign: 'center',
-                        // paddingTop:'40px',
-                        // marginTop:'30px'
+                    {/* <span>头像：</span><br></br> */}
+                    <Upload
+                      customRequest={({ file }) => {
+                        handleUploadSuccess(file);
                       }}
+                      showUploadList={false}
+                      beforeUpload={beforeUpload}
                     >
-                      {imageUrl === '' ? (
-                        uploadButton
-                      ) : (
-                        <div>
-                          <img src={imageUrl} width={'120px'} height={'90px'}></img>
-                        </div>
-                      )}
-                    </div>
-                  </Upload>
-                </Form.Item>
-              </Form>
-            </Modal>
+                      <div
+                        style={{
+                          border: '1px dashed',
+                          backgroundColor: '#F6F6F6',
+                          width: '120px',
+                          height: '90px',
+                          textAlign: 'center',
+                          // paddingTop:'40px',
+                          // marginTop:'30px'
+                        }}
+                      >
+                        {imageUrl === '' ? (
+                          uploadButton
+                        ) : (
+                          <div>
+                            <img src={imageUrl} width={'120px'} height={'90px'}></img>
+                          </div>
+                        )}
+                      </div>
+                    </Upload>
+                  </Form.Item>
+                </Form>
+              </Modal>
+            </div>
           </div>
-        </div>
 
-        {/* 删除的弹窗 */}
-        <Modal
-          title="删除用户信息"
-          open={visibleDel}
-          onOk={handleOkDel}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancelDel}
-          okText="确认"
-          cancelText="取消"
-        >
-          <h2>确定删除吗？</h2>
-          <span style={{ color: 'red' }}>
-            一旦删除将无法使用该账号绑定的身份证、手机号登注册新账号
-          </span>
-          <br />
-          <span style={{ color: 'red' }}>同时也将无法查看该账号的所有日志记录等信息</span>
-        </Modal>
+          {/* 删除的弹窗 */}
+          <Modal
+            title="删除用户信息"
+            open={visibleDel}
+            onOk={handleOkDel}
+            confirmLoading={confirmLoading}
+            onCancel={handleCancelDel}
+            okText="确认"
+            cancelText="取消"
+          >
+            <h2>确定删除吗？</h2>
+            <span style={{ color: 'red' }}>
+              一旦删除将无法使用该账号绑定的身份证、手机号登注册新账号
+            </span>
+            <br />
+            <span style={{ color: 'red' }}>
+              同时也将无法查看该账号的所有日志记录等信息
+            </span>
+          </Modal>
 
-        {/* 修改的弹窗 */}
-        {/* 添加用户信息的弹框 */}
-        {/* <div className='addUser'> */}
-        <Modal
-          title="修改用户信息"
-          open={visibleUpd}
-          onOk={handleOkUpd}
-          confirmLoading={confirmLoading}
-          onCancel={handleCancelUpd}
-          okText="确认"
-          cancelText="取消"
-        >
-          <Form form={form2}>
-            <Form.Item
-              name="role_id"
-              label="请选择角色"
-              labelCol={{ span: 6 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请选择角色',
-                },
-              ]}
-            >
-              {/* <span>请选择角色：</span><br/> */}
-              <Select
-                placeholder="请选择"
-                onChange={selectRole}
-                disabled={true}
-                // value={record?.role_id}
-              >
-                {role?.getRole.map((item: any) => (
-                  <Option key={item.id} value={item.id}>
-                    {item.remark}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="username"
-              label="用户名"
-              labelCol={{ span: 6 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入用户名',
-                },
-              ]}
-            >
-              {/* <span>用户名：</span><br/> */}
-              <Input placeholder="请输入用户名" />
-            </Form.Item>
-            <Form.Item
-              name="real_name"
-              label="真实姓名"
-              labelCol={{ span: 6 }}
-              rules={[
-                {
-                  required: true,
-                  message: '请输入真实姓名',
-                },
-              ]}
-            >
-              {/* <span>用户名：</span><br/> */}
-              <Input placeholder="请输入真实姓名" />
-            </Form.Item>
-            <Form.Item
-              name="id_card"
-              label="身份证:"
-              labelCol={{ span: 6 }}
-              rules={[
-                {
-                  pattern: /^\d{17}[\dXx]$/,
-                  required: true,
-                  message: '请输入合法身份证号',
-                },
-              ]}
-              validateTrigger={['onBlur']}
-            >
-              {/* <span>身份证：</span><br/> */}
-              <Input placeholder="请输入身份证号" />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              label="密码:"
-              labelCol={{ span: 6 }}
-              rules={[
-                {
-                  // required: true,
-                  // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
-                  min: 8,
-                  message: '密码长度不少于8位',
-                },
-              ]}
-              validateTrigger={['onBlur']}
-            >
-              {/* <span>密码：</span><br/> */}
-              <Input.Password
-                placeholder="请输入密码"
-                iconRender={(visible) =>
-                  visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
-                }
-              />
-            </Form.Item>
-            <Form.Item
-              name="mobile"
-              label="手机号码:"
-              labelCol={{ span: 6 }}
-              rules={[
-                {
-                  pattern: /^1[3-9]\d{9}$/,
-                  required: true,
-                  message: '请输入合法手机号码',
-                },
-              ]}
-              validateTrigger={['onBlur']}
-            >
-              {/* <span>手机号：</span><br/> */}
-              <Input placeholder="请输入手机号码" />
-            </Form.Item>
-            {role_id === 4 && (
+          {/* 修改的弹窗 */}
+          {/* 添加用户信息的弹框 */}
+          {/* <div className='addUser'> */}
+          <Modal
+            title="修改用户信息"
+            open={visibleUpd}
+            onOk={handleOkUpd}
+            confirmLoading={confirmLoading}
+            onCancel={handleCancelUpd}
+            okText="确认"
+            cancelText="取消"
+          >
+            <Form form={form2}>
               <Form.Item
-                name="area_id"
-                label="请选择行政区域"
+                name="role_id"
+                label="请选择角色"
                 labelCol={{ span: 6 }}
                 rules={[
                   {
-                    required: false,
-                    // message: '请选择行政区域',
+                    required: true,
+                    message: '请选择角色',
                   },
                 ]}
               >
+                {/* <span>请选择角色：</span><br/> */}
                 <Select
-                  placeholder="请选择行政区域"
-                  onChange={selectAreaCreate}
-                  value={administrionAreaIdCreate}
+                  placeholder="请选择"
+                  onChange={selectRole}
+                  disabled={true}
+                  // value={record?.role_id}
                 >
-                  {createAreaList?.map((item: any) => (
+                  {role?.getRole.map((item: any) => (
                     <Option key={item.id} value={item.id}>
-                      {item.name}
+                      {item.remark}
                     </Option>
                   ))}
                 </Select>
               </Form.Item>
-            )}
-
-            {role_id === 4 && (
               <Form.Item
-                name="community_id"
-                label="请选择社区"
+                name="username"
+                label="用户名"
                 labelCol={{ span: 6 }}
                 rules={[
                   {
-                    required: false,
-                    // message: '请选择社区',
+                    required: true,
+                    message: '请输入用户名',
                   },
                 ]}
               >
-                <Select
-                  placeholder="请选择社区"
-                  onChange={selectCommunityCreate}
-                  value={firstCommunityCreate}
-                >
-                  {createCommunityList?.map((item: any) => (
-                    <Option key={item.id} value={item.id}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
+                {/* <span>用户名：</span><br/> */}
+                <Input placeholder="请输入用户名" />
               </Form.Item>
-            )}
+              <Form.Item
+                name="real_name"
+                label="真实姓名"
+                labelCol={{ span: 6 }}
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入真实姓名',
+                  },
+                ]}
+              >
+                {/* <span>用户名：</span><br/> */}
+                <Input placeholder="请输入真实姓名" />
+              </Form.Item>
+              <Form.Item
+                name="id_card"
+                label="身份证:"
+                labelCol={{ span: 6 }}
+                rules={[
+                  {
+                    pattern: /^\d{17}[\dXx]$/,
+                    required: true,
+                    message: '请输入合法身份证号',
+                  },
+                ]}
+                validateTrigger={['onBlur']}
+              >
+                {/* <span>身份证：</span><br/> */}
+                <Input placeholder="请输入身份证号" />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                label="密码:"
+                labelCol={{ span: 6 }}
+                rules={[
+                  {
+                    // required: true,
+                    // pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/,
+                    min: 8,
+                    message: '密码长度不少于8位',
+                  },
+                ]}
+                validateTrigger={['onBlur']}
+              >
+                {/* <span>密码：</span><br/> */}
+                <Input.Password
+                  placeholder="请输入密码"
+                  iconRender={(visible) =>
+                    visible ? <EyeOutlined /> : <EyeInvisibleOutlined />
+                  }
+                />
+              </Form.Item>
+              <Form.Item
+                name="mobile"
+                label="手机号码:"
+                labelCol={{ span: 6 }}
+                rules={[
+                  {
+                    pattern: /^1[3-9]\d{9}$/,
+                    required: true,
+                    message: '请输入合法手机号码',
+                  },
+                ]}
+                validateTrigger={['onBlur']}
+              >
+                {/* <span>手机号：</span><br/> */}
+                <Input placeholder="请输入手机号码" />
+              </Form.Item>
+              {role_id === 4 && (
+                <Form.Item
+                  name="area_id"
+                  label="请选择行政区域"
+                  labelCol={{ span: 6 }}
+                  rules={[
+                    {
+                      required: false,
+                      // message: '请选择行政区域',
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="请选择行政区域"
+                    onChange={selectAreaCreate}
+                    value={administrionAreaIdCreate}
+                  >
+                    {createAreaList?.map((item: any) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              )}
 
-            {/* {(role_id === 6) && (
+              {role_id === 4 && (
+                <Form.Item
+                  name="community_id"
+                  label="请选择社区"
+                  labelCol={{ span: 6 }}
+                  rules={[
+                    {
+                      required: false,
+                      // message: '请选择社区',
+                    },
+                  ]}
+                >
+                  <Select
+                    placeholder="请选择社区"
+                    onChange={selectCommunityCreate}
+                    value={firstCommunityCreate}
+                  >
+                    {createCommunityList?.map((item: any) => (
+                      <Option key={item.id} value={item.id}>
+                        {item.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              )}
+
+              {/* {(role_id === 6) && (
             <Form.Item
               name="grid_id"
               label="请选择网格"
@@ -1515,130 +1524,131 @@ export default function PersonManage() {
             </Form.Item>
           )} */}
 
-            {role_id === 4 && (
-              <>
-                {' '}
+              {role_id === 4 && (
+                <>
+                  {' '}
+                  <Form.Item
+                    name="grid_id"
+                    label="请选择网格"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: '请选择网格',
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="请选择网格"
+                      onChange={selectGridInput}
+                      value={gridIdInput}
+                      // mode="multiple"
+                    >
+                      {createGridList?.map((item: any) => (
+                        <Option key={item.id} value={item.id}>
+                          {item.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                  <Form.Item
+                    name="police_user_id"
+                    label="请选择警员"
+                    labelCol={{ span: 6 }}
+                    rules={[
+                      {
+                        required: true,
+                        message: '请选择警员',
+                      },
+                    ]}
+                  >
+                    <Select placeholder="请选择警员" onChange={selectPoliceInput}>
+                      {createPoliceList?.map((item: any) => (
+                        <Option key={item.police_user_id} value={item.police_user_id}>
+                          {item.real_name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </>
+              )}
+
+              {role_id === 2 && (
                 <Form.Item
-                  name="grid_id"
-                  label="请选择网格"
+                  name="policestation"
+                  label="请选择派出所"
                   labelCol={{ span: 6 }}
                   rules={[
                     {
                       required: true,
-                      message: '请选择网格',
+                      message: '请选择派出所',
                     },
                   ]}
                 >
-                  <Select
-                    placeholder="请选择网格"
-                    onChange={selectGridInput}
-                    value={gridIdInput}
-                    // mode="multiple"
-                  >
-                    {createGridList?.map((item: any) => (
+                  <Select placeholder="请选择派出所" onChange={selectPoliceInput}>
+                    {policestation?.getPolicestation.map((item: any) => (
                       <Option key={item.id} value={item.id}>
                         {item.name}
                       </Option>
                     ))}
                   </Select>
                 </Form.Item>
-                <Form.Item
-                  name="police_user_id"
-                  label="请选择警员"
-                  labelCol={{ span: 6 }}
-                  rules={[
-                    {
-                      required: true,
-                      message: '请选择警员',
-                    },
-                  ]}
-                >
-                  <Select placeholder="请选择警员" onChange={selectPoliceInput}>
-                    {createPoliceList?.map((item: any) => (
-                      <Option key={item.police_user_id} value={item.police_user_id}>
-                        {item.real_name}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </>
-            )}
-
-            {role_id === 2 && (
+              )}
               <Form.Item
-                name="policestation"
-                label="请选择派出所"
+                name="head_url"
+                label="头像:"
                 labelCol={{ span: 6 }}
-                rules={[
-                  {
-                    required: true,
-                    message: '请选择派出所',
-                  },
-                ]}
+                // rules={[
+                // {
+                //     required: true,
+                //     message: '上传头像',
+                // },
+                // ]}
               >
-                <Select placeholder="请选择派出所" onChange={selectPoliceInput}>
-                  {policestation?.getPolicestation.map((item: any) => (
-                    <Option key={item.id} value={item.id}>
-                      {item.name}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            )}
-            <Form.Item
-              name="head_url"
-              label="头像:"
-              labelCol={{ span: 6 }}
-              // rules={[
-              // {
-              //     required: true,
-              //     message: '上传头像',
-              // },
-              // ]}
-            >
-              {/* <span>头像：</span><br></br> */}
-              <Upload
-                customRequest={({ file }) => {
-                  handleUploadSuccess(file);
-                }}
-                showUploadList={false}
-                beforeUpload={beforeUpload}
-              >
-                <div
-                  style={{
-                    border: '1px dashed',
-                    backgroundColor: '#F6F6F6',
-                    width: '120px',
-                    height: '90px',
-                    textAlign: 'center',
-                    // paddingTop:'40px',
-                    // marginTop:'30px'
+                {/* <span>头像：</span><br></br> */}
+                <Upload
+                  customRequest={({ file }) => {
+                    handleUploadSuccess(file);
                   }}
+                  showUploadList={false}
+                  beforeUpload={beforeUpload}
                 >
-                  {imageUrl === '' ? (
-                    uploadButton
-                  ) : (
-                    <div>
-                      <img src={imageUrl} width={'120px'} height={'90px'}></img>
-                    </div>
-                  )}
-                </div>
-              </Upload>
-            </Form.Item>
-          </Form>
-        </Modal>
-        <Divider></Divider>
+                  <div
+                    style={{
+                      border: '1px dashed',
+                      backgroundColor: '#F6F6F6',
+                      width: '120px',
+                      height: '90px',
+                      textAlign: 'center',
+                      // paddingTop:'40px',
+                      // marginTop:'30px'
+                    }}
+                  >
+                    {imageUrl === '' ? (
+                      uploadButton
+                    ) : (
+                      <div>
+                        <img src={imageUrl} width={'120px'} height={'90px'}></img>
+                      </div>
+                    )}
+                  </div>
+                </Upload>
+              </Form.Item>
+            </Form>
+          </Modal>
+          <Divider></Divider>
 
-        <Table
-          columns={columns}
-          rowKey={(record) => record.id}
-          dataSource={db?.getPerson.data}
-          pagination={pagination}
-          loading={loading}
-          onChange={handleTableChange}
-          // scroll={{ y: 200 }}
-        ></Table>
-      </div>
+          <Table
+            columns={columns}
+            rowKey={(record) => record.id}
+            dataSource={db?.getPerson.data}
+            pagination={pagination}
+            loading={loading}
+            onChange={handleTableChange}
+            // scroll={{ y: 200 }}
+          ></Table>
+        </div>
+      </Watermark>
     </Layout>
   );
 }

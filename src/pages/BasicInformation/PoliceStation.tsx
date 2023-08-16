@@ -22,6 +22,7 @@ import {
   Tooltip,
 } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import Watermark from 'antd/es/watermark';
 import { useEffect, useState } from 'react';
 
 import {
@@ -602,18 +603,25 @@ export default function PoliceStation() {
     );
   });
   return (
-    <div>
-      <div
-        style={{
-          marginLeft: '1vw',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Form form={onSearchForm}>
-          <Row gutter={16} style={{ columnGap: '20px' }}>
-            {/* <Col>
+    <Watermark
+      content={'漠河市基层社会治理智管平台'}
+      style={{ height: '100%' }}
+      // rotate={-20}
+      // gap={[50, 120]}
+      // className="WaterMarkBox"
+    >
+      <div>
+        <div
+          style={{
+            marginLeft: '1vw',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}
+        >
+          <Form form={onSearchForm}>
+            <Row gutter={16} style={{ columnGap: '20px' }}>
+              {/* <Col>
                             <Form.Item name="town">
                                 <Select
                                     allowClear
@@ -632,469 +640,470 @@ export default function PoliceStation() {
 
                             </Form.Item>
                         </Col> */}
-            <Col>
-              <Form.Item name="community">
-                <Select
-                  allowClear
-                  showSearch
-                  onChange={onChangecommunity}
-                  placeholder="请选择村或者社区"
-                  style={{ width: '180px' }}
-                  optionFilterProp="children"
-                  options={community.map((item: any) => {
-                    return {
-                      key: item.id,
-                      label: item.name,
-                      value: item.id,
-                    };
-                  })}
-                />
-              </Form.Item>
-            </Col>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{
-                  background: '#0757CB',
-                  fontSize: '14px',
-                  fontFamily: 'MicrosoftYaHei',
-                }}
-                onClick={searchPoliceStation}
-              >
-                筛选
-              </Button>
-            </Form.Item>
-            <Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                style={{
-                  background: '#0757CB',
-                  fontSize: '14px',
-                  fontFamily: 'MicrosoftYaHei',
-                }}
-                onClick={onReset}
-              >
-                重置
-              </Button>
-            </Form.Item>
-          </Row>
-        </Form>
-        <Button
-          type="primary"
-          style={{
-            background: '#0757CB',
-          }}
-          onClick={() => {
-            setAddPoliceStation(true);
-          }}
-        >
-          + 添加派出所
-        </Button>
-      </div>
-      <Spin spinning={policeStationloading}>
-        {policeStation.length !== 0 ? (
-          <>
-            <Row style={{ marginLeft: '0.5vw' }} gutter={16}>
-              {PoliceStation_card}
-            </Row>
-            <Pagination
-              className="Pagination"
-              // showSizeChanger={true}
-              current={pagination.current}
-              pageSize={pagination.pageSize}
-              total={total}
-              showTotal={(total) => `总共 ${total} 条`}
-              onChange={(_current) => {
-                changePage(_current);
-              }}
-            />
-          </>
-        ) : (
-          <Empty />
-        )}
-      </Spin>
-      <Modal
-        title="警员信息"
-        open={visitInfo}
-        onCancel={VisitInfo_handleCancel}
-        footer={null}
-        width="60vw"
-        getContainer={false}
-      >
-        <Table
-          style={{ paddingTop: '1vh' }}
-          columns={columns}
-          loading={policeDetailloading}
-          dataSource={policeDetail}
-        />
-      </Modal>
-      <Modal
-        title="增加警员"
-        open={addPolice}
-        onOk={AddPolice_handleOk}
-        onCancel={AddPolice_handleCancel}
-        okText="确认"
-        cancelText="取消"
-      >
-        <Form form={formAddPolice} layout="vertical">
-          <Form.Item
-            name="nameInfo"
-            extra={
-              <div style={{ color: 'red' }}>
-                注意：输入完请点击搜索进行警员信息查询并选择
-              </div>
-            }
-          >
-            <Input
-              placeholder="请输入搜索关键字"
-              suffix={
-                <SearchOutlined
-                  onClick={() => {
-                    let name = formAddPolice.getFieldValue('nameInfo');
-                    if (!name) {
-                      message.info('请输入警员名称');
-                      return;
-                    }
-                    let role = '民警';
-                    setSearchName(name);
-                    setSearchRole(role);
-                    setPoliceState(true);
+              <Col>
+                <Form.Item name="community">
+                  <Select
+                    allowClear
+                    showSearch
+                    onChange={onChangecommunity}
+                    placeholder="请选择村或者社区"
+                    style={{ width: '180px' }}
+                    optionFilterProp="children"
+                    options={community.map((item: any) => {
+                      return {
+                        key: item.id,
+                        label: item.name,
+                        value: item.id,
+                      };
+                    })}
+                  />
+                </Form.Item>
+              </Col>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    background: '#0757CB',
+                    fontSize: '14px',
+                    fontFamily: 'MicrosoftYaHei',
                   }}
-                />
+                  onClick={searchPoliceStation}
+                >
+                  筛选
+                </Button>
+              </Form.Item>
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    background: '#0757CB',
+                    fontSize: '14px',
+                    fontFamily: 'MicrosoftYaHei',
+                  }}
+                  onClick={onReset}
+                >
+                  重置
+                </Button>
+              </Form.Item>
+            </Row>
+          </Form>
+          <Button
+            type="primary"
+            style={{
+              background: '#0757CB',
+            }}
+            onClick={() => {
+              setAddPoliceStation(true);
+            }}
+          >
+            + 添加派出所
+          </Button>
+        </div>
+        <Spin spinning={policeStationloading}>
+          {policeStation.length !== 0 ? (
+            <>
+              <Row style={{ marginLeft: '0.5vw' }} gutter={16}>
+                {PoliceStation_card}
+              </Row>
+              <Pagination
+                className="Pagination"
+                // showSizeChanger={true}
+                current={pagination.current}
+                pageSize={pagination.pageSize}
+                total={total}
+                showTotal={(total) => `总共 ${total} 条`}
+                onChange={(_current) => {
+                  changePage(_current);
+                }}
+              />
+            </>
+          ) : (
+            <Empty />
+          )}
+        </Spin>
+        <Modal
+          title="警员信息"
+          open={visitInfo}
+          onCancel={VisitInfo_handleCancel}
+          footer={null}
+          width="60vw"
+          getContainer={false}
+        >
+          <Table
+            style={{ paddingTop: '1vh' }}
+            columns={columns}
+            loading={policeDetailloading}
+            dataSource={policeDetail}
+          />
+        </Modal>
+        <Modal
+          title="增加警员"
+          open={addPolice}
+          onOk={AddPolice_handleOk}
+          onCancel={AddPolice_handleCancel}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Form form={formAddPolice} layout="vertical">
+            <Form.Item
+              name="nameInfo"
+              extra={
+                <div style={{ color: 'red' }}>
+                  注意：输入完请点击搜索进行警员信息查询并选择
+                </div>
               }
-            />
-          </Form.Item>
-          <Form.Item label="姓名" name="name">
-            <Input placeholder="姓名" disabled />
-          </Form.Item>
-          <Form.Item label="身份证号" name="idcard">
-            <Input placeholder="身份证号" disabled />
-          </Form.Item>
-          <Form.Item label="手机号" name="mobile">
-            <Input disabled placeholder="手机号" />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        title="添加派出所"
-        open={addPoliceStation}
-        getContainer={false}
-        onOk={AddPoliceStation_handleOk}
-        onCancel={AddPoliceStation_handleCancel}
-        okText="确认"
-        cancelText="取消"
-      >
-        <Form form={formAddPoliceStation} layout="vertical">
-          <Row justify={'center'}>
-            <Col span={23}>
-              <Form.Item
-                name="name"
-                label="派出所名称"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入派出所名称',
-                  },
-                ]}
-              >
-                <Input placeholder="请输入派出所名称" />
-              </Form.Item>
-              <Form.Item
-                name="username"
-                label="所长名称"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入所长名称',
-                  },
-                ]}
-                extra={
-                  <div style={{ color: 'red' }}>
-                    注意：输入完请点击搜索进行所长信息查询并选择
-                  </div>
+            >
+              <Input
+                placeholder="请输入搜索关键字"
+                suffix={
+                  <SearchOutlined
+                    onClick={() => {
+                      let name = formAddPolice.getFieldValue('nameInfo');
+                      if (!name) {
+                        message.info('请输入警员名称');
+                        return;
+                      }
+                      let role = '民警';
+                      setSearchName(name);
+                      setSearchRole(role);
+                      setPoliceState(true);
+                    }}
+                  />
                 }
-              >
-                <Input
-                  placeholder="请输入所长名称"
-                  suffix={
-                    <SearchOutlined
-                      onClick={() => {
-                        let name = formAddPoliceStation.getFieldValue('username');
-                        if (!name) {
-                          message.info('请输入所长名称');
-                          return;
-                        }
-                        let role = '所长';
-                        setPoliceLeaderStation(true);
-                        setSearchName(name);
-                        setSearchRole(role);
-                      }}
-                    />
+              />
+            </Form.Item>
+            <Form.Item label="姓名" name="name">
+              <Input placeholder="姓名" disabled />
+            </Form.Item>
+            <Form.Item label="身份证号" name="idcard">
+              <Input placeholder="身份证号" disabled />
+            </Form.Item>
+            <Form.Item label="手机号" name="mobile">
+              <Input disabled placeholder="手机号" />
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="添加派出所"
+          open={addPoliceStation}
+          getContainer={false}
+          onOk={AddPoliceStation_handleOk}
+          onCancel={AddPoliceStation_handleCancel}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Form form={formAddPoliceStation} layout="vertical">
+            <Row justify={'center'}>
+              <Col span={23}>
+                <Form.Item
+                  name="name"
+                  label="派出所名称"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请输入派出所名称',
+                    },
+                  ]}
+                >
+                  <Input placeholder="请输入派出所名称" />
+                </Form.Item>
+                <Form.Item
+                  name="username"
+                  label="所长名称"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请输入所长名称',
+                    },
+                  ]}
+                  extra={
+                    <div style={{ color: 'red' }}>
+                      注意：输入完请点击搜索进行所长信息查询并选择
+                    </div>
                   }
-                />
-              </Form.Item>
-              <Form.Item
-                name="area"
-                label="行政区域"
-                rules={[
-                  {
-                    required: true,
-                    message: '请输入行政区域',
-                  },
-                ]}
-              >
-                <Cascader
-                  fieldNames={{ label: 'title', value: 'key', children: 'children' }}
-                  options={Areadata ? flatToTree(Areadata.findManyArea) : []}
-                  // onChange={onChange}
-                  multiple
-                  showCheckedStrategy={SHOW_CHILD}
-                  placeholder="请选择所属行政区域"
-                  // changeOnSelect
-                />
-              </Form.Item>
-            </Col>
-          </Row>
-        </Form>
-      </Modal>
-      <Modal
-        title={'警员信息'}
-        open={policeState}
-        onCancel={() => {
-          setSearchName('');
-          setPoliceState(false);
-        }}
-        footer={null}
-      >
-        <Table columns={columnsRole} loading={loading} dataSource={policeInfo} />
-      </Modal>
-      <Modal
-        title={'所长信息'}
-        open={policeLeaderStation}
-        onCancel={() => {
-          setSearchName('');
-          setPoliceLeaderStation(false);
-        }}
-        footer={null}
-      >
-        <Table
-          style={{ overflow: 'hidden' }}
-          columns={columnsRole}
-          loading={loading}
-          dataSource={policeInfo}
-        />
-      </Modal>
-      <Modal
-        title="修改派出所信息"
-        open={updateState}
-        getContainer={false}
-        onOk={async () => {
-          if (
-            policeStationLeaderName !==
-            formupdatePoliceStation.getFieldValue('policeStationLeader')
-          ) {
-            if (!search) {
-              message.info('请根据您输入的所长姓名进行搜索选择！');
-              return;
+                >
+                  <Input
+                    placeholder="请输入所长名称"
+                    suffix={
+                      <SearchOutlined
+                        onClick={() => {
+                          let name = formAddPoliceStation.getFieldValue('username');
+                          if (!name) {
+                            message.info('请输入所长名称');
+                            return;
+                          }
+                          let role = '所长';
+                          setPoliceLeaderStation(true);
+                          setSearchName(name);
+                          setSearchRole(role);
+                        }}
+                      />
+                    }
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="area"
+                  label="行政区域"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请输入行政区域',
+                    },
+                  ]}
+                >
+                  <Cascader
+                    fieldNames={{ label: 'title', value: 'key', children: 'children' }}
+                    options={Areadata ? flatToTree(Areadata.findManyArea) : []}
+                    // onChange={onChange}
+                    multiple
+                    showCheckedStrategy={SHOW_CHILD}
+                    placeholder="请选择所属行政区域"
+                    // changeOnSelect
+                  />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Modal>
+        <Modal
+          title={'警员信息'}
+          open={policeState}
+          onCancel={() => {
+            setSearchName('');
+            setPoliceState(false);
+          }}
+          footer={null}
+        >
+          <Table columns={columnsRole} loading={loading} dataSource={policeInfo} />
+        </Modal>
+        <Modal
+          title={'所长信息'}
+          open={policeLeaderStation}
+          onCancel={() => {
+            setSearchName('');
+            setPoliceLeaderStation(false);
+          }}
+          footer={null}
+        >
+          <Table
+            style={{ overflow: 'hidden' }}
+            columns={columnsRole}
+            loading={loading}
+            dataSource={policeInfo}
+          />
+        </Modal>
+        <Modal
+          title="修改派出所信息"
+          open={updateState}
+          getContainer={false}
+          onOk={async () => {
+            if (
+              policeStationLeaderName !==
+              formupdatePoliceStation.getFieldValue('policeStationLeader')
+            ) {
+              if (!search) {
+                message.info('请根据您输入的所长姓名进行搜索选择！');
+                return;
+              }
             }
-          }
-          setSearch(false);
-          setPoliceStationLoading(true);
-          setupdateLoading(true);
-          setUpdateState(false);
-          let administrative_area_idArr = formupdatePoliceStation.getFieldValue('area');
-          let administrative_area_id: any = [];
-          administrative_area_idArr.map((item: any) => {
-            administrative_area_id.push(parseInt(item[item.length - 1]));
-          });
-          const updatepolicestationdata: any = await updatePoliceStation({
-            variables: {
-              new_data: {
-                administrative_area_id: administrative_area_id,
-                // community_id: 0,
-                name: formupdatePoliceStation.getFieldValue('policeStationname'),
+            setSearch(false);
+            setPoliceStationLoading(true);
+            setupdateLoading(true);
+            setUpdateState(false);
+            let administrative_area_idArr = formupdatePoliceStation.getFieldValue('area');
+            let administrative_area_id: any = [];
+            administrative_area_idArr.map((item: any) => {
+              administrative_area_id.push(parseInt(item[item.length - 1]));
+            });
+            const updatepolicestationdata: any = await updatePoliceStation({
+              variables: {
+                new_data: {
+                  administrative_area_id: administrative_area_id,
+                  // community_id: 0,
+                  name: formupdatePoliceStation.getFieldValue('policeStationname'),
+                  user_id: userID,
+                },
+                rightnow_pstation_id: policeStationId,
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: ['findManyPolicestation'], // 重新查询
+            });
+            if (updatepolicestationdata.data.updatePolicestation === 1) {
+              formupdatePoliceStation.resetFields();
+              message.success(
+                '修改成功',
+                (onclose = () => {
+                  setPoliceStationLoading(false);
+                  setupdateLoading(false);
+                }),
+              );
+            } else {
+              // formupdatePoliceStation.resetFields();
+              message.success(
+                '修改失败',
+                (onclose = () => {
+                  setPoliceStationLoading(false);
+                  setupdateLoading(false);
+                }),
+              );
+            }
+          }}
+          onCancel={() => {
+            formupdatePoliceStation.resetFields();
+            setUpdateState(false);
+            setSearchName('');
+            setPoliceLeaderStation(false);
+          }}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Form {...layout} form={formupdatePoliceStation}>
+            <Form.Item
+              name="policeStationname"
+              label="派出所名称"
+              rules={[{ required: true, message: '请输入派出所名称' }]}
+            >
+              <Input placeholder="请输入派出所名称" />
+            </Form.Item>
+            <Form.Item
+              name="policeStationLeader"
+              label="所长名称"
+              rules={[{ required: true, message: '请输入所长名称' }]}
+              extra={
+                <div style={{ color: 'red' }}>
+                  注意：输入完请点击搜索进行所长信息查询并选择
+                </div>
+              }
+            >
+              <Input
+                placeholder="请输入所长名称"
+                suffix={
+                  <SearchOutlined
+                    onClick={() => {
+                      let name =
+                        formupdatePoliceStation.getFieldValue('policeStationLeader');
+                      if (!name) {
+                        message.info('请输入所长名称');
+                        return;
+                      }
+                      let role = '所长';
+                      setPoliceLeaderStation(true);
+                      setSearchName(name);
+                      setSearchRole(role);
+                    }}
+                  />
+                }
+              />
+            </Form.Item>
+            <Form.Item
+              name="area"
+              label="行政区域"
+              rules={[
+                {
+                  required: true,
+                  message: '请输入行政区域',
+                },
+              ]}
+            >
+              <Cascader
+                fieldNames={{ label: 'title', value: 'key', children: 'children' }}
+                options={Areadata ? flatToTree(Areadata.findManyArea) : []}
+                multiple
+                showCheckedStrategy={SHOW_CHILD}
+                placeholder="请选择所属行政区域"
+                // changeOnSelect
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+        <Modal
+          title="删除派出所"
+          open={deletePoliceStation}
+          onOk={() => {
+            Delete_Police({
+              awaitRefetchQueries: true,
+              refetchQueries: ['findManyPolicestation'], // 重新查询
+              variables: {
+                id: policeStationId,
+              },
+            })
+              .then((r) => {
+                if (r.data.deletePolicestation === 1) {
+                  message.success('删除成功');
+                } else if (r.data.deletePolicestation === 0) {
+                  message.error('删除失败');
+                }
+                setDeletePoliceStation(false);
+                if (
+                  total - 1 &&
+                  pagination.current > total / pagination.pageSize &&
+                  total % pagination.pageSize === 1
+                ) {
+                  setTotal(total);
+                  setPagination({
+                    current: pagination.current - 1,
+                    pageSize: pagination.pageSize,
+                  });
+                }
+              })
+              .catch((res: any) => {
+                message.error(res);
+                setDeletePoliceStation(false);
+              });
+          }}
+          onCancel={() => {
+            setDeletePoliceStation(false);
+          }}
+          okText="确认"
+          cancelText="取消"
+        >
+          <p>该操作会删除警局下的所有信息，您确认要删除该警局吗？</p>
+        </Modal>
+        <Modal
+          title="删除警员"
+          open={deletePoliceInfo}
+          onOk={() => {
+            deletePolice({
+              variables: {
                 user_id: userID,
               },
-              rightnow_pstation_id: policeStationId,
-            },
-            awaitRefetchQueries: true,
-            refetchQueries: ['findManyPolicestation'], // 重新查询
-          });
-          if (updatepolicestationdata.data.updatePolicestation === 1) {
-            formupdatePoliceStation.resetFields();
-            message.success(
-              '修改成功',
-              (onclose = () => {
-                setPoliceStationLoading(false);
-                setupdateLoading(false);
-              }),
-            );
-          } else {
-            // formupdatePoliceStation.resetFields();
-            message.success(
-              '修改失败',
-              (onclose = () => {
-                setPoliceStationLoading(false);
-                setupdateLoading(false);
-              }),
-            );
-          }
-        }}
-        onCancel={() => {
-          formupdatePoliceStation.resetFields();
-          setUpdateState(false);
-          setSearchName('');
-          setPoliceLeaderStation(false);
-        }}
-        okText="确认"
-        cancelText="取消"
-      >
-        <Form {...layout} form={formupdatePoliceStation}>
-          <Form.Item
-            name="policeStationname"
-            label="派出所名称"
-            rules={[{ required: true, message: '请输入派出所名称' }]}
-          >
-            <Input placeholder="请输入派出所名称" />
-          </Form.Item>
-          <Form.Item
-            name="policeStationLeader"
-            label="所长名称"
-            rules={[{ required: true, message: '请输入所长名称' }]}
-            extra={
-              <div style={{ color: 'red' }}>
-                注意：输入完请点击搜索进行所长信息查询并选择
-              </div>
-            }
-          >
-            <Input
-              placeholder="请输入所长名称"
-              suffix={
-                <SearchOutlined
-                  onClick={() => {
-                    let name =
-                      formupdatePoliceStation.getFieldValue('policeStationLeader');
-                    if (!name) {
-                      message.info('请输入所长名称');
-                      return;
-                    }
-                    let role = '所长';
-                    setPoliceLeaderStation(true);
-                    setSearchName(name);
-                    setSearchRole(role);
-                  }}
-                />
-              }
-            />
-          </Form.Item>
-          <Form.Item
-            name="area"
-            label="行政区域"
-            rules={[
-              {
-                required: true,
-                message: '请输入行政区域',
-              },
-            ]}
-          >
-            <Cascader
-              fieldNames={{ label: 'title', value: 'key', children: 'children' }}
-              options={Areadata ? flatToTree(Areadata.findManyArea) : []}
-              multiple
-              showCheckedStrategy={SHOW_CHILD}
-              placeholder="请选择所属行政区域"
-              // changeOnSelect
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        title="删除派出所"
-        open={deletePoliceStation}
-        onOk={() => {
-          Delete_Police({
-            awaitRefetchQueries: true,
-            refetchQueries: ['findManyPolicestation'], // 重新查询
-            variables: {
-              id: policeStationId,
-            },
-          })
-            .then((r) => {
-              if (r.data.deletePolicestation === 1) {
-                message.success('删除成功');
-              } else if (r.data.deletePolicestation === 0) {
-                message.error('删除失败');
-              }
-              setDeletePoliceStation(false);
-              if (
-                total - 1 &&
-                pagination.current > total / pagination.pageSize &&
-                total % pagination.pageSize === 1
-              ) {
-                setTotal(total);
-                setPagination({
-                  current: pagination.current - 1,
-                  pageSize: pagination.pageSize,
-                });
-              }
-            })
-            .catch((res: any) => {
-              message.error(res);
-              setDeletePoliceStation(false);
-            });
-        }}
-        onCancel={() => {
-          setDeletePoliceStation(false);
-        }}
-        okText="确认"
-        cancelText="取消"
-      >
-        <p>该操作会删除警局下的所有信息，您确认要删除该警局吗？</p>
-      </Modal>
-      <Modal
-        title="删除警员"
-        open={deletePoliceInfo}
-        onOk={() => {
-          deletePolice({
-            variables: {
-              user_id: userID,
-            },
-            awaitRefetchQueries: true,
-            refetchQueries: [
-              {
-                query: GetPoliceInfo,
-                variables: {
-                  rightnow_policestation_id: policeStationId,
-                  role: 2,
+              awaitRefetchQueries: true,
+              refetchQueries: [
+                {
+                  query: GetPoliceInfo,
+                  variables: {
+                    rightnow_policestation_id: policeStationId,
+                    role: 2,
+                  },
                 },
-              },
-              'findManyPolicestation',
-            ],
-          })
-            .then((r) => {
-              if (r.data.deletePolice === 1) {
-                message.success('删除成功');
-              } else if (r.data.deletePolice === 0) {
-                message.error('删除失败');
-              }
-              setDeletePoliceInfo(false);
-              setVisitInfo(false);
+                'findManyPolicestation',
+              ],
             })
-            .catch((res: any) => {
-              message.error(res);
-              setDeletePoliceInfo(false);
-            });
-        }}
-        onCancel={() => {
-          setDeletePoliceInfo(false);
-        }}
-        okText="确认"
-        cancelText="取消"
-      >
-        <p>该操作会从警局中删除该警员信息，您确认要删除该警员吗？</p>
-      </Modal>
-    </div>
+              .then((r) => {
+                if (r.data.deletePolice === 1) {
+                  message.success('删除成功');
+                } else if (r.data.deletePolice === 0) {
+                  message.error('删除失败');
+                }
+                setDeletePoliceInfo(false);
+                setVisitInfo(false);
+              })
+              .catch((res: any) => {
+                message.error(res);
+                setDeletePoliceInfo(false);
+              });
+          }}
+          onCancel={() => {
+            setDeletePoliceInfo(false);
+          }}
+          okText="确认"
+          cancelText="取消"
+        >
+          <p>该操作会从警局中删除该警员信息，您确认要删除该警员吗？</p>
+        </Modal>
+      </div>
+    </Watermark>
   );
 }

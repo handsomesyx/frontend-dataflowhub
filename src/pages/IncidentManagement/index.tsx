@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import type { TabsProps } from 'antd';
 import { Layout, Tabs } from 'antd';
+import Watermark from 'antd/es/watermark';
 import { useState } from 'react';
 
 import { modifyTheEventInformation } from '@/apis';
@@ -45,7 +46,14 @@ function IncidentManagement() {
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       <div style={{ width: '100%', height: '100%' }}>
-        <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        <Watermark
+          content={'漠河市基层社会治理智管平台'}
+          // rotate={-20}
+          // gap={[50, 120]}
+          // className="WaterMarkBox"
+        >
+          <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+        </Watermark>
       </div>
     </Layout>
   );
