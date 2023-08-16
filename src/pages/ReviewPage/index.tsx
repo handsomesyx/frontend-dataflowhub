@@ -1,5 +1,6 @@
 import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
+import Watermark from 'antd/es/watermark';
 
 import Complete from './Complete';
 import Pending from './Pending';
@@ -23,12 +24,19 @@ const items: TabsProps['items'] = [
 function ReviewPage() {
   return (
     <>
-      <Tabs
-        defaultActiveKey="1"
-        items={items}
-        onChange={onChange}
-        style={{ paddingTop: '1vw', paddingLeft: '2vw', paddingRight: '2vw' }}
-      />
+      <Watermark
+        content={'漠河市基层社会治理智管平台'}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+      >
+        <Tabs
+          defaultActiveKey="1"
+          items={items}
+          onChange={onChange}
+          style={{ paddingTop: '1vw', paddingLeft: '2vw', paddingRight: '2vw' }}
+        />
+      </Watermark>
     </>
   );
 }
