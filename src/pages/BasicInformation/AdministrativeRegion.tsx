@@ -21,6 +21,7 @@ import {
   Tree,
 } from 'antd';
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table';
+import Watermark from 'antd/es/watermark';
 // import type { DataNode } from 'antd/es/tree';
 import React, { useEffect, useState } from 'react';
 
@@ -677,15 +678,70 @@ const AdministrativeRegion: React.FC = () => {
   };
   return (
     <>
-      <Row gutter={16} style={{ height: '100%' }}>
-        <Col span={5} style={{ height: '100%' }}>
-          <Card
-            style={{ height: '100%' }}
-            bodyStyle={{
-              height: '96%',
+      <Watermark
+        content={'漠河市基层社会治理智管平台'}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+        style={{ height: '100%' }}
+      >
+        <Row gutter={16} style={{ height: '100%' }}>
+          <Col span={5} style={{ height: '100%' }}>
+            <Card
+              style={{ height: '100%' }}
+              bodyStyle={{
+                height: '96%',
+                overflow: 'auto',
+              }}
+              title={
+                <div
+                  style={{
+                    fontSize: '16px',
+                    fontFamily: 'MicrosoftYaHeiUI',
+                    color: '#000000',
+                    lineHeight: '24px',
+                  }}
+                >
+                  行政区域
+                </div>
+              }
+              bordered={false}
+            >
+              <Tree
+                checkable
+                // treeData={treeData}
+                // onExpand={onExpand}
+                // expandedKeys={expandedKeys}
+                // autoExpandParent={autoExpandParent}
+                // @ts-ignore
+                onCheck={onCheck}
+                // height={600}
+                // checkedKeys={checkedKeys}
+                // onSelect={onSelect}
+                // selectedKeys={selectedKeys}
+                onRightClick={rigthChecked}
+                treeData={Areadata ? flatToTree(Areadata.findManyArea) : []}
+              />
+            </Card>
+          </Col>
+          <Col
+            style={{
+              backgroundColor: 'white',
+              borderRadius: '4px',
+              height: '100%',
               overflow: 'auto',
             }}
-            title={
+            span={19}
+          >
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: '2vh',
+                marginLeft: '1vw',
+              }}
+            >
               <div
                 style={{
                   fontSize: '16px',
@@ -694,449 +750,498 @@ const AdministrativeRegion: React.FC = () => {
                   lineHeight: '24px',
                 }}
               >
-                行政区域
+                网格区域
               </div>
-            }
-            bordered={false}
-          >
-            <Tree
-              checkable
-              // treeData={treeData}
-              // onExpand={onExpand}
-              // expandedKeys={expandedKeys}
-              // autoExpandParent={autoExpandParent}
-              // @ts-ignore
-              onCheck={onCheck}
-              // height={600}
-              // checkedKeys={checkedKeys}
-              // onSelect={onSelect}
-              // selectedKeys={selectedKeys}
-              onRightClick={rigthChecked}
-              treeData={Areadata ? flatToTree(Areadata.findManyArea) : []}
-            />
-          </Card>
-        </Col>
-        <Col
-          style={{
-            backgroundColor: 'white',
-            borderRadius: '4px',
-            height: '100%',
-            overflow: 'auto',
-          }}
-          span={19}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginTop: '2vh',
-              marginLeft: '1vw',
-            }}
-          >
-            <div
-              style={{
-                fontSize: '16px',
-                fontFamily: 'MicrosoftYaHeiUI',
-                color: '#000000',
-                lineHeight: '24px',
-              }}
-            >
-              网格区域
+              <Row justify={'end'} style={{ marginRight: '1vw', columnGap: '20px' }}>
+                <Button
+                  style={{
+                    background: '#0757CB',
+                    color: '#FFFFFF',
+                  }}
+                  onClick={showDrawer}
+                >
+                  + 添加网格
+                </Button>
+              </Row>
             </div>
-            <Row justify={'end'} style={{ marginRight: '1vw', columnGap: '20px' }}>
-              <Button
-                style={{
-                  background: '#0757CB',
-                  color: '#FFFFFF',
-                }}
-                onClick={showDrawer}
-              >
-                + 添加网格
-              </Button>
+            <Table
+              pagination={{
+                current: pagination.current,
+                pageSize: pagination.pageSize,
+                total: total,
+                showTotal: (total) => `共 ${total} 条`,
+              }}
+              onChange={handleTableChange}
+              style={{ paddingTop: '1vh' }}
+              columns={columns}
+              dataSource={griddata}
+            />
+          </Col>
+        </Row>
+        <Drawer
+          mask={false}
+          size={'default'}
+          title="添加网格"
+          placement="right"
+          onClose={onClose}
+          open={open}
+          footer={
+            <Row justify={'end'}>
+              <Space>
+                <Button
+                  onClick={() => {
+                    setGridleader(false);
+                    setOpen(false);
+                    formSubmit.resetFields();
+                  }}
+                >
+                  取消
+                </Button>
+                <Button
+                  style={{
+                    background: '#0757CB',
+                    color: 'white',
+                  }}
+                  onClick={onAddGrid}
+                >
+                  确认
+                </Button>
+              </Space>
             </Row>
-          </div>
-          <Table
-            pagination={{
-              current: pagination.current,
-              pageSize: pagination.pageSize,
-              total: total,
-              showTotal: (total) => `共 ${total} 条`,
-            }}
-            onChange={handleTableChange}
-            style={{ paddingTop: '1vh' }}
-            columns={columns}
-            dataSource={griddata}
-          />
-        </Col>
-      </Row>
-      <Drawer
-        mask={false}
-        size={'default'}
-        title="添加网格"
-        placement="right"
-        onClose={onClose}
-        open={open}
-        footer={
-          <Row justify={'end'}>
-            <Space>
-              <Button
-                onClick={() => {
-                  setGridleader(false);
-                  setOpen(false);
-                  formSubmit.resetFields();
-                }}
-              >
-                取消
-              </Button>
-              <Button
-                style={{
-                  background: '#0757CB',
-                  color: 'white',
-                }}
-                onClick={onAddGrid}
-              >
-                确认
-              </Button>
-            </Space>
-          </Row>
-        }
-      >
-        <Form style={{ width: '100%' }} layout="vertical" form={formSubmit}>
-          <Form.Item
-            name="Gridname"
-            label="网格名称"
-            rules={[{ required: true, message: '请输入网格名称' }]}
-          >
-            <Input placeholder="请输入网格名称" />
-          </Form.Item>
-          <Form.Item
-            name="Areaname"
-            label="所属社区"
-            rules={[{ required: true, message: '请选择所属社区' }]}
-          >
-            <Cascader
-              fieldNames={{ label: 'title', value: 'key', children: 'children' }}
-              options={Areadata ? flatToTree(Areadata.findManyArea) : []}
-              placeholder="请选择所属社区"
-              onChange={(e) => {
-                if (e) {
-                  setSelectGridId([Number(e[e.length - 1])]);
-                  setSelectGrid(true);
-                } else {
-                  setSelectGrid(false);
-                }
-              }}
-            />
-          </Form.Item>
-          <Form.Item
-            name="Gridleader"
-            label="所属网格长"
-            extra={
-              <div style={{ color: 'red' }}>
-                注意：输入完请点击搜索进行网格长信息查询并选择
-              </div>
-            }
-          >
-            <Input
-              placeholder="请输入网格长名称"
-              suffix={
-                <SearchOutlined
-                  onClick={() => {
-                    let name = formSubmit.getFieldValue('Gridleader');
-                    if (!name) {
-                      message.info('请输入网格长名称');
-                      return;
-                    }
-                    let role = '网格长';
-                    setGridleader(true);
-                    setGridleaderloading(true);
-                    setSearchName(name);
-                    setSearchRole(role);
-                  }}
-                />
-              }
-            />
-          </Form.Item>
-          {/* <Form.Item
-            name="policeStation_id"
-            label="所属派出所"
-            rules={[{ required: true, message: '请选择所属派出所' }]}
-          > */}
-          {/* <Select placeholder='请选择所属派出所'>
-              {policeStation?.map((item: any) => (
-                <Option key={item.id} value={item.id}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select> */}
-          <>所属派出所：{selectGird ? policeStation : ''}</>
-
-          {/* </Form.Item> */}
-        </Form>
-      </Drawer>
-      <Drawer
-        mask={false}
-        size={'default'}
-        title="修改网格"
-        placement="right"
-        onClose={onupdate_Close}
-        open={update_open}
-        footer={
-          <Row justify={'end'}>
-            <Space>
-              <Button
-                onClick={() => {
-                  setUpdate_Open(false);
-                  setGridleader(false);
-                  formUpdate.resetFields();
-                }}
-              >
-                取消
-              </Button>
-              <Button
-                style={{ background: '#0757CB', color: 'white' }}
-                onClick={onUpdateGrid}
-              >
-                确认
-              </Button>
-            </Space>
-          </Row>
-        }
-      >
-        <Form
-          style={{ width: '100%' }}
-          layout="vertical"
-          // initialValues={{
-          //   Gridname: gridName,
-          //   Areaname: areaName,
-          //   leader: gridleaderName,
-          // }}
-          form={formUpdate}
-        >
-          <Form.Item
-            name="Gridname"
-            label="网格名称"
-            rules={[{ required: true, message: '请输入网格名称' }]}
-          >
-            <Input placeholder="请输入" />
-          </Form.Item>
-          <Form.Item
-            name="Areaname"
-            label="所属社区"
-            rules={[{ required: true, message: '请选择所属社区' }]}
-          >
-            <Cascader
-              fieldNames={{ label: 'title', value: 'key', children: 'children' }}
-              options={Areadata ? flatToTree(Areadata.findManyArea) : []}
-              placeholder="请选择所属社区"
-              onChange={(e) => {
-                if (e) {
-                  setSelectGridId([Number(e[e.length - 1])]);
-                  setSelectGrid(true);
-                } else {
-                  setSelectGrid(false);
-                }
-              }}
-            />
-          </Form.Item>
-          <Form.Item
-            name="leader"
-            label="所属网格长"
-            extra={
-              <div style={{ color: 'red' }}>
-                注意：输入完请点击搜索进行网格长信息查询并选择
-              </div>
-            }
-          >
-            <Input
-              placeholder="请输入网格长名称"
-              suffix={
-                <SearchOutlined
-                  onClick={() => {
-                    let name = formUpdate.getFieldValue('leader');
-                    if (!name) {
-                      message.info('请输入网格长名称');
-                      return;
-                    }
-                    let role = '网格长';
-                    setGridleader(true);
-                    setGridleaderloading(true);
-                    setSearchName(name);
-                    setSearchRole(role);
-                  }}
-                />
-              }
-            />
-          </Form.Item>
-          {/* <Form.Item
-            name="policeStation_id"
-            label="所属派出所"
-            rules={[{ required: true, message: '请选择所属派出所' }]}
-          > */}
-          {/* <Select placeholder='请选择所属派出所'>
-              {policeStation?.map((item: any) => (
-                <Option key={item.id} value={item.id}>
-                  {item.name}
-                </Option>
-              ))}
-            </Select> */}
-          <>所属派出所：{policeStation}</>
-          {/* </Form.Item> */}
-        </Form>
-      </Drawer>
-      <Modal
-        open={editlevel}
-        onCancel={handleCancel_editlevel}
-        closable={false}
-        centered
-        footer={null}
-        width={'150px'}
-        style={{ borderRadius: '50px', overflow: 'auto' }}
-      >
-        <div style={{ textAlign: 'center' }}>
-          {level === 1 ? (
-            <>
-              <PlusOutlined
-                style={{ marginLeft: 10, fontSize: 20 }}
-                onClick={() => {
-                  setModalAddVisible(true);
-                  setEditlevel(false);
-                }}
-              />
-            </>
-          ) : level === 2 ? (
-            <>
-              <EditOutlined
-                style={{ marginLeft: 10, fontSize: 20 }}
-                onClick={() => {
-                  setModalRenameVisible(true);
-                  setEditlevel(false);
-                }}
-              />
-              <PlusOutlined
-                style={{ marginLeft: 10, fontSize: 20 }}
-                onClick={() => {
-                  setModalAddVisible(true);
-                  setEditlevel(false);
-                }}
-              />
-              <DeleteOutlined
-                style={{ marginLeft: 10, fontSize: 20 }}
-                onClick={() => {
-                  setModalDeleteVisible(true);
-                  setEditlevel(false);
-                }}
-              />
-            </>
-          ) : (
-            <>
-              <EditOutlined
-                style={{ marginLeft: 10, fontSize: 20 }}
-                onClick={() => {
-                  setModalRenameVisible(true);
-                  setEditlevel(false);
-                }}
-              />
-              <span> </span>
-              <DeleteOutlined
-                style={{ marginLeft: 10, fontSize: 20 }}
-                onClick={() => {
-                  setModalDeleteVisible(true);
-                  setEditlevel(false);
-                }}
-              />
-            </>
-          )}
-        </div>
-      </Modal>
-
-      <Modal
-        title="添加行政区域"
-        getContainer={false}
-        open={modalAddVisible}
-        onOk={() => {
-          // const user_id = formAddArea.getFieldValue('CommunityLeadername')
-          // const areadata = await addArea({
-          //   variables: {
-          //     data: {
-          //       level: level + 1,
-          //       name: formAddArea.getFieldValue('Areaname'),
-          //       parent_id: parentID,
-          //       user_id: userid,
-          //     }
-          //   },
-          //   awaitRefetchQueries: true,
-          //   refetchQueries: ['findManyArea'],
-          // });
-          // //console.log('areadata', areadata);
-          if (!search && level === 2) {
-            message.info('请根据您输入的网格长姓名进行搜索选择！');
-            return;
           }
-          setSearch(false);
-          addArea({
-            variables: {
-              data: {
-                level: level + 1,
-                name: formAddArea.getFieldValue('Areaname'),
-                parent_id: parentID,
-                user_id: userid,
-              },
-            },
-            awaitRefetchQueries: true,
-            refetchQueries: ['findManyArea'],
-          })
-            .then(() => {
-              message.success('添加成功');
-              formAddArea.resetFields();
-              setModalAddVisible(false);
-            })
-            .catch((res) => {
-              message.error('' + res);
-              setModalAddVisible(false);
-            });
-          // setModalAddVisible(false);
-          formAddArea.resetFields();
-        }}
-        onCancel={handle_cancelAdd}
-        okText="确认"
-        cancelText="取消"
-      >
-        <Row
-          style={{
-            marginTop: '0.5%',
-            paddingTop: '1%',
-            display: 'flex',
-            alignItems: 'center',
-          }}
+        >
+          <Form style={{ width: '100%' }} layout="vertical" form={formSubmit}>
+            <Form.Item
+              name="Gridname"
+              label="网格名称"
+              rules={[{ required: true, message: '请输入网格名称' }]}
+            >
+              <Input placeholder="请输入网格名称" />
+            </Form.Item>
+            <Form.Item
+              name="Areaname"
+              label="所属社区"
+              rules={[{ required: true, message: '请选择所属社区' }]}
+            >
+              <Cascader
+                fieldNames={{ label: 'title', value: 'key', children: 'children' }}
+                options={Areadata ? flatToTree(Areadata.findManyArea) : []}
+                placeholder="请选择所属社区"
+                onChange={(e) => {
+                  if (e) {
+                    setSelectGridId([Number(e[e.length - 1])]);
+                    setSelectGrid(true);
+                  } else {
+                    setSelectGrid(false);
+                  }
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="Gridleader"
+              label="所属网格长"
+              extra={
+                <div style={{ color: 'red' }}>
+                  注意：输入完请点击搜索进行网格长信息查询并选择
+                </div>
+              }
+            >
+              <Input
+                placeholder="请输入网格长名称"
+                suffix={
+                  <SearchOutlined
+                    onClick={() => {
+                      let name = formSubmit.getFieldValue('Gridleader');
+                      if (!name) {
+                        message.info('请输入网格长名称');
+                        return;
+                      }
+                      let role = '网格长';
+                      setGridleader(true);
+                      setGridleaderloading(true);
+                      setSearchName(name);
+                      setSearchRole(role);
+                    }}
+                  />
+                }
+              />
+            </Form.Item>
+            {/* <Form.Item
+            name="policeStation_id"
+            label="所属派出所"
+            rules={[{ required: true, message: '请选择所属派出所' }]}
+          > */}
+            {/* <Select placeholder='请选择所属派出所'>
+              {policeStation?.map((item: any) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select> */}
+            <>所属派出所：{selectGird ? policeStation : ''}</>
+
+            {/* </Form.Item> */}
+          </Form>
+        </Drawer>
+        <Drawer
+          mask={false}
+          size={'default'}
+          title="修改网格"
+          placement="right"
+          onClose={onupdate_Close}
+          open={update_open}
+          footer={
+            <Row justify={'end'}>
+              <Space>
+                <Button
+                  onClick={() => {
+                    setUpdate_Open(false);
+                    setGridleader(false);
+                    formUpdate.resetFields();
+                  }}
+                >
+                  取消
+                </Button>
+                <Button
+                  style={{ background: '#0757CB', color: 'white' }}
+                  onClick={onUpdateGrid}
+                >
+                  确认
+                </Button>
+              </Space>
+            </Row>
+          }
         >
           <Form
-            form={formAddArea}
-            // style={{
-            //   width: '95%',
-            //   marginTop: '0.5%',
-            //   marginBottom: '0.5%',
-            //   paddingTop: '3%',
-            //   paddingBottom: '1%',
-            //   paddingLeft: '10%',
-            //   paddingRight: '1%',
+            style={{ width: '100%' }}
+            layout="vertical"
+            // initialValues={{
+            //   Gridname: gridName,
+            //   Areaname: areaName,
+            //   leader: gridleaderName,
             // }}
-            preserve={false}
+            form={formUpdate}
           >
             <Form.Item
-              label="行政区域"
+              name="Gridname"
+              label="网格名称"
+              rules={[{ required: true, message: '请输入网格名称' }]}
+            >
+              <Input placeholder="请输入" />
+            </Form.Item>
+            <Form.Item
               name="Areaname"
+              label="所属社区"
+              rules={[{ required: true, message: '请选择所属社区' }]}
+            >
+              <Cascader
+                fieldNames={{ label: 'title', value: 'key', children: 'children' }}
+                options={Areadata ? flatToTree(Areadata.findManyArea) : []}
+                placeholder="请选择所属社区"
+                onChange={(e) => {
+                  if (e) {
+                    setSelectGridId([Number(e[e.length - 1])]);
+                    setSelectGrid(true);
+                  } else {
+                    setSelectGrid(false);
+                  }
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="leader"
+              label="所属网格长"
+              extra={
+                <div style={{ color: 'red' }}>
+                  注意：输入完请点击搜索进行网格长信息查询并选择
+                </div>
+              }
+            >
+              <Input
+                placeholder="请输入网格长名称"
+                suffix={
+                  <SearchOutlined
+                    onClick={() => {
+                      let name = formUpdate.getFieldValue('leader');
+                      if (!name) {
+                        message.info('请输入网格长名称');
+                        return;
+                      }
+                      let role = '网格长';
+                      setGridleader(true);
+                      setGridleaderloading(true);
+                      setSearchName(name);
+                      setSearchRole(role);
+                    }}
+                  />
+                }
+              />
+            </Form.Item>
+            {/* <Form.Item
+            name="policeStation_id"
+            label="所属派出所"
+            rules={[{ required: true, message: '请选择所属派出所' }]}
+          > */}
+            {/* <Select placeholder='请选择所属派出所'>
+              {policeStation?.map((item: any) => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
+            </Select> */}
+            <>所属派出所：{policeStation}</>
+            {/* </Form.Item> */}
+          </Form>
+        </Drawer>
+        <Modal
+          open={editlevel}
+          onCancel={handleCancel_editlevel}
+          closable={false}
+          centered
+          footer={null}
+          width={'150px'}
+          style={{ borderRadius: '50px', overflow: 'auto' }}
+        >
+          <div style={{ textAlign: 'center' }}>
+            {level === 1 ? (
+              <>
+                <PlusOutlined
+                  style={{ marginLeft: 10, fontSize: 20 }}
+                  onClick={() => {
+                    setModalAddVisible(true);
+                    setEditlevel(false);
+                  }}
+                />
+              </>
+            ) : level === 2 ? (
+              <>
+                <EditOutlined
+                  style={{ marginLeft: 10, fontSize: 20 }}
+                  onClick={() => {
+                    setModalRenameVisible(true);
+                    setEditlevel(false);
+                  }}
+                />
+                <PlusOutlined
+                  style={{ marginLeft: 10, fontSize: 20 }}
+                  onClick={() => {
+                    setModalAddVisible(true);
+                    setEditlevel(false);
+                  }}
+                />
+                <DeleteOutlined
+                  style={{ marginLeft: 10, fontSize: 20 }}
+                  onClick={() => {
+                    setModalDeleteVisible(true);
+                    setEditlevel(false);
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <EditOutlined
+                  style={{ marginLeft: 10, fontSize: 20 }}
+                  onClick={() => {
+                    setModalRenameVisible(true);
+                    setEditlevel(false);
+                  }}
+                />
+                <span> </span>
+                <DeleteOutlined
+                  style={{ marginLeft: 10, fontSize: 20 }}
+                  onClick={() => {
+                    setModalDeleteVisible(true);
+                    setEditlevel(false);
+                  }}
+                />
+              </>
+            )}
+          </div>
+        </Modal>
+
+        <Modal
+          title="添加行政区域"
+          getContainer={false}
+          open={modalAddVisible}
+          onOk={() => {
+            // const user_id = formAddArea.getFieldValue('CommunityLeadername')
+            // const areadata = await addArea({
+            //   variables: {
+            //     data: {
+            //       level: level + 1,
+            //       name: formAddArea.getFieldValue('Areaname'),
+            //       parent_id: parentID,
+            //       user_id: userid,
+            //     }
+            //   },
+            //   awaitRefetchQueries: true,
+            //   refetchQueries: ['findManyArea'],
+            // });
+            // //console.log('areadata', areadata);
+            if (!search && level === 2) {
+              message.info('请根据您输入的网格长姓名进行搜索选择！');
+              return;
+            }
+            setSearch(false);
+            addArea({
+              variables: {
+                data: {
+                  level: level + 1,
+                  name: formAddArea.getFieldValue('Areaname'),
+                  parent_id: parentID,
+                  user_id: userid,
+                },
+              },
+              awaitRefetchQueries: true,
+              refetchQueries: ['findManyArea'],
+            })
+              .then(() => {
+                message.success('添加成功');
+                formAddArea.resetFields();
+                setModalAddVisible(false);
+              })
+              .catch((res) => {
+                message.error('' + res);
+                setModalAddVisible(false);
+              });
+            // setModalAddVisible(false);
+            formAddArea.resetFields();
+          }}
+          onCancel={handle_cancelAdd}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Row
+            style={{
+              marginTop: '0.5%',
+              paddingTop: '1%',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <Form
+              form={formAddArea}
+              // style={{
+              //   width: '95%',
+              //   marginTop: '0.5%',
+              //   marginBottom: '0.5%',
+              //   paddingTop: '3%',
+              //   paddingBottom: '1%',
+              //   paddingLeft: '10%',
+              //   paddingRight: '1%',
+              // }}
+              preserve={false}
+            >
+              <Form.Item
+                label="行政区域"
+                name="Areaname"
+                rules={[
+                  {
+                    required: true,
+                    message: '请输入行政区域',
+                  },
+                ]}
+              >
+                <Input style={{ width: '350px' }} placeholder="请输入行政区域" />
+              </Form.Item>
+              {level === 2 ? (
+                <Form.Item
+                  label="社区主任"
+                  name="CommunityLeadername"
+                  rules={[
+                    {
+                      required: true,
+                      message: '请输入社区主任',
+                    },
+                  ]}
+                  extra={
+                    <div style={{ color: 'red' }}>
+                      注意：输入完请点击搜索进行社区主任信息查询并选择
+                    </div>
+                  }
+                >
+                  <Input
+                    placeholder="请输入社区主任"
+                    suffix={
+                      <SearchOutlined
+                        onClick={() => {
+                          let name = formAddArea.getFieldValue('CommunityLeadername');
+                          if (!name) {
+                            message.info('请输入社区主任名称');
+                            return;
+                          }
+                          let role = '社区主任';
+                          setCommunityleader(true);
+                          setCommunityleaderloading(true);
+                          setSearchName(name);
+                          setSearchRole(role);
+                        }}
+                      />
+                    }
+                  />
+                </Form.Item>
+              ) : (
+                <></>
+              )}
+            </Form>
+          </Row>
+        </Modal>
+        <Modal
+          title="修改行政区域"
+          open={modalRenameVisible}
+          getContainer={false}
+          onOk={() => {
+            if (!search && level === 3) {
+              message.info('请根据您输入的社区主任姓名进行搜索选择！');
+              return;
+            }
+            setSearch(false);
+            updateArea({
+              awaitRefetchQueries: true,
+              refetchQueries: ['findManyArea', 'findManyGrid'], // 重新查询
+              variables: {
+                new_data: {
+                  level: level,
+                  name: formRename.getFieldValue('areaname'),
+                  parent_id: areaparentID,
+                  user_id: userid,
+                },
+                rightnow_area_id: parentID,
+              },
+            })
+              .then((r) => {
+                if (r.data.updateArea === 1) {
+                  message.success('修改成功');
+                  formRename.resetFields();
+                } else if (r.data.updateArea === 0) {
+                  message.error('修改失败');
+                  formRename.resetFields();
+                }
+                setModalRenameVisible(false);
+                // if ()
+              })
+              .catch((res: any) => {
+                message.error(res);
+              });
+          }}
+          onCancel={handle_cancelRename}
+          okText="确认"
+          cancelText="取消"
+        >
+          <Form form={formRename}>
+            <Form.Item
+              name="areaname"
+              label="区域名称"
               rules={[
                 {
                   required: true,
-                  message: '请输入行政区域',
+                  message: '请输入行政区域名称',
                 },
               ]}
             >
-              <Input style={{ width: '350px' }} placeholder="请输入行政区域" />
+              <Input placeholder="请输入行政区域名称" />
             </Form.Item>
-            {level === 2 ? (
+            {level === 3 ? (
               <Form.Item
                 label="社区主任"
                 name="CommunityLeadername"
@@ -1157,7 +1262,7 @@ const AdministrativeRegion: React.FC = () => {
                   suffix={
                     <SearchOutlined
                       onClick={() => {
-                        let name = formAddArea.getFieldValue('CommunityLeadername');
+                        let name = formRename.getFieldValue('CommunityLeadername');
                         if (!name) {
                           message.info('请输入社区主任名称');
                           return;
@@ -1176,229 +1281,135 @@ const AdministrativeRegion: React.FC = () => {
               <></>
             )}
           </Form>
-        </Row>
-      </Modal>
-      <Modal
-        title="修改行政区域"
-        open={modalRenameVisible}
-        getContainer={false}
-        onOk={() => {
-          if (!search && level === 3) {
-            message.info('请根据您输入的社区主任姓名进行搜索选择！');
-            return;
-          }
-          setSearch(false);
-          updateArea({
-            awaitRefetchQueries: true,
-            refetchQueries: ['findManyArea', 'findManyGrid'], // 重新查询
-            variables: {
-              new_data: {
-                level: level,
-                name: formRename.getFieldValue('areaname'),
-                parent_id: areaparentID,
-                user_id: userid,
+        </Modal>
+        <Modal
+          title="删除行政区域"
+          open={modalDeleteVisible}
+          onOk={() => {
+            deleteArea({
+              awaitRefetchQueries: true,
+              refetchQueries: ['findManyArea', 'findManyGrid'], // 重新查询
+              variables: {
+                id: parentID,
               },
-              rightnow_area_id: parentID,
-            },
-          })
-            .then((r) => {
-              if (r.data.updateArea === 1) {
-                message.success('修改成功');
-                formRename.resetFields();
-              } else if (r.data.updateArea === 0) {
-                message.error('修改失败');
-                formRename.resetFields();
-              }
-              setModalRenameVisible(false);
-              // if ()
             })
-            .catch((res: any) => {
-              message.error(res);
-            });
-        }}
-        onCancel={handle_cancelRename}
-        okText="确认"
-        cancelText="取消"
-      >
-        <Form form={formRename}>
-          <Form.Item
-            name="areaname"
-            label="区域名称"
-            rules={[
-              {
-                required: true,
-                message: '请输入行政区域名称',
-              },
-            ]}
-          >
-            <Input placeholder="请输入行政区域名称" />
-          </Form.Item>
-          {level === 3 ? (
-            <Form.Item
-              label="社区主任"
-              name="CommunityLeadername"
-              rules={[
-                {
-                  required: true,
-                  message: '请输入社区主任',
-                },
-              ]}
-              extra={
-                <div style={{ color: 'red' }}>
-                  注意：输入完请点击搜索进行社区主任信息查询并选择
-                </div>
-              }
-            >
-              <Input
-                placeholder="请输入社区主任"
-                suffix={
-                  <SearchOutlined
-                    onClick={() => {
-                      let name = formRename.getFieldValue('CommunityLeadername');
-                      if (!name) {
-                        message.info('请输入社区主任名称');
-                        return;
-                      }
-                      let role = '社区主任';
-                      setCommunityleader(true);
-                      setCommunityleaderloading(true);
-                      setSearchName(name);
-                      setSearchRole(role);
-                    }}
-                  />
+              .then((r) => {
+                if (r.data.deleteArea === 1) {
+                  message.success('删除成功');
+                } else if (r.data.deleteArea === 0) {
+                  message.error('删除失败');
                 }
-              />
-            </Form.Item>
-          ) : (
-            <></>
-          )}
-        </Form>
-      </Modal>
-      <Modal
-        title="删除行政区域"
-        open={modalDeleteVisible}
-        onOk={() => {
-          deleteArea({
-            awaitRefetchQueries: true,
-            refetchQueries: ['findManyArea', 'findManyGrid'], // 重新查询
-            variables: {
-              id: parentID,
-            },
-          })
-            .then((r) => {
-              if (r.data.deleteArea === 1) {
-                message.success('删除成功');
-              } else if (r.data.deleteArea === 0) {
-                message.error('删除失败');
-              }
-              setModalDeleteVisible(false);
-              // if ()
-            })
-            .catch((res: any) => {
-              message.error(res);
-            });
-        }}
-        onCancel={handle_cancelDelete}
-        okText="确认"
-        cancelText="取消"
-      >
-        <Row
-          style={{
-            marginTop: '0.5%',
-            paddingTop: '1%',
-            display: 'flex',
-            alignItems: 'center',
+                setModalDeleteVisible(false);
+                // if ()
+              })
+              .catch((res: any) => {
+                message.error(res);
+              });
           }}
+          onCancel={handle_cancelDelete}
+          okText="确认"
+          cancelText="取消"
         >
-          <p>该操作会删除该行政区域下的所有子区域和信息，您确认要删除这个行政区域吗？</p>
-        </Row>
-      </Modal>
-      <Modal
-        title="删除网格区域"
-        open={modalDeleteGrid}
-        onOk={() => {
-          deleteGrid({
-            awaitRefetchQueries: true,
-            refetchQueries: ['findManyGrid'], // 重新查询
-            variables: {
-              id: GridId,
-            },
-          })
-            .then((r) => {
-              if (r.data.deleteGrid === 1) {
-                message.success('删除成功');
-              } else if (r.data.deleteGrid === 0) {
-                message.error('删除失败');
-              }
-              setModalDeleteGrid(false);
-              if (total - 1 && current > total / pageSize && total % pageSize === 1) {
-                setTotal(total);
-                setPagination({
-                  current: current - 1,
-                  pageSize: pageSize,
-                });
-              }
+          <Row
+            style={{
+              marginTop: '0.5%',
+              paddingTop: '1%',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <p>
+              该操作会删除该行政区域下的所有子区域和信息，您确认要删除这个行政区域吗？
+            </p>
+          </Row>
+        </Modal>
+        <Modal
+          title="删除网格区域"
+          open={modalDeleteGrid}
+          onOk={() => {
+            deleteGrid({
+              awaitRefetchQueries: true,
+              refetchQueries: ['findManyGrid'], // 重新查询
+              variables: {
+                id: GridId,
+              },
             })
-            .catch((res: any) => {
-              message.error(res);
-            });
-        }}
-        onCancel={handle_cancelDeleteGrid}
-        okText="确认"
-        cancelText="取消"
-      >
-        <Row
-          style={{
-            marginTop: '0.5%',
-            paddingTop: '1%',
-            display: 'flex',
-            alignItems: 'center',
+              .then((r) => {
+                if (r.data.deleteGrid === 1) {
+                  message.success('删除成功');
+                } else if (r.data.deleteGrid === 0) {
+                  message.error('删除失败');
+                }
+                setModalDeleteGrid(false);
+                if (total - 1 && current > total / pageSize && total % pageSize === 1) {
+                  setTotal(total);
+                  setPagination({
+                    current: current - 1,
+                    pageSize: pageSize,
+                  });
+                }
+              })
+              .catch((res: any) => {
+                message.error(res);
+              });
           }}
+          onCancel={handle_cancelDeleteGrid}
+          okText="确认"
+          cancelText="取消"
         >
-          <p>该操作会删除网格区域下的所有信息，您确认要删除这条网格吗？</p>
-        </Row>
-      </Modal>
-      <Modal
-        // style={{z-index:"1"}}
-        // style={{
-        //   top: 20,
-        // }}
-        // centered
-        // zIndex={1}
-        title={'网格长信息'}
-        open={gridleader}
-        onCancel={() => {
-          setSearchName('');
-          setGridleader(false);
-          setInformationRole([]);
-        }}
-        footer={null}
-      >
-        <Table
-          // style={{ overflow: 'hidden' }}
-          columns={columnsRole}
-          loading={gridleaderloading}
-          dataSource={informationRole}
-        />
-      </Modal>
-      <Modal
-        title={'社区主任信息'}
-        // key={Math.random()}
-        open={communityleader}
-        onCancel={() => {
-          setSearchName('');
-          setCommunityleader(false);
-          setInformationRole([]);
-        }}
-        footer={null}
-      >
-        <Table
-          style={{ overflow: 'hidden' }}
-          columns={columnsRole}
-          loading={communityleaderloading}
-          dataSource={informationRole}
-        />
-      </Modal>
+          <Row
+            style={{
+              marginTop: '0.5%',
+              paddingTop: '1%',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <p>该操作会删除网格区域下的所有信息，您确认要删除这条网格吗？</p>
+          </Row>
+        </Modal>
+        <Modal
+          // style={{z-index:"1"}}
+          // style={{
+          //   top: 20,
+          // }}
+          // centered
+          // zIndex={1}
+          title={'网格长信息'}
+          open={gridleader}
+          onCancel={() => {
+            setSearchName('');
+            setGridleader(false);
+            setInformationRole([]);
+          }}
+          footer={null}
+        >
+          <Table
+            // style={{ overflow: 'hidden' }}
+            columns={columnsRole}
+            loading={gridleaderloading}
+            dataSource={informationRole}
+          />
+        </Modal>
+        <Modal
+          title={'社区主任信息'}
+          // key={Math.random()}
+          open={communityleader}
+          onCancel={() => {
+            setSearchName('');
+            setCommunityleader(false);
+            setInformationRole([]);
+          }}
+          footer={null}
+        >
+          <Table
+            style={{ overflow: 'hidden' }}
+            columns={columnsRole}
+            loading={communityleaderloading}
+            dataSource={informationRole}
+          />
+        </Modal>
+      </Watermark>
     </>
   );
 };
