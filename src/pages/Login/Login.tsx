@@ -46,15 +46,31 @@ const Login = () => {
           saveUserName(data.login?.user?.username);
           const url = window.location;
           const newUrl = url.origin + '/home';
+          message.open({
+            type: 'success',
+            content: '登入成功',
+          });
           setTimeout(() => {
             window.location.href = newUrl;
           }, 300);
         })
-        .catch(() => {
-          message.open({
-            type: 'error',
-            content: '账号或密码错误',
-          });
+        .catch((res) => {
+          if (res.message === '1') {
+            message.open({
+              type: 'error',
+              content: '用户名错误',
+            });
+          } else if (res.message === '2') {
+            message.open({
+              type: 'error',
+              content: '密码错误',
+            });
+          } else {
+            message.open({
+              type: 'error',
+              content: '网络连接错误',
+            });
+          }
           // 写这个是为了强制推到下一个队列执行  确保组件不重新渲染  不然上面的提示弹窗打不开
           setTimeout(() => {
             form.resetFields();
@@ -97,6 +113,7 @@ const Login = () => {
                     prefix={<LockOutlined />}
                     type="password"
                     placeholder="密码"
+                    minLength={8}
                   />
                 </Form.Item>
                 <Form.Item>

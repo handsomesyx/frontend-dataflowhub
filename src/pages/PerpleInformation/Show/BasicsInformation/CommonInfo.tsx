@@ -657,11 +657,23 @@ const Common: React.FC<Props> = ({
       </div>
 
       <div style={{ position: 'absolute', right: '1px', top: '-40px' }}>
-        <Button style={{ marginRight: '10px' }} type="primary" onClick={exportExcel}>
+        <Button
+          style={{
+            marginRight: '10px',
+            backgroundColor: '#0559ca',
+            borderRadius: '5px',
+          }}
+          type="primary"
+          onClick={exportExcel}
+        >
           下载此人员信息
         </Button>
         <Button
-          style={{ marginRight: '10px' }}
+          style={{
+            marginRight: '10px',
+            backgroundColor: '#0559ca',
+            borderRadius: '5px',
+          }}
           type="primary"
           onClick={() => {
             setRecordVisible(true);
@@ -670,7 +682,11 @@ const Common: React.FC<Props> = ({
           查看历史记录
         </Button>
         <Button
-          style={{ marginRight: '10px' }}
+          style={{
+            marginRight: '10px',
+            backgroundColor: '#0559ca',
+            borderRadius: '5px',
+          }}
           type="primary"
           onClick={() => {
             navigate(`/population-manager/person-management-update/${Number(id)}`);
@@ -678,7 +694,14 @@ const Common: React.FC<Props> = ({
         >
           修改信息
         </Button>
-        <Button onClick={() => setDeleteVisible(true)} type="primary">
+        <Button
+          style={{
+            backgroundColor: '#0559ca',
+            borderRadius: '5px',
+          }}
+          onClick={() => setDeleteVisible(true)}
+          type="primary"
+        >
           删除
         </Button>
 

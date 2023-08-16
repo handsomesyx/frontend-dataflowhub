@@ -434,7 +434,14 @@ const BasicInfo = ({
           <div className={styles.FormInput}>
             {update ? (
               <>
-                <Button type="primary" onClick={() => setAddVisible(true)}>
+                <Button
+                  style={{
+                    backgroundColor: '#0559ca',
+                    borderRadius: '5px',
+                    color: '#fff',
+                  }}
+                  onClick={() => setAddVisible(true)}
+                >
                   添加家庭成员
                 </Button>
               </>

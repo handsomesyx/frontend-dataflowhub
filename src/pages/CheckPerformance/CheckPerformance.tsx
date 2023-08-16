@@ -2,21 +2,23 @@
 //  git commit -m [审计模块] --no-verify
 
 import './index.css';
-// import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 
 import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import type { MenuProps, TablePaginationConfig } from 'antd';
-import { Pagination } from 'antd';
+import { message, Pagination } from 'antd';
 import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import locale from 'antd/es/date-picker/locale/zh_CN';
+import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import ExcelJS from 'exceljs';
 // 如果是时间戳格式的DateTime，解锁luxon
 import { DateTime } from 'luxon';
+// import dayjs from 'dayjs';
+import type { RangeValue } from 'rc-picker/lib/interface';
 import React, { useState } from 'react';
 
 import { getUserType } from '../../store/SaveToken';
@@ -45,6 +47,7 @@ const items: MenuProps['items'] = [
 ];
 
 // Query查找查询
+// 获取用户操作日志
 const GET_USER_LOG_OPERATIONS = gql`
   query GetUserLogOperations(
     $role_id: Int!
@@ -72,6 +75,7 @@ const GET_USER_LOG_OPERATIONS = gql`
         login_count
         modify_person_count
         query_count
+        delete_count
         submit_event_count
         add_person_count
         begin_time
@@ -96,6 +100,7 @@ const GET_DEFAULT_TABLEDATA = gql`
         login_count
         modify_person_count
         query_count
+        delete_count
         submit_event_count
         add_person_count
         begin_time
@@ -156,7 +161,8 @@ const CheckPerformance: React.FC = () => {
   // 存储开始与结束时间
   const [beginTime, setBeginTime] = useState();
   const [endTime, setEndTime] = useState();
-
+  // const [beginTime, setBeginTime] = useState<Dayjs | null>(null);
+  // const [endTime, setEndTime] = useState<Dayjs | null>(null);
   // 同样是一系列状态Hook，Auth负责管理点击菜单所确定的role_id，isDefault负责展示初始表单，
   const [currentAuth, setCurrentAuth] = useState(4);
   const [isDefault, setIsDefault] = useState(true);
@@ -257,11 +263,16 @@ const CheckPerformance: React.FC = () => {
             take: 100000,
           },
         });
-        // console.log(UsedDataLength);
-        setPagination({ current: 1, pageSize: pageSizeSet });
+        message.success('查找完成！'),
+          // console.log(UsedDataLength);
+          setPagination({ current: 1, pageSize: pageSizeSet });
       }
     }
   };
+  // const [messages,setmessages]=useState('')
+  // const handleChange = event => {
+  //   setmessages(event.target.value);
+  // };
 
   // 这里的Select级联使用了switch的思想，使用useState得到的city town 进行选择，调取相应的数组
   const getTownOptions = (city: number) => {
@@ -355,6 +366,7 @@ const CheckPerformance: React.FC = () => {
         '姓名',
         '登陆次数',
         '查找次数',
+        '删除次数',
         '新增群众数',
         '提交事件数',
         '群众信息变更数',
@@ -368,14 +380,29 @@ const CheckPerformance: React.FC = () => {
       const data = ExcelData;
 
       data.forEach((item: any, index: any) => {
+        // worksheet.getCell(`A${index + 2}`).value = index + 1;
+        // worksheet.getCell(`B${index + 2}`).value = item.name;
+        // worksheet.getCell(`C${index + 2}`).value = item.login_count;
+        // worksheet.getCell(`D${index + 2}`).value = item.query_count;
+        // worksheet.getCell(`J${index + 2}`).value = item.delete_count;
+        // worksheet.getCell(`E${index + 2}`).value = item.add_person_count;
+        // worksheet.getCell(`F${index + 2}`).value = item.submit_event_count;
+        // worksheet.getCell(`G${index + 2}`).value = item.modify_person_count;
+        // worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
+        //   item.begin_time,
+        // ).toFormat('yyyy-MM-dd HH:mm:ss');
+        // worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
+        //   item.end_time,
+        // ).toFormat('yyyy-MM-dd HH:mm:ss');
+
         worksheet.getCell(`A${index + 2}`).value = index + 1;
         worksheet.getCell(`B${index + 2}`).value = item.name;
         worksheet.getCell(`C${index + 2}`).value = item.login_count;
         worksheet.getCell(`D${index + 2}`).value = item.query_count;
-        worksheet.getCell(`E${index + 2}`).value = item.add_person_count;
-        worksheet.getCell(`F${index + 2}`).value = item.submit_event_count;
-        worksheet.getCell(`G${index + 2}`).value = item.modify_person_count;
-
+        worksheet.getCell(`E${index + 2}`).value = item.delete_count;
+        worksheet.getCell(`F${index + 2}`).value = item.add_person_count;
+        worksheet.getCell(`G${index + 2}`).value = item.submit_event_count;
+        worksheet.getCell(`H${index + 2}`).value = item.modify_person_count;
         // 这里的后端代码没有统一，有时间戳格式的，有年月日格式的，非常吊诡
         // 这是默认直接输出
         // worksheet.getCell(`H${index + 2}`).value = item.begin_time;
@@ -383,10 +410,10 @@ const CheckPerformance: React.FC = () => {
 
         // 这是时间戳模式的，不要忘记解锁import luxon
         // luxon这小玩意确实有用
-        worksheet.getCell(`H${index + 2}`).value = DateTime.fromMillis(
+        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
           item.begin_time,
         ).toFormat('yyyy-MM-dd HH:mm:ss');
-        worksheet.getCell(`I${index + 2}`).value = DateTime.fromMillis(
+        worksheet.getCell(`J${index + 2}`).value = DateTime.fromMillis(
           item.end_time,
         ).toFormat('yyyy-MM-dd HH:mm:ss');
 
@@ -452,7 +479,18 @@ const CheckPerformance: React.FC = () => {
       setGrid(0);
     }
   };
-
+  // 重置查找条件,搜索框清空
+  const [rangeValue, setRangeValue] = useState<RangeValue<Dayjs> | null>(null);
+  const handleReset = () => {
+    // 重置搜索条件
+    setName(''); // 重置姓名
+    setTown(0); // 重置乡镇
+    setGrid(0); // 重置网格
+    setBeginTime(undefined); // 重置RangePicker 的日期范围
+    setEndTime(undefined);
+    setRangeValue(null);
+    message.success('重置完成');
+  };
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       {/* 网格员 警员 菜单 */}
@@ -472,6 +510,7 @@ const CheckPerformance: React.FC = () => {
         <Input
           placeholder="姓名"
           className="BlockTypeName"
+          value={name}
           onChange={(event) => {
             setName(event.target.value);
           }}
@@ -536,6 +575,8 @@ const CheckPerformance: React.FC = () => {
         />
 
         <RangePicker
+          value={rangeValue}
+          onCalendarChange={(value) => setRangeValue(value)}
           disabledDate={disabledDate}
           showTime={{
             hideDisabledOptions: true,
@@ -559,6 +600,14 @@ const CheckPerformance: React.FC = () => {
           onClick={handleExport}
         >
           <span>导出</span>
+        </Button>
+        <Button
+          type="primary"
+          icon={<SearchOutlined />}
+          className="ButtonType"
+          onClick={handleReset}
+        >
+          <span>搜索重置</span>
         </Button>
       </div>
       <div style={{ backgroundColor: '#fff' }}>
@@ -600,6 +649,12 @@ const CheckPerformance: React.FC = () => {
             title={<div style={{ textAlign: 'center' }}>查找次数</div>}
             dataIndex="query_count"
             key="query_count"
+            align="center"
+          />
+          <Column
+            title={<div style={{ textAlign: 'center' }}>删除次数</div>}
+            dataIndex="delete_count"
+            key="delete_count"
             align="center"
           />
           <Column

@@ -220,7 +220,13 @@ function InformationUpdate() {
       id: 2,
       name: '专群结合',
       href: 'combination2',
-      elem: <Combination CombinationData={CombinationData} />,
+      elem: (
+        <Combination
+          CombinationData={CombinationData}
+          update={true}
+          pesonal_id={peopleData.id}
+        />
+      ),
     },
     {
       id: 3,

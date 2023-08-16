@@ -8,7 +8,6 @@ const LogOut = () => {
     logout();
   }, []);
   return <></>;
-
 };
 
 export default LogOut;
