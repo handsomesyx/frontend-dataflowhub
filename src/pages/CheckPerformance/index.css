@@ -4,6 +4,7 @@
 
 .InputBlock {
   background-color: #fff;
+  display: flex;
 }
 
 .BlockTypeNameBackUp {
@@ -32,7 +33,7 @@
 
 .ButtonType {
   padding: 160px auto;
-  margin: 18px 6px;
+  margin: 18px 20px;
   height: 32px;
   float: right;
 }
@@ -49,3 +50,7 @@
   display: flex;
   justify-content: flex-end;
 } */
+.ButtonGroupMenu {
+  display: flex;
+  margin-left: 10px;
+}
