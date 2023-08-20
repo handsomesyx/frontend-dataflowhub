@@ -14,12 +14,13 @@ import {
   Space,
   Table,
 } from 'antd';
+import Watermark from 'antd/es/watermark';
 import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
 import { GetAllUserOperateLogs } from '@/apis';
+import { getUserIdCard, getUserName } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
-
 export function OperateLog() {
   type TableData = {
     id: number;
@@ -387,139 +388,144 @@ export function OperateLog() {
       ),
     },
   ];
+  // 添加水印
+  const nowusername = getUserName();
+  const nowuserid_card = getUserIdCard();
   return (
     <>
       <div style={{ height: '100%', overflow: 'auto' }}>
-        <div
-          style={{
-            margin: '10px  22px 22px 22px ',
-          }}
-        >
-          <Form form={form}>
-            <Row justify="start" gutter={[8, 8]} align="middle">
-              <Col span={4}>
-                <Form.Item name="searchContent">
-                  <Input
-                    placeholder="全局模糊查找"
-                    style={{ width: '15vw' }}
-                    allowClear
-                  />
-                </Form.Item>
-              </Col>
-              <Col span={18}>
-                <Form.Item>
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    style={{ width: '5vw' }}
-                    icon={<SearchOutlined />}
-                    onClick={handleSearch}
-                  >
-                    查找
-                  </Button>
-                </Form.Item>
-              </Col>
-              <Col span={2}>
-                <Form.Item>
-                  {contextHolder}
-                  <Button
-                    type="primary"
-                    onClick={() => {
-                      setVisibleExcel(true);
-                    }}
-                    style={{ width: '5vw' }}
-                    icon={<UploadOutlined />}
-                  >
-                    导出
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Form>
-          <Table
-            columns={columns}
-            rowKey={(record) => record.id}
-            dataSource={userOperateLogsTable}
-            pagination={pagination}
-            onChange={tablePageChange}
-            loading={loading}
-            //   showQuickJumper: true,
-            //   // showSizeChanger: true,
-            scroll={{ x: 800, y: 800 }}
-          />
-          <Modal
-            title="查看详情"
-            open={modalOpen}
-            onCancel={onModalClose}
-            width={750}
-            footer={false}
-            destroyOnClose
-            style={{ paddingTop: 100 }}
+        <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+          <div
+            style={{
+              margin: '10px  22px 22px 22px ',
+            }}
           >
-            <Descriptions bordered column={2} style={{ paddingBottom: 20 }}>
-              <Descriptions.Item label="用户名">
-                {colRecod?.creator_name}
-              </Descriptions.Item>
-              <Descriptions.Item label="请求时长">
-                {colRecod?.request_time}
-              </Descriptions.Item>
-              <Descriptions.Item label="请求URL">
-                {colRecod?.request_query}
-              </Descriptions.Item>
-              <Descriptions.Item label="用户代理">
-                {colRecod?.user_agent}
-              </Descriptions.Item>
-              <Descriptions.Item label="请求方式">
-                {colRecod?.request_type}
-              </Descriptions.Item>
-              <Descriptions.Item label="操作IP">{colRecod?.ip}</Descriptions.Item>
-              <Descriptions.Item label="请求参数">
-                {colRecod?.request_params}
-              </Descriptions.Item>
-              {/* <Descriptions.Item label="状态">{colRecod?.status}</Descriptions.Item> */}
-            </Descriptions>
-            <Space style={{ position: 'relative', left: 550 }}>
-              <Button onClick={() => setModalOpen(false)}>取消</Button>
-              <Button type="primary" onClick={() => setModalOpen(false)}>
-                确认
-              </Button>
-            </Space>
-          </Modal>
-          {/* 添加Excel弹窗 */}
-          <Modal
-            title="导出"
-            open={visibleExcel}
-            confirmLoading={confirmLoading}
-            onCancel={handleCancelExcel}
-            width="600px"
-            footer={null}
-          >
-            <div>总记录数:{total as number}个, 您确认要导出吗？</div>
-            <Row justify={'end'}>
-              <Space size={8}>
-                <Col>
-                  <Button
-                    onClick={() => {
-                      handleCancelExcel();
-                    }}
-                  >
-                    取消
-                  </Button>
+            <Form form={form}>
+              <Row justify="start" gutter={[8, 8]} align="middle">
+                <Col span={4}>
+                  <Form.Item name="searchContent">
+                    <Input
+                      placeholder="全局模糊查找"
+                      style={{ width: '15vw' }}
+                      allowClear
+                    />
+                  </Form.Item>
                 </Col>
-                <Col>
-                  <Button
-                    onClick={() => {
-                      handleOkExcel();
-                    }}
-                    type={'primary'}
-                  >
-                    确定
-                  </Button>
+                <Col span={18}>
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      style={{ width: '5vw' }}
+                      icon={<SearchOutlined />}
+                      onClick={handleSearch}
+                    >
+                      查找
+                    </Button>
+                  </Form.Item>
                 </Col>
+                <Col span={2}>
+                  <Form.Item>
+                    {contextHolder}
+                    <Button
+                      type="primary"
+                      onClick={() => {
+                        setVisibleExcel(true);
+                      }}
+                      style={{ width: '5vw' }}
+                      icon={<UploadOutlined />}
+                    >
+                      导出
+                    </Button>
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form>
+            <Table
+              columns={columns}
+              rowKey={(record) => record.id}
+              dataSource={userOperateLogsTable}
+              pagination={pagination}
+              onChange={tablePageChange}
+              loading={loading}
+              //   showQuickJumper: true,
+              //   // showSizeChanger: true,
+              scroll={{ x: 800, y: 800 }}
+            />
+            <Modal
+              title="查看详情"
+              open={modalOpen}
+              onCancel={onModalClose}
+              width={750}
+              footer={false}
+              destroyOnClose
+              style={{ paddingTop: 100 }}
+            >
+              <Descriptions bordered column={2} style={{ paddingBottom: 20 }}>
+                <Descriptions.Item label="用户名">
+                  {colRecod?.creator_name}
+                </Descriptions.Item>
+                <Descriptions.Item label="请求时长">
+                  {colRecod?.request_time}
+                </Descriptions.Item>
+                <Descriptions.Item label="请求URL">
+                  {colRecod?.request_query}
+                </Descriptions.Item>
+                <Descriptions.Item label="用户代理">
+                  {colRecod?.user_agent}
+                </Descriptions.Item>
+                <Descriptions.Item label="请求方式">
+                  {colRecod?.request_type}
+                </Descriptions.Item>
+                <Descriptions.Item label="操作IP">{colRecod?.ip}</Descriptions.Item>
+                <Descriptions.Item label="请求参数">
+                  {colRecod?.request_params}
+                </Descriptions.Item>
+                {/* <Descriptions.Item label="状态">{colRecod?.status}</Descriptions.Item> */}
+              </Descriptions>
+              <Space style={{ position: 'relative', left: 550 }}>
+                <Button onClick={() => setModalOpen(false)}>取消</Button>
+                <Button type="primary" onClick={() => setModalOpen(false)}>
+                  确认
+                </Button>
               </Space>
-            </Row>
-          </Modal>
-        </div>
+            </Modal>
+            {/* 添加Excel弹窗 */}
+            <Modal
+              title="导出"
+              open={visibleExcel}
+              confirmLoading={confirmLoading}
+              onCancel={handleCancelExcel}
+              width="600px"
+              footer={null}
+            >
+              <div>总记录数:{total as number}个, 您确认要导出吗？</div>
+              <Row justify={'end'}>
+                <Space size={8}>
+                  <Col>
+                    <Button
+                      onClick={() => {
+                        handleCancelExcel();
+                      }}
+                    >
+                      取消
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Button
+                      onClick={() => {
+                        handleOkExcel();
+                      }}
+                      type={'primary'}
+                    >
+                      确定
+                    </Button>
+                  </Col>
+                </Space>
+              </Row>
+            </Modal>
+          </div>
+        </Watermark>
       </div>
     </>
   );

@@ -4,13 +4,14 @@
 import './index.css';
 import 'dayjs/locale/zh-cn';
 
-import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
+import { RedoOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import type { MenuProps, TablePaginationConfig } from 'antd';
 import { message, Pagination } from 'antd';
 import { Button, DatePicker, Input, Layout, Menu, Select, Table } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
 import locale from 'antd/es/date-picker/locale/zh_CN';
+import Watermark from 'antd/es/watermark';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
@@ -21,8 +22,9 @@ import { DateTime } from 'luxon';
 import type { RangeValue } from 'rc-picker/lib/interface';
 import React, { useState } from 'react';
 
-import { getUserType } from '../../store/SaveToken';
+import { getUserIdCard, getUserName } from '@/store/SaveToken';
 
+import { getUserType } from '../../store/SaveToken';
 dayjs.extend(customParseFormat);
 
 const { Column } = Table;
@@ -490,220 +492,228 @@ const CheckPerformance: React.FC = () => {
     setEndTime(undefined);
     setRangeValue(null);
     message.success('重置完成');
+    setIsDefault(true); // 设置默认状态为true
   };
+  // 添加水印
+  const nowusername = getUserName();
+  const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      {/* 网格员 警员 菜单 */}
-      <Menu
-        onClick={onMenuClick}
-        // @ts-ignore
-        selectedKeys={current ? [current] : [items[0].key]}
-        mode="horizontal"
-        items={items}
-        className="UpperMenu"
-        style={{
-          borderStyle: 'hidden',
-          fontSize: 'bold',
-        }}
-      />
-      <div className="InputBlock" style={{ margin: '0px 0.15vw' }}>
-        <Input
-          placeholder="姓名"
-          className="BlockTypeName"
-          value={name}
-          onChange={(event) => {
-            setName(event.target.value);
-          }}
-        />
-        <Select
-          allowClear
-          placeholder="请选择城市"
-          className="BlockTypeGrid"
-          options={level1Areas.map((area: { name: any; id: any }) => ({
-            label: area.name,
-            value: area.id,
-          }))}
-          onSelect={(value) => {
-            // Find the selected option based on the value
-            const selectedOption = level1Areas.find(
-              (area: { id: any }) => area.id === value,
-            );
-            if (selectedOption) {
-              setCity(selectedOption.id);
-              setTown(0);
-              setGrid(0);
-            }
-          }}
-          onClear={() => handleClear(0)}
-        />
-        <Select
-          allowClear
-          placeholder="请选择镇"
-          className="BlockTypeGrid"
-          options={getTownOptions(city)}
-          onSelect={(value) => {
-            // Find the selected option based on the value
-            const selectedOption = getTownOptions(city).find(
-              (option: { value: number }) => option.value === value,
-            );
-            if (selectedOption) {
-              setTown(selectedOption.value);
-              setGrid(0);
-            }
-          }}
-          onClear={() => handleClear(1)}
-          value={town !== 0 ? town : null || null}
-        />
-        <Select
-          allowClear
-          placeholder="请选择社区"
-          className="BlockTypeGrid"
-          options={getGridOptions(town)}
-          onSelect={(value) => {
-            // Find the selected option based on the value
-            const selectedOption = getGridOptions(town).find(
-              (option: { value: number }) => option.value === value,
-            );
-            if (selectedOption) {
-              setGrid(selectedOption.value);
-            }
-          }}
-          onClear={() => handleClear(2)}
-          value={grid !== 0 ? grid : null || null}
-          // Set the value to the first option's value only if grid is not 'default'
-          // 当重新选择上一个Select选项后，该选项需要重新选择
-        />
-
-        <RangePicker
-          value={rangeValue}
-          onCalendarChange={(value) => setRangeValue(value)}
-          disabledDate={disabledDate}
-          showTime={{
-            hideDisabledOptions: true,
-          }}
-          locale={locale}
-          className="RangePicker"
-          onChange={handleRangeChange}
-        />
-        <Button
-          type="primary"
-          icon={<SearchOutlined />}
-          className="ButtonType"
-          onClick={handleSearch}
-        >
-          <span>查找</span>
-        </Button>
-        <Button
-          type="primary"
-          icon={<UploadOutlined />}
-          className="ButtonType"
-          onClick={handleExport}
-        >
-          <span>导出</span>
-        </Button>
-        <Button
-          type="primary"
-          icon={<SearchOutlined />}
-          className="ButtonType"
-          onClick={handleReset}
-        >
-          <span>搜索重置</span>
-        </Button>
-      </div>
-      <div style={{ backgroundColor: '#fff' }}>
-        <Table
-          dataSource={
-            Array.isArray(UsedData)
-              ? UsedData.slice(
-                  (pagination.current - 1) * pagination.pageSize,
-                  pagination.current * pagination.pageSize,
-                )
-              : []
-          }
-          // 怎么可能为未定义？
-          // dataSource={UsedData}
-          style={{ margin: '0px 0.5vw' }}
-          onChange={handleTableChange}
-          pagination={false}
-        >
-          <Column
-            title={<div style={{ textAlign: 'center' }}>编号</div>}
-            // dataIndex="id"
-            // key="id"
-            align="center"
-            render={(_text, _record, index) => index + 1}
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>姓名</div>}
-            dataIndex="name"
-            key="name"
-            align="center"
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>登录次数</div>}
-            dataIndex="login_count"
-            key="login_count"
-            align="center"
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>查找次数</div>}
-            dataIndex="query_count"
-            key="query_count"
-            align="center"
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>删除次数</div>}
-            dataIndex="delete_count"
-            key="delete_count"
-            align="center"
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>新增群众数</div>}
-            dataIndex="add_person_count"
-            key="add_person_count"
-            align="center"
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>提交事件数</div>}
-            dataIndex="submit_event_count"
-            key="submit_event_count"
-            align="center"
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>群众信息变更数</div>}
-            dataIndex="modify_person_count"
-            key="modify_person_count"
-            align="center"
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>开始时间</div>}
-            dataIndex="begin_time"
-            key="begin_Time"
-            align="center"
-            render={(text) => formatTimestamp(text)}
-          />
-          <Column
-            title={<div style={{ textAlign: 'center' }}>结束时间</div>}
-            dataIndex="end_time"
-            key="end_Time"
-            align="center"
-            render={(text) => formatTimestamp(text)}
-          />
-        </Table>
-        <Pagination
-          showSizeChanger
-          pageSizeOptions={pageSizeOptions}
-          current={pagination.current}
-          pageSize={pagination.pageSize}
-          total={UsedDataLength}
+      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+        {/* 网格员 警员 菜单 */}
+        <Menu
+          onClick={onMenuClick}
+          // @ts-ignore
+          selectedKeys={current ? [current] : [items[0].key]}
+          mode="horizontal"
+          items={items}
+          className="UpperMenu"
           style={{
-            float: 'right',
-            margin: '10px auto',
+            borderStyle: 'hidden',
+            fontSize: 'bold',
           }}
-          onChange={handlePageChange}
-          showTotal={(total) => `共 ${total} 条`}
         />
-      </div>
+        <div className="InputBlock" style={{ margin: '0px 0.15vw' }}>
+          <Input
+            placeholder="姓名"
+            className="BlockTypeName"
+            value={name}
+            onChange={(event) => {
+              setName(event.target.value);
+            }}
+          />
+          <Select
+            allowClear
+            placeholder="请选择城市"
+            className="BlockTypeGrid"
+            options={level1Areas.map((area: { name: any; id: any }) => ({
+              label: area.name,
+              value: area.id,
+            }))}
+            onSelect={(value) => {
+              // Find the selected option based on the value
+              const selectedOption = level1Areas.find(
+                (area: { id: any }) => area.id === value,
+              );
+              if (selectedOption) {
+                setCity(selectedOption.id);
+                setTown(0);
+                setGrid(0);
+              }
+            }}
+            onClear={() => handleClear(0)}
+          />
+          <Select
+            allowClear
+            placeholder="请选择镇"
+            className="BlockTypeGrid"
+            options={getTownOptions(city)}
+            onSelect={(value) => {
+              // Find the selected option based on the value
+              const selectedOption = getTownOptions(city).find(
+                (option: { value: number }) => option.value === value,
+              );
+              if (selectedOption) {
+                setTown(selectedOption.value);
+                setGrid(0);
+              }
+            }}
+            onClear={() => handleClear(1)}
+            value={town !== 0 ? town : null || null}
+          />
+          <Select
+            allowClear
+            placeholder="请选择社区"
+            className="BlockTypeGrid"
+            options={getGridOptions(town)}
+            onSelect={(value) => {
+              // Find the selected option based on the value
+              const selectedOption = getGridOptions(town).find(
+                (option: { value: number }) => option.value === value,
+              );
+              if (selectedOption) {
+                setGrid(selectedOption.value);
+              }
+            }}
+            onClear={() => handleClear(2)}
+            value={grid !== 0 ? grid : null || null}
+            // Set the value to the first option's value only if grid is not 'default'
+            // 当重新选择上一个Select选项后，该选项需要重新选择
+          />
+
+          <RangePicker
+            value={rangeValue}
+            onCalendarChange={(value) => setRangeValue(value)}
+            disabledDate={disabledDate}
+            showTime={{
+              hideDisabledOptions: true,
+            }}
+            locale={locale}
+            className="RangePicker"
+            onChange={handleRangeChange}
+          />
+          <div className="ButtonGroupMenu">
+            <Button
+              type="primary"
+              icon={<SearchOutlined />}
+              className="ButtonType"
+              onClick={handleSearch}
+            >
+              <span>查找</span>
+            </Button>
+            <Button
+              type="primary"
+              icon={<RedoOutlined />}
+              className="ButtonType"
+              onClick={handleReset}
+            >
+              <span>重置</span>
+            </Button>
+            <Button
+              type="primary"
+              icon={<UploadOutlined />}
+              className="ButtonType"
+              onClick={handleExport}
+            >
+              <span>导出</span>
+            </Button>
+          </div>
+        </div>
+        <div style={{ backgroundColor: '#fff' }}>
+          <Table
+            dataSource={
+              Array.isArray(UsedData)
+                ? UsedData.slice(
+                    (pagination.current - 1) * pagination.pageSize,
+                    pagination.current * pagination.pageSize,
+                  )
+                : []
+            }
+            // 怎么可能为未定义？
+            // dataSource={UsedData}
+            style={{ margin: '0px 0.5vw' }}
+            onChange={handleTableChange}
+            pagination={false}
+          >
+            <Column
+              title={<div style={{ textAlign: 'center' }}>编号</div>}
+              // dataIndex="id"
+              // key="id"
+              align="center"
+              render={(_text, _record, index) => index + 1}
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>姓名</div>}
+              dataIndex="name"
+              key="name"
+              align="center"
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>登录次数</div>}
+              dataIndex="login_count"
+              key="login_count"
+              align="center"
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>查找次数</div>}
+              dataIndex="query_count"
+              key="query_count"
+              align="center"
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>删除次数</div>}
+              dataIndex="delete_count"
+              key="delete_count"
+              align="center"
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>新增群众数</div>}
+              dataIndex="add_person_count"
+              key="add_person_count"
+              align="center"
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>提交事件数</div>}
+              dataIndex="submit_event_count"
+              key="submit_event_count"
+              align="center"
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>群众信息变更数</div>}
+              dataIndex="modify_person_count"
+              key="modify_person_count"
+              align="center"
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>开始时间</div>}
+              dataIndex="begin_time"
+              key="begin_Time"
+              align="center"
+              render={(text) => formatTimestamp(text)}
+            />
+            <Column
+              title={<div style={{ textAlign: 'center' }}>结束时间</div>}
+              dataIndex="end_time"
+              key="end_Time"
+              align="center"
+              render={(text) => formatTimestamp(text)}
+            />
+          </Table>
+          <Pagination
+            showSizeChanger
+            pageSizeOptions={pageSizeOptions}
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={UsedDataLength}
+            style={{
+              float: 'right',
+              margin: '10px auto',
+            }}
+            onChange={handlePageChange}
+            showTotal={(total) => `共 ${total} 条`}
+          />
+        </div>
+      </Watermark>
     </Layout>
   );
 };
