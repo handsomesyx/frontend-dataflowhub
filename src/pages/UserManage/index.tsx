@@ -20,6 +20,7 @@ import Watermark from 'antd/es/watermark';
 // import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import type { ColumnsType } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import {
   CreatePerson,
@@ -40,6 +41,7 @@ import type { Area, DataType, Grid, Police, SelectObject } from './types';
 export default function PersonManage() {
   // 检查参数
   // const [p, setP] = useState<number>();
+  const params = useParams();
 
   const user_role = getUserType();
   const user_name = getUserName();
@@ -109,7 +111,7 @@ export default function PersonManage() {
     area_id: undefined,
     community_id: undefined,
     grid_id: undefined,
-    role_id: undefined,
+    role_id: params?.role === 'police' ? 2 : params?.role === 'grid' ? 4 : undefined,
   });
 
   // 记录表格中的一行数据，方便修改和删除当前记录
