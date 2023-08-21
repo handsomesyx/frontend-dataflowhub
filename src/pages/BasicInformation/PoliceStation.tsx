@@ -36,6 +36,7 @@ import {
   GetPoliceInfo,
   UpdatePolicestation,
 } from '@/apis';
+import { getUserIdCard, getUserName } from '@/store/SaveToken';
 
 import shanchu from '../../assets/delete.svg';
 import xiugai from '../../assets/xiugai.svg';
@@ -602,6 +603,9 @@ export default function PoliceStation() {
       </>
     );
   });
+  // 添加水印
+  const nowusername = getUserName();
+  const nowuserid_card = getUserIdCard();
   return (
     <Watermark
       content={'漠河市基层社会治理智管平台'}

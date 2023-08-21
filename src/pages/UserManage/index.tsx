@@ -34,10 +34,9 @@ import {
   // GetUserInfo,
   UpdatePerson,
 } from '@/apis';
-import { getUserName, getUserType } from '@/store/SaveToken';
+import { getUserIdCard, getUserName, getUserType } from '@/store/SaveToken';
 
 import type { Area, DataType, Grid, Police, SelectObject } from './types';
-
 export default function PersonManage() {
   // 检查参数
   // const [p, setP] = useState<number>();
@@ -890,7 +889,9 @@ export default function PersonManage() {
   const selectGridInput = (value: number) => {
     setGridIdInput(value);
   };
-
+  // 添加水印
+  const nowusername = getUserName();
+  const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       <Watermark

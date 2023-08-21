@@ -11,6 +11,7 @@ import {
   Select,
   Spin,
 } from 'antd';
+import Watermark from 'antd/es/watermark';
 import zhCN from 'antd/locale/zh_CN';
 import { useEffect, useState } from 'react';
 
@@ -21,6 +22,7 @@ import {
   getSelectPolicer,
   getSelectPoliceStation,
 } from '@/apis';
+import { getUserIdCard, getUserName } from '@/store/SaveToken';
 
 import BasicShowList from './BasicShowList';
 import city from './cities.json';
@@ -365,334 +367,343 @@ const SearchBasic = () => {
       return { ...pre, [dataName]: a };
     });
   };
+  // 添加水印
+  const nowusername = getUserName();
+  const nowuserid_card = getUserIdCard();
   return (
-    <div className={styles.FlexColomnBox}>
-      <div className={styles.TopBox}>
-        <div className={styles.TopTitle}>人员管理</div>
-        <div>
-          <button className={styles.ClickShow} onClick={handleShowSearch}>
-            {isshowSearch ? '收起筛选' : '展开筛选'}
-          </button>
-          {/* <button className={styles.AddPeople} onClick={showMadal}>
+    <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <div className={styles.FlexColomnBox}>
+        <div className={styles.TopBox}>
+          <div className={styles.TopTitle}>人员管理</div>
+          <div>
+            <button className={styles.ClickShow} onClick={handleShowSearch}>
+              {isshowSearch ? '收起筛选' : '展开筛选'}
+            </button>
+            {/* <button className={styles.AddPeople} onClick={showMadal}>
             <span style={{ transform: ' scale(1.5)', display: 'inline-block' }}>+</span>
             &nbsp;增加人员信息
           </button> */}
-        </div>
-      </div>
-
-      <div className={styles.TopSearchBox} id="TopSearchHidden">
-        <div className={styles.TopSearchPadding}>
-          <div>
-            <div>
-              <span>公安局：</span>
-              {/* jiade */}
-              <Select
-                placeholder="选择公安局"
-                style={{ width: '60%' }}
-                allowClear
-                options={[{ value: 1, label: '漠河市公安局' }]}
-              ></Select>
-            </div>
-            <div>
-              <span>姓名：</span>
-              <Input
-                placeholder="请输入姓名"
-                allowClear
-                onChange={(a) => {
-                  handleFliterData(a, 'name');
-                }}
-                value={filterData?.name}
-                style={{ width: '60%', display: 'flex' }}
-              ></Input>
-            </div>
-            <div>
-              <span>人口标识：</span>
-              <Select
-                placeholder="请输入人口标识"
-                allowClear
-                style={{ width: '60%' }}
-                onChange={(e) => {
-                  handleFliterDataSelect(e, 'person_classification');
-                }}
-                options={[
-                  { label: 'A', value: 'A', id: 'A' },
-                  { label: 'B', value: 'B', id: 'B' },
-                  { label: 'C', value: 'C', id: 'C' },
-                  { label: 'D', value: 'D', id: 'D' },
-                ]}
-              ></Select>
-            </div>
-            <div>
-              <span>籍贯：</span>
-              <Cascader
-                options={city}
-                onChange={onChange}
-                changeOnSelect
-                placeholder="请输入或选择籍贯"
-                showSearch={filter}
-                style={{ width: '60%' }}
-              />
-            </div>
-            <div>
-              <span>录入日期：</span>
-              <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleinTimeChange} />
-              </ConfigProvider>
-            </div>
           </div>
-          <div>
+        </div>
+
+        <div className={styles.TopSearchBox} id="TopSearchHidden">
+          <div className={styles.TopSearchPadding}>
             <div>
-              <span>分县公安局</span>：
-              <Select
-                placeholder="选择分县公安局"
-                allowClear
-                style={{ width: '60%' }}
-                options={[{ value: 1, label: '漠河县公安局' }]}
-              ></Select>
+              <div>
+                <span>公安局：</span>
+                {/* jiade */}
+                <Select
+                  placeholder="选择公安局"
+                  style={{ width: '60%' }}
+                  allowClear
+                  options={[{ value: 1, label: '漠河市公安局' }]}
+                ></Select>
+              </div>
+              <div>
+                <span>姓名：</span>
+                <Input
+                  placeholder="请输入姓名"
+                  allowClear
+                  onChange={(a) => {
+                    handleFliterData(a, 'name');
+                  }}
+                  value={filterData?.name}
+                  style={{ width: '60%', display: 'flex' }}
+                ></Input>
+              </div>
+              <div>
+                <span>人口标识：</span>
+                <Select
+                  placeholder="请输入人口标识"
+                  allowClear
+                  style={{ width: '60%' }}
+                  onChange={(e) => {
+                    handleFliterDataSelect(e, 'person_classification');
+                  }}
+                  options={[
+                    { label: 'A', value: 'A', id: 'A' },
+                    { label: 'B', value: 'B', id: 'B' },
+                    { label: 'C', value: 'C', id: 'C' },
+                    { label: 'D', value: 'D', id: 'D' },
+                  ]}
+                ></Select>
+              </div>
+              <div>
+                <span>籍贯：</span>
+                <Cascader
+                  options={city}
+                  onChange={onChange}
+                  changeOnSelect
+                  placeholder="请输入或选择籍贯"
+                  showSearch={filter}
+                  style={{ width: '60%' }}
+                />
+              </div>
+              <div>
+                <span>录入日期：</span>
+                <ConfigProvider locale={zhCN}>
+                  <RangePicker style={{ width: '60%' }} onChange={handleinTimeChange} />
+                </ConfigProvider>
+              </div>
             </div>
             <div>
-              <span>身份证号</span>：
-              <Input
-                placeholder="输入身份证号"
-                allowClear
-                onChange={(a) => {
-                  handleFliterData(a, 'id_card');
-                }}
-                value={filterData?.id_card}
-                style={{ width: '60%', display: 'flex' }}
-              ></Input>
+              <div>
+                <span>分县公安局</span>：
+                <Select
+                  placeholder="选择分县公安局"
+                  allowClear
+                  style={{ width: '60%' }}
+                  options={[{ value: 1, label: '漠河县公安局' }]}
+                ></Select>
+              </div>
+              <div>
+                <span>身份证号</span>：
+                <Input
+                  placeholder="输入身份证号"
+                  allowClear
+                  onChange={(a) => {
+                    handleFliterData(a, 'id_card');
+                  }}
+                  value={filterData?.id_card}
+                  style={{ width: '60%', display: 'flex' }}
+                ></Input>
+              </div>
+              <div>
+                <span>手机号码</span>：
+                <Input
+                  allowClear
+                  placeholder="输入手机号码"
+                  onChange={(a) => {
+                    let e = a.target.value;
+                    if (/^\d*$/.test(e)) {
+                      setFilterData((pre: any) => {
+                        return { ...pre, phone: e };
+                      });
+                    } else {
+                      return;
+                    }
+                  }}
+                  value={filterData?.phone}
+                  style={{ width: '60%', display: 'flex' }}
+                ></Input>
+              </div>
+              <div>
+                <span>住址</span>：
+                <Input
+                  placeholder="输入住址"
+                  allowClear
+                  onChange={(a) => {
+                    handleFliterData(a, 'current_address');
+                  }}
+                  value={filterData?.current_address}
+                  style={{ width: '60%', display: 'flex' }}
+                ></Input>
+              </div>
+              <div>
+                <span>修改日期</span>：
+                <ConfigProvider locale={zhCN}>
+                  <RangePicker style={{ width: '60%' }} onChange={handleTimeChange} />
+                </ConfigProvider>
+              </div>
             </div>
             <div>
-              <span>手机号码</span>：
-              <Input
-                allowClear
-                placeholder="输入手机号码"
-                onChange={(a) => {
-                  let e = a.target.value;
-                  if (/^\d*$/.test(e)) {
-                    setFilterData((pre: any) => {
-                      return { ...pre, phone: e };
+              <div>
+                <span>派出所</span>：
+                <Select
+                  placeholder="选择派出所"
+                  disabled={regionalSelect ? true : false}
+                  onClear={() => {
+                    setPoliceValue(undefined);
+                    setFilterData((pre) => {
+                      return { ...pre, police_user_id: undefined };
                     });
-                  } else {
-                    return;
-                  }
-                }}
-                value={filterData?.phone}
-                style={{ width: '60%', display: 'flex' }}
-              ></Input>
-            </div>
-            <div>
-              <span>住址</span>：
-              <Input
-                placeholder="输入住址"
-                allowClear
-                onChange={(a) => {
-                  handleFliterData(a, 'current_address');
-                }}
-                value={filterData?.current_address}
-                style={{ width: '60%', display: 'flex' }}
-              ></Input>
-            </div>
-            <div>
-              <span>修改日期</span>：
-              <ConfigProvider locale={zhCN}>
-                <RangePicker style={{ width: '60%' }} onChange={handleTimeChange} />
-              </ConfigProvider>
-            </div>
-          </div>
-          <div>
-            <div>
-              <span>派出所</span>：
-              <Select
-                placeholder="选择派出所"
-                disabled={regionalSelect ? true : false}
-                onClear={() => {
-                  setPoliceValue(undefined);
-                  setFilterData((pre) => {
-                    return { ...pre, police_user_id: undefined };
-                  });
-                }}
-                allowClear
-                style={{ width: '60%' }}
-                onChange={handleSetPoliceStation}
-                options={policeStationData?.getSelectPoliceStation?.selectPoliceStation?.map(
-                  (item: any) => {
+                  }}
+                  allowClear
+                  style={{ width: '60%' }}
+                  onChange={handleSetPoliceStation}
+                  options={policeStationData?.getSelectPoliceStation?.selectPoliceStation?.map(
+                    (item: any) => {
+                      return { value: item?.id, label: item?.name };
+                    },
+                  )}
+                ></Select>
+              </div>
+              <div>
+                <span>性别</span>：
+                <Select
+                  placeholder="选择性别"
+                  allowClear
+                  onChange={(e) => {
+                    handleFliterDataSelect(e, 'gender');
+                  }}
+                  options={[
+                    { value: true, label: '女' },
+                    { value: false, label: '男' },
+                  ]}
+                  style={{ width: '60%' }}
+                ></Select>
+              </div>
+              <div>
+                <span>行政区域</span>：
+                <Select
+                  disabled={policeStationId || gridSelect ? true : false}
+                  placeholder="行政区域"
+                  value={regionalSelect}
+                  onChange={(e) => {
+                    setRegionalSelect(e);
+                    handleFliterDataSelect(e, 'administrative_area_id');
+                  }}
+                  style={{ width: '60%' }}
+                  allowClear
+                  options={regional?.getSelectAdmin?.selectAdmin?.map((item: any) => {
                     return { value: item?.id, label: item?.name };
-                  },
-                )}
-              ></Select>
+                  })}
+                ></Select>
+              </div>
+              <div>
+                <span>宗教信仰</span>：
+                <Select
+                  placeholder="请选择宗教"
+                  options={religion}
+                  onChange={(e) => {
+                    handleFliterDataSelect(e, 'religion');
+                  }}
+                  allowClear
+                  style={{ width: '60%' }}
+                ></Select>
+              </div>
+              <div>
+                <span>别名</span>：
+                <Input
+                  placeholder="输入别名"
+                  allowClear
+                  onChange={(a) => {
+                    handleFliterData(a, 'nickname');
+                  }}
+                  value={filterData?.nickname}
+                  style={{ width: '60%', display: 'flex' }}
+                ></Input>
+              </div>
             </div>
-            <div>
-              <span>性别</span>：
-              <Select
-                placeholder="选择性别"
-                allowClear
-                onChange={(e) => {
-                  handleFliterDataSelect(e, 'gender');
-                }}
-                options={[
-                  { value: true, label: '女' },
-                  { value: false, label: '男' },
-                ]}
-                style={{ width: '60%' }}
-              ></Select>
-            </div>
-            <div>
-              <span>行政区域</span>：
-              <Select
-                disabled={policeStationId || gridSelect ? true : false}
-                placeholder="行政区域"
-                value={regionalSelect}
-                onChange={(e) => {
-                  setRegionalSelect(e);
-                  handleFliterDataSelect(e, 'administrative_area_id');
-                }}
-                style={{ width: '60%' }}
-                allowClear
-                options={regional?.getSelectAdmin?.selectAdmin?.map((item: any) => {
-                  return { value: item?.id, label: item?.name };
-                })}
-              ></Select>
-            </div>
-            <div>
-              <span>宗教信仰</span>：
-              <Select
-                placeholder="请选择宗教"
-                options={religion}
-                onChange={(e) => {
-                  handleFliterDataSelect(e, 'religion');
-                }}
-                allowClear
-                style={{ width: '60%' }}
-              ></Select>
-            </div>
-            <div>
-              <span>别名</span>：
-              <Input
-                placeholder="输入别名"
-                allowClear
-                onChange={(a) => {
-                  handleFliterData(a, 'nickname');
-                }}
-                value={filterData?.nickname}
-                style={{ width: '60%', display: 'flex' }}
-              ></Input>
-            </div>
-          </div>
-          <div style={{ position: 'relative' }}>
-            <div>
-              <span>警员</span>：
-              <Select
-                placeholder="选择警员"
-                value={policeValue}
-                disabled={regionalSelect ? true : false}
-                allowClear
-                style={{ width: '60%' }}
-                onChange={(e) => {
-                  setPoliceValue(e);
-                  handleFliterDataSelect(e, 'police_user_id');
-                }}
-                options={police?.getSelectPolicer?.selectPolicer?.map((item: any) => {
-                  return { value: item?.id, label: item?.name };
-                })}
-              ></Select>
-            </div>
-            <div>
-              <span>民族</span>：
-              <Select
-                showSearch
-                allowClear
-                onChange={(e) => {
-                  handleFliterDataSelect(e, 'nationality');
-                }}
-                placeholder="输入或选择民族"
-                style={{ width: '60%' }}
-                options={nationality}
-              ></Select>
-            </div>
-            <div>
-              <span>网格</span>：
-              <Select
-                mode="tags"
-                style={{ width: '60%' }}
-                placeholder="输入网格编号或选择网格"
-                optionFilterProp="children"
-                value={gridSelect}
-                onChange={(e) => {
-                  if (e?.length > 0 && e?.length < 2) {
-                    setGridSelect(e);
-                    let grid = Number(e[0]);
-                    handleFliterDataSelect(grid, 'grid_id');
-                    console.log(typeof e);
-                  }
-                }}
-                onClear={() => {
-                  setGridSelect(undefined);
-                  handleFliterDataSelect(undefined, 'grid_id');
-                }}
-                onDeselect={() => {
-                  handleFliterDataSelect(undefined, 'grid_id');
-                  setGridSelect(undefined);
-                }}
-                allowClear
-                options={gridData?.getSelectGrid?.selectGrid?.map((item: any) => {
-                  return { value: item?.id, label: item?.name };
-                })}
-              />
-            </div>
+            <div style={{ position: 'relative' }}>
+              <div>
+                <span>警员</span>：
+                <Select
+                  placeholder="选择警员"
+                  value={policeValue}
+                  disabled={regionalSelect ? true : false}
+                  allowClear
+                  style={{ width: '60%' }}
+                  onChange={(e) => {
+                    setPoliceValue(e);
+                    handleFliterDataSelect(e, 'police_user_id');
+                  }}
+                  options={police?.getSelectPolicer?.selectPolicer?.map((item: any) => {
+                    return { value: item?.id, label: item?.name };
+                  })}
+                ></Select>
+              </div>
+              <div>
+                <span>民族</span>：
+                <Select
+                  showSearch
+                  allowClear
+                  onChange={(e) => {
+                    handleFliterDataSelect(e, 'nationality');
+                  }}
+                  placeholder="输入或选择民族"
+                  style={{ width: '60%' }}
+                  options={nationality}
+                ></Select>
+              </div>
+              <div>
+                <span>网格</span>：
+                <Select
+                  mode="tags"
+                  style={{ width: '60%' }}
+                  placeholder="输入网格编号或选择网格"
+                  optionFilterProp="children"
+                  value={gridSelect}
+                  onChange={(e) => {
+                    if (e?.length > 0 && e?.length < 2) {
+                      setGridSelect(e);
+                      let grid = Number(e[0]);
+                      handleFliterDataSelect(grid, 'grid_id');
+                      console.log(typeof e);
+                    }
+                  }}
+                  onClear={() => {
+                    setGridSelect(undefined);
+                    handleFliterDataSelect(undefined, 'grid_id');
+                  }}
+                  onDeselect={() => {
+                    handleFliterDataSelect(undefined, 'grid_id');
+                    setGridSelect(undefined);
+                  }}
+                  allowClear
+                  options={gridData?.getSelectGrid?.selectGrid?.map((item: any) => {
+                    return { value: item?.id, label: item?.name };
+                  })}
+                />
+              </div>
 
-            <div>
-              <span>年龄</span>：
-              <Input
-                placeholder="输入年龄"
-                allowClear
-                onChange={(a) => {
-                  handleFliterData(a, 'age');
-                }}
-                value={filterData?.age}
-                style={{ width: '60%', display: 'flex' }}
-              ></Input>
-            </div>
-            <div style={{ justifyContent: 'end' }}>
-              <button onClick={handleSearch}>
-                <img src={SearchIcon} />
-                &nbsp;查询
-              </button>
+              <div>
+                <span>年龄</span>：
+                <Input
+                  placeholder="输入年龄"
+                  allowClear
+                  onChange={(a) => {
+                    handleFliterData(a, 'age');
+                  }}
+                  value={filterData?.age}
+                  style={{ width: '60%', display: 'flex' }}
+                ></Input>
+              </div>
+              <div style={{ justifyContent: 'end' }}>
+                <button onClick={handleSearch}>
+                  <img src={SearchIcon} />
+                  &nbsp;查询
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 具体内容区域 */}
-      <div className={styles.BottomShowList}>
-        <Spin size={'large'} delay={50} spinning={loading}>
-          {pagination?.total === 0 || error ? (
-            <div
-              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            >
-              <Empty />
-            </div>
-          ) : (
-            <BasicShowList
-              BasicShowListData={datalist()}
-              currentPage={current}
-              onePageTotal={pageSize}
-            ></BasicShowList>
-          )}
-        </Spin>
+        {/* 具体内容区域 */}
+        <div className={styles.BottomShowList}>
+          <Spin size={'large'} delay={50} spinning={loading}>
+            {pagination?.total === 0 || error ? (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Empty />
+              </div>
+            ) : (
+              <BasicShowList
+                BasicShowListData={datalist()}
+                currentPage={current}
+                onePageTotal={pageSize}
+              ></BasicShowList>
+            )}
+          </Spin>
+        </div>
+        <div className={styles.PaginationBox}>
+          <Pagination
+            className={styles.Pagination}
+            onShowSizeChange={changePage}
+            showSizeChanger
+            onChange={currentChange}
+            showTotal={(total) => `共 ${total} 条`}
+            {...pagination}
+            pageSizeOptions={[5, 10, 15, 20]}
+          />
+        </div>
       </div>
-      <div className={styles.PaginationBox}>
-        <Pagination
-          className={styles.Pagination}
-          onShowSizeChange={changePage}
-          showSizeChanger
-          onChange={currentChange}
-          showTotal={(total) => `共 ${total} 条`}
-          {...pagination}
-          pageSizeOptions={[5, 10, 15, 20]}
-        />
-      </div>
-    </div>
+    </Watermark>
   );
 };
 

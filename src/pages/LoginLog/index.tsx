@@ -19,8 +19,8 @@ import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
 import { GetAllUserLoginLogs } from '@/apis';
+import { getUserIdCard, getUserName } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
-
 export function LoginLog() {
   type TableData = {
     id: number;
@@ -297,6 +297,7 @@ export function LoginLog() {
       ),
     },
   ];
+
   return (
     <>
       <div style={{ height: '100%', overflow: 'auto' }}>
