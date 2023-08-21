@@ -19,7 +19,6 @@ import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
 import { GetAllUserOperateLogs } from '@/apis';
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 export function OperateLog() {
   type TableData = {
