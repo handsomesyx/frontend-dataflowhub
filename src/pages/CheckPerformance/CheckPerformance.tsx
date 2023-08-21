@@ -494,12 +494,16 @@ const CheckPerformance: React.FC = () => {
     message.success('重置完成');
     setIsDefault(true); // 设置默认状态为true
   };
-  // 添加水印
-  const nowusername = getUserName();
-  const nowuserid_card = getUserIdCard();
+
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark
+        content={'漠河市基层社会治理智管平台'}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+        style={{ height: '100%' }}
+      >
         {/* 网格员 警员 菜单 */}
         <Menu
           onClick={onMenuClick}
@@ -580,6 +584,7 @@ const CheckPerformance: React.FC = () => {
             // Set the value to the first option's value only if grid is not 'default'
             // 当重新选择上一个Select选项后，该选项需要重新选择
           />
+
 
           <RangePicker
             value={rangeValue}

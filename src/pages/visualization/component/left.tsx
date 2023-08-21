@@ -4,15 +4,15 @@ import { useNavigate } from 'react-router-dom';
 
 function Left(Props: LeftType) {
   const navigate = useNavigate();
-  const changeRoute = () => {
-    if (Props.route) {
-      navigate(Props.route);
+  const changeRoute = (route: string) => {
+    if (route) {
+      navigate(route);
     }
   };
 
   return (
     <div className="ComponentLeft">
-      <div className="Header" onClick={changeRoute}>
+      <div className="Header">
         <div className="HeaderText">{Props.name}</div>
         <img className="HeaderLeft" alt="箭头" src="/》.png" />
         <img className="HeaderRight" alt="header-right" src="/header-right.png" />
@@ -28,7 +28,9 @@ function Left(Props: LeftType) {
               {Props.loading ? (
                 <div className="ListCount Loading"></div>
               ) : (
-                <div className="ListCount">{item.count}</div>
+                <div onClick={() => changeRoute(item.route)} className="ListCount">
+                  {item.count}
+                </div>
               )}
 
               <img className="IconLeftBottom" alt="底部横线" src="/-.png" />

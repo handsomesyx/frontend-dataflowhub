@@ -20,6 +20,7 @@ import Watermark from 'antd/es/watermark';
 // import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import type { ColumnsType } from 'antd/lib/table';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import {
   CreatePerson,
@@ -39,6 +40,7 @@ import type { Area, DataType, Grid, Police, SelectObject } from './types';
 export default function PersonManage() {
   // 检查参数
   // const [p, setP] = useState<number>();
+  const params = useParams();
 
   const user_role = getUserType();
   const user_name = getUserName();
@@ -108,7 +110,7 @@ export default function PersonManage() {
     area_id: undefined,
     community_id: undefined,
     grid_id: undefined,
-    role_id: undefined,
+    role_id: params?.role === 'police' ? 2 : params?.role === 'grid' ? 4 : undefined,
   });
 
   // 记录表格中的一行数据，方便修改和删除当前记录
@@ -892,8 +894,13 @@ export default function PersonManage() {
   const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <div className="UserManage">
-        <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark
+        content={'漠河市基层社会治理智管平台'}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+      >
+        <div className="UserManage">
           {/* 添加按钮 */}
           <div>
             <Row>
@@ -1643,8 +1650,8 @@ export default function PersonManage() {
             onChange={handleTableChange}
             // scroll={{ y: 200 }}
           ></Table>
-        </Watermark>
-      </div>
+        </div>
+      </Watermark>
     </Layout>
   );
 }

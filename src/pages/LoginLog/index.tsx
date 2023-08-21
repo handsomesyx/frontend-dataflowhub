@@ -297,13 +297,16 @@ export function LoginLog() {
       ),
     },
   ];
-  // 添加水印
-  const nowusername = getUserName();
-  const nowuserid_card = getUserIdCard();
+
   return (
     <>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
-        <div style={{ height: '100%', overflow: 'auto' }}>
+      <div style={{ height: '100%', overflow: 'auto' }}>
+        <Watermark
+          content={'漠河市基层社会治理智管平台'}
+          // rotate={-20}
+          // gap={[50, 120]}
+          // className="WaterMarkBox"
+        >
           <div
             style={{
               margin: '10px  22px 22px 22px ',
@@ -426,8 +429,8 @@ export function LoginLog() {
               </Row>
             </Modal>
           </div>
-        </div>
-      </Watermark>
+        </Watermark>
+      </div>
     </>
   );
 }
