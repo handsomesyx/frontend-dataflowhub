@@ -22,8 +22,6 @@ import { DateTime } from 'luxon';
 import type { RangeValue } from 'rc-picker/lib/interface';
 import React, { useState } from 'react';
 
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
-
 import { getUserType } from '../../store/SaveToken';
 dayjs.extend(customParseFormat);
 
@@ -584,7 +582,6 @@ const CheckPerformance: React.FC = () => {
             // Set the value to the first option's value only if grid is not 'default'
             // 当重新选择上一个Select选项后，该选项需要重新选择
           />
-
 
           <RangePicker
             value={rangeValue}

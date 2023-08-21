@@ -19,7 +19,6 @@ import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
 import { GetAllUserLoginLogs } from '@/apis';
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 export function LoginLog() {
   type TableData = {
