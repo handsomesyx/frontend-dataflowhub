@@ -19,7 +19,7 @@ import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
 import { GetAllUserOperateLogs } from '@/apis';
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 export function OperateLog() {
   type TableData = {
@@ -389,7 +389,7 @@ export function OperateLog() {
     },
   ];
   // 添加水印
-  const nowusername = getUserName();
+  const nowusername = getRealName();
   const nowuserid_card = getUserIdCard();
   return (
     <>

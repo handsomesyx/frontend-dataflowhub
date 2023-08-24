@@ -38,7 +38,7 @@ import {
   UpdateArea,
   UpdateGrid,
 } from '@/apis';
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 // import wanggeyuan from '../../assets/wanggeyuan_bianji.svg';
 
 interface DataType {
@@ -677,7 +677,7 @@ const AdministrativeRegion: React.FC = () => {
     formUpdate.resetFields();
   };
   // 添加水印
-  const nowusername = getUserName();
+  const nowusername = getRealName();
   const nowuserid_card = getUserIdCard();
   return (
     <>

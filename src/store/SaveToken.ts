@@ -56,6 +56,15 @@ export const saveUserId = (user: number) => {
 export const saveUserName = (user: any) => {
   window.localStorage.setItem('userName', user || '');
 };
+// 存储用户的真实姓名
+export const saveRealName = (user: any) => {
+  window.localStorage.setItem('realName', user || '');
+};
+// 获取用户真实姓名
+export const getRealName = () => {
+  return window.localStorage.getItem('realName') || '';
+};
+
 // 存储用户的身份号码
 export const saveUserIdCard = (user: any) => {
   window.localStorage.setItem('userCard', user || '');

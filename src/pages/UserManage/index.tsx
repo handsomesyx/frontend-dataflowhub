@@ -33,7 +33,7 @@ import {
   // GetUserInfo,
   UpdatePerson,
 } from '@/apis';
-import { getUserIdCard, getUserName, getUserType } from '@/store/SaveToken';
+import { getRealName, getUserIdCard, getUserName, getUserType } from '@/store/SaveToken';
 
 import type { Area, DataType, Grid, Police, SelectObject } from './types';
 export default function PersonManage() {
@@ -888,8 +888,10 @@ export default function PersonManage() {
     setGridIdInput(value);
   };
   // 添加水印
-  const nowusername = getUserName();
+  const nowusername = getRealName();
   const nowuserid_card = getUserIdCard();
+  console.log(nowusername);
+
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       <div className="UserManage">

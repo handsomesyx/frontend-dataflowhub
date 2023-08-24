@@ -22,7 +22,7 @@ import { DateTime } from 'luxon';
 import type { RangeValue } from 'rc-picker/lib/interface';
 import React, { useState } from 'react';
 
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 
 import { getUserType } from '../../store/SaveToken';
 dayjs.extend(customParseFormat);
@@ -495,7 +495,7 @@ const CheckPerformance: React.FC = () => {
     setIsDefault(true); // 设置默认状态为true
   };
   // 添加水印
-  const nowusername = getUserName();
+  const nowusername = getRealName();
   const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
