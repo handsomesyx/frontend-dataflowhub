@@ -27,7 +27,7 @@ import {
   getSelectPoliceStation,
 } from '@/apis';
 import { getUserType } from '@/store/SaveToken';
-// import { getUserIdCard, getUserName } from '@/store/SaveToken';
+// import { getRealName, getUserIdCard } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 
 import BasicShowList from './BasicShowList';
@@ -679,7 +679,7 @@ const SearchBasic = () => {
     });
   };
   // 添加水印
-  // const nowusername = getUserName();
+  // const nowusername = getRealName();
   // const nowuserid_card = getUserIdCard();
   return (
     // <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">

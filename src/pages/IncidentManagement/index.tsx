@@ -49,6 +49,9 @@ function IncidentManagement() {
       children: <Finished role={role} level={level} />,
     },
   ];
+  // 添加水印
+  // const nowusername = getRealName();
+  // const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       <div style={{ width: '100%', height: '100%' }}>

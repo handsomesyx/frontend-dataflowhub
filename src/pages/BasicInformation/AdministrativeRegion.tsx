@@ -38,6 +38,7 @@ import {
   UpdateArea,
   UpdateGrid,
 } from '@/apis';
+// import { getRealName, getUserIdCard } from '@/store/SaveToken';
 // import wanggeyuan from '../../assets/wanggeyuan_bianji.svg';
 
 interface DataType {
@@ -675,7 +676,9 @@ const AdministrativeRegion: React.FC = () => {
     setUpdate_Open(false);
     formUpdate.resetFields();
   };
-
+  // 添加水印
+  // const nowusername = getRealName();
+  // const nowuserid_card = getUserIdCard();
   return (
     <>
       <Watermark

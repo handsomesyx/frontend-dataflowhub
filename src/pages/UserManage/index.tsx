@@ -34,7 +34,8 @@ import {
   // GetUserInfo,
   UpdatePerson,
 } from '@/apis';
-import { getUserName, getUserType } from '@/store/SaveToken';
+// import { getRealName, getUserName, getUserType } from '@/store/SaveToken';
+import { getRealName, getUserName, getUserType } from '@/store/SaveToken';
 
 import type { Area, DataType, Grid, Police, SelectObject } from './types';
 export default function PersonManage() {
@@ -889,6 +890,11 @@ export default function PersonManage() {
   const selectGridInput = (value: number) => {
     setGridIdInput(value);
   };
+  // 添加水印
+  const nowusername = getRealName();
+  // const nowuserid_card = getUserIdCard();
+  console.log(nowusername);
+
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       <Watermark
