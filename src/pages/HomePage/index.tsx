@@ -1,14 +1,22 @@
 /* eslint-disable max-len */
-import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
 // Card,  Row
+import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
 import { useQuery } from '@apollo/client';
 import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
+import type { Socket } from 'socket.io-client';
+import { io } from 'socket.io-client';
 
 import { GetAllHandledEvents, GetAllUnhandledEvents } from '@/apis';
-import { getRefreshToken, getUserId, getUserName, logout } from '@/store/SaveToken';
+import {
+  getRefreshToken,
+  getUserId,
+  getUserName,
+  getUserType,
+  logout,
+} from '@/store/SaveToken';
 
 import TopIcon from '../../assets/top.svg';
 import Detail from '../ReviewPage/Detail';
@@ -74,9 +82,9 @@ function HomePage() {
   if (!token) {
     logout();
   }
-
+  // 这里用来记录ws对象
+  const [socket, setSocket] = useState<Socket | null>(null);
   const [hintChoose, setHintChoose] = useState('1');
-  // const [userId, setUserId] = useState(1169); // 目前是写死的id
   const [_unHandledNumber, setUnHandledNumber] = useState(0);
   // _unHandledNumber
   const [_HandledNumber, setHandledNumber] = useState(0);
@@ -97,11 +105,13 @@ function HomePage() {
       variables: {
         data: { ID: Number(getUserId()) },
       },
-      onCompleted: (data) => {
-        setUnhandleSource(data.getAllUnhandledEvents);
-        setUnHandledNumber(
-          data.getAllUnhandledEvents === null ? data.getAllUnhandledEvents.length : 0,
-        );
+      onCompleted: () => {
+        // setUnhandleSource(data.getAllUnhandledEvents);
+        // setUnHandledNumber(
+        //   data.getAllUnhandledEvents === null
+        //     ? data.getAllUnhandledEvents.length
+        //     : 0,
+        // );
         console.log(unhandleData);
       },
     },
@@ -113,24 +123,75 @@ function HomePage() {
       variables: {
         data: { ID: Number(getUserId()) },
       },
-      onCompleted: (data) => {
-        setHandleSource(data.getAllHandledEvents);
-        setHandledNumber(
-          data.getAllHandledEvents === null ? data.getAllHandledEvents.length : 0,
-        );
+      onCompleted: () => {
+        // setHandleSource(data.getAllHandledEvents);
+        // setHandledNumber(
+        //   data.getAllHandledEvents === null
+        //     ? data.getAllHandledEvents.length
+        //     : 0,
+        // );
         console.log(handleData);
       },
     },
   );
-  // 定时轮询
+
+  const user = {
+    id: Number(getUserId()),
+    role: getUserType(),
+  };
+  // 连接websocket
+  const connectWs = () => {
+    if (socket === null) {
+      const ws = io('http://127.0.0.1:7001/event-system', {
+        transports: ['websocket'],
+        query: user,
+      });
+      setSocket(ws);
+      // 在连接建立时的处理
+      ws.on('connect', () => {
+        console.log('已成功连接');
+        // 在连接成功后主动发起请求获取事件
+        ws.emit('getAllUnhandledEvents', user, (data: any) => {
+          setUnhandleSource(data);
+          setUnHandledNumber(data === null ? data.length : 0);
+          console.log('获取未处理事件', data);
+        });
+        ws.emit('getAllHandledEvents', user, (data: any) => {
+          setHandleSource(data);
+          setHandledNumber(data === null ? data.length : 0);
+          console.log('获取已处理事件', data);
+        });
+      });
+      ws.on('error', (error) => {
+        console.log('连接失败', error);
+      });
+    }
+    socket?.on('sendUnhandleEventsToClient', (data: any) => {
+      setUnhandleSource(data);
+      setUnHandledNumber(data === null ? data.length : 0);
+      console.log('后端发送未处理事件', data);
+    });
+    socket?.on('sendHandleEventsToClient', (data: any) => {
+      setHandleSource(data);
+      setHandledNumber(data === null ? data.length : 0);
+      console.log('后端发送已处理事件', data);
+    });
+  };
+
+  // websocket
   useEffect(() => {
-    setInterval(() => {
-      unhandledDataRefetch(); // 重新发起查询
-    }, 5000); // 每隔5秒发送一次查询
-    setInterval(() => {
-      handledDataRefetch(); // 重新发起查询
-    }, 60000); // 每隔60秒发送一次查询
-  }, [unhandledDataRefetch, handledDataRefetch]);
+    connectWs();
+  });
+
+  // 定时轮询
+  // useEffect(() => {
+  //   setInterval(() => {
+  //     unhandledDataRefetch(); // 重新发起查询
+  //   }, 5000); // 每隔5秒发送一次查询
+  //   setInterval(() => {
+  //     handledDataRefetch(); // 重新发起查询
+  //   }, 60000); // 每隔60秒发送一次查询
+  // }, [unhandledDataRefetch, handledDataRefetch]);
 
   useEffect(() => {
     if (hintChoose === '1') {
@@ -176,6 +237,10 @@ function HomePage() {
                       ? `删除姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
                       : item.auditrecords?.action_type === '3'
                       ? `修改姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                      : item.auditrecords?.action_type === '4'
+                      ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
+                      : item.auditrecords?.action_type === '5'
+                      ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
                       : ''}
                   </Row>
                   <Row>事件类型:{item.event_type}</Row>
@@ -200,19 +265,6 @@ function HomePage() {
     <>
       {unHandleSource.length !== 0
         ? unHandleSource?.map((item: EventData, index: any) => {
-            // const getEventPageRoute = (eventType: string) => {
-            //   switch (eventType) {
-            //     case '事件上报':
-            //       return '/event-management';
-            //     case '人口变更':
-            //       return '/population-manager/pending';
-            //     default:
-            //       return '/default-route'; // 默认的路由
-            //   }
-            // };
-
-            // const eventPageRoute = getEventPageRoute(item.event_type);
-            // const timeDATE = new Date(item.create_time);
             return (
               <Card
                 key={index}
@@ -237,6 +289,10 @@ function HomePage() {
                     ? `删除姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
                     : item.auditrecords?.action_type === '3'
                     ? `修改姓名为 ${item.auditrecords.person_info?.name} 的群众信息`
+                    : item.auditrecords?.action_type === '4'
+                    ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
+                    : item.auditrecords?.action_type === '5'
+                    ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
                     : ''}
                 </Row>
                 <Row>事件类型:{item?.event_type}</Row>
