@@ -4,7 +4,7 @@
 import './index.css';
 import 'dayjs/locale/zh-cn';
 
-import { SearchOutlined, UploadOutlined } from '@ant-design/icons';
+import { RedoOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import { gql, useLazyQuery, useQuery } from '@apollo/client';
 import type { MenuProps, TablePaginationConfig } from 'antd';
 import { message, Pagination } from 'antd';
@@ -23,7 +23,6 @@ import type { RangeValue } from 'rc-picker/lib/interface';
 import React, { useState } from 'react';
 
 import { getUserType } from '../../store/SaveToken';
-
 dayjs.extend(customParseFormat);
 
 const { Column } = Table;
@@ -491,7 +490,9 @@ const CheckPerformance: React.FC = () => {
     setEndTime(undefined);
     setRangeValue(null);
     message.success('重置完成');
+    setIsDefault(true); // 设置默认状态为true
   };
+
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       <Watermark
@@ -593,30 +594,32 @@ const CheckPerformance: React.FC = () => {
             className="RangePicker"
             onChange={handleRangeChange}
           />
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            className="ButtonType"
-            onClick={handleSearch}
-          >
-            <span>查找</span>
-          </Button>
-          <Button
-            type="primary"
-            icon={<UploadOutlined />}
-            className="ButtonType"
-            onClick={handleExport}
-          >
-            <span>导出</span>
-          </Button>
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            className="ButtonType"
-            onClick={handleReset}
-          >
-            <span>搜索重置</span>
-          </Button>
+          <div className="ButtonGroupMenu">
+            <Button
+              type="primary"
+              icon={<SearchOutlined />}
+              className="ButtonType"
+              onClick={handleSearch}
+            >
+              <span>查找</span>
+            </Button>
+            <Button
+              type="primary"
+              icon={<RedoOutlined />}
+              className="ButtonType"
+              onClick={handleReset}
+            >
+              <span>重置</span>
+            </Button>
+            <Button
+              type="primary"
+              icon={<UploadOutlined />}
+              className="ButtonType"
+              onClick={handleExport}
+            >
+              <span>导出</span>
+            </Button>
+          </div>
         </div>
         <div style={{ backgroundColor: '#fff' }}>
           <Table

@@ -101,6 +101,7 @@
   font-weight: bold;
   color: #fff;
   display: inline-block;
+  cursor: pointer;
 }
 
 .RightListCount {
@@ -111,6 +112,7 @@
   font-weight: bold;
   color: #fff;
   display: inline-block;
+  cursor: pointer;
 }
 
 .IconLeftBottom {

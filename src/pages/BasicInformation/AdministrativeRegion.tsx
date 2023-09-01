@@ -38,7 +38,6 @@ import {
   UpdateArea,
   UpdateGrid,
 } from '@/apis';
-
 // import wanggeyuan from '../../assets/wanggeyuan_bianji.svg';
 
 interface DataType {
@@ -676,6 +675,7 @@ const AdministrativeRegion: React.FC = () => {
     setUpdate_Open(false);
     formUpdate.resetFields();
   };
+
   return (
     <>
       <Watermark

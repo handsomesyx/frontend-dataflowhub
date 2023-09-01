@@ -20,7 +20,6 @@ import { useEffect, useState } from 'react';
 
 import { GetAllUserLoginLogs } from '@/apis';
 import { saveWorkbook } from '@/utils/ExportExcel';
-
 export function LoginLog() {
   type TableData = {
     id: number;
@@ -297,6 +296,7 @@ export function LoginLog() {
       ),
     },
   ];
+
   return (
     <>
       <div style={{ height: '100%', overflow: 'auto' }}>

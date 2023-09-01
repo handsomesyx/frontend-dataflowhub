@@ -8,6 +8,7 @@ type MapData = {
   url: string;
   count: number;
   name: string;
+  route: string;
 };
 type RightType = {
   name: string;

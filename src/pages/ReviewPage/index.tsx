@@ -20,7 +20,6 @@ const items: TabsProps['items'] = [
     children: <Complete />,
   },
 ];
-
 function ReviewPage() {
   return (
     <>

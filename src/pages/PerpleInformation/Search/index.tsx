@@ -12,11 +12,12 @@ import {
   Spin,
 } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
+// import Watermark from 'antd/es/watermark';
 import zhCN from 'antd/locale/zh_CN';
 import dayjs from 'dayjs';
 import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import {
   getPeopleDataFilter,
@@ -26,6 +27,7 @@ import {
   getSelectPoliceStation,
 } from '@/apis';
 import { getUserType } from '@/store/SaveToken';
+// import { getUserIdCard, getUserName } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 
 import BasicShowList from './BasicShowList';
@@ -63,6 +65,7 @@ type filterType = {
 
 // 控制数据请求 筛选  筛选后的内容会传递给子组件BasicShowList展示
 const SearchBasic = () => {
+  const params = useParams();
   // 保存所有的筛选数据
   const [filterData, setFilterData] = useState<filterType>({
     administrative_area_id: undefined,
@@ -191,10 +194,42 @@ const SearchBasic = () => {
     if (role === 'filmPolice' || role === 'Director') {
       setIsPolice(true);
     }
+    let select = {};
+    if (params.content) {
+      if (params.content === 'partyMember') {
+        select = {
+          political_status: '中共党员',
+        };
+      } else if (params.content === 'rent') {
+        select = {
+          house_info: '出租户',
+        };
+      } else if (params.content === 'temporary') {
+        select = {
+          people: '暂住人员',
+        };
+      } else {
+        select = {
+          person_classification: params.content,
+        };
+        setFilterDataOld((e) => {
+          return {
+            ...e,
+            person_classification: params.content,
+          };
+        });
+        setFilterData((e) => {
+          return {
+            ...e,
+            person_classification: params.content,
+          };
+        });
+      }
+    }
     getFilterPeopleData({
       variables: {
         isDelete: false,
-        content: {},
+        content: select,
         pagingOption: {
           skip: skip,
           take: take,
@@ -213,6 +248,7 @@ const SearchBasic = () => {
 
   // 分页的时候使用旧的数据进行筛选
   useEffect(() => {
+    console.log(filterDataOld);
     getFilterPeopleData({
       variables: {
         isDelete: false,
@@ -380,14 +416,32 @@ const SearchBasic = () => {
       e = undefined;
     }
     setFilterData((pre: any) => {
-      return { ...pre, [dataName]: e };
+      return {
+        ...pre,
+        [dataName]: e,
+        person_classification: undefined,
+        house_info: undefined,
+        people: undefined,
+        political_status: undefined,
+      };
     });
   };
   // 数据输出到fliter中 针对select组件
   const handleFliterDataSelect = (a: any, dataName: string) => {
-    setFilterData((pre: any) => {
-      return { ...pre, [dataName]: a };
-    });
+    if (dataName === 'house_info') {
+      setFilterData((pre: any) => {
+        return { ...pre, [dataName]: a };
+      });
+    } else {
+      // 如果没有选择房子信息，则要将可视化传过来的参数去掉
+      setFilterData((pre: any) => {
+        return {
+          ...pre,
+          [dataName]: a,
+          house_info: undefined,
+        };
+      });
+    }
   };
 
   const disabledDate: RangePickerProps['disabledDate'] = (current) => {
@@ -624,8 +678,11 @@ const SearchBasic = () => {
       saveWorkbook(workbook, '人员信息.xlsx');
     });
   };
-
+  // 添加水印
+  // const nowusername = getUserName();
+  // const nowuserid_card = getUserIdCard();
   return (
+    // <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
     <div className={styles.FlexColomnBox}>
       <div className={styles.TopBox}>
         <div className={styles.TopTitle}>人员管理</div>
@@ -981,7 +1038,11 @@ const SearchBasic = () => {
         <Spin size={'large'} delay={50} spinning={loading}>
           {pagination?.total === 0 || error ? (
             <div
-              style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
             >
               <Empty />
             </div>
@@ -1006,6 +1067,7 @@ const SearchBasic = () => {
         />
       </div>
     </div>
+    // </Watermark>
   );
 };
 
