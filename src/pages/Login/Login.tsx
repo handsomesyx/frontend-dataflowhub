@@ -46,6 +46,7 @@ const Login = () => {
           saveUserType(data.login?.user?.role);
           saveUserName(data.login?.user?.username);
           saveRealName(data.login?.user?.real_name);
+          // 重新上传
           const url = window.location;
           const newUrl = url.origin + '/home';
           message.open({
