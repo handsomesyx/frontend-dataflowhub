@@ -19,6 +19,7 @@ import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
 import { GetAllUserOperateLogs } from '@/apis';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 export function OperateLog() {
   type TableData = {
@@ -448,16 +449,13 @@ export function OperateLog() {
       ),
     },
   ];
-
+  // 添加水印
+  const nowusername = getRealName();
+  const nowuserid_card = getUserIdCard();
   return (
     <>
       <div style={{ height: '100%', overflow: 'auto' }}>
-        <Watermark
-          content={'漠河市基层社会治理智管平台'}
-          // rotate={-20}
-          // gap={[50, 120]}
-          // className="WaterMarkBox"
-        >
+        <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
           <div
             style={{
               margin: '10px  22px 22px 22px ',

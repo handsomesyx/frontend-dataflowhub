@@ -22,6 +22,8 @@ import { DateTime } from 'luxon';
 import type { RangeValue } from 'rc-picker/lib/interface';
 import React, { useState } from 'react';
 
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
+
 import { getUserType } from '../../store/SaveToken';
 dayjs.extend(customParseFormat);
 
@@ -492,16 +494,12 @@ const CheckPerformance: React.FC = () => {
     message.success('重置完成');
     setIsDefault(true); // 设置默认状态为true
   };
-
+  // 添加水印
+  const nowusername = getRealName();
+  const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <Watermark
-        content={'漠河市基层社会治理智管平台'}
-        // rotate={-20}
-        // gap={[50, 120]}
-        // className="WaterMarkBox"
-        style={{ height: '100%' }}
-      >
+      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
         {/* 网格员 警员 菜单 */}
         <Menu
           onClick={onMenuClick}

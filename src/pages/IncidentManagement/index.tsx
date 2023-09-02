@@ -10,7 +10,7 @@ import Finished from '@/pages/IncidentManagement/components/finished';
 import Processing from '@/pages/IncidentManagement/components/processing';
 import Reported from '@/pages/IncidentManagement/components/reported';
 import ToBeEvaluated from '@/pages/IncidentManagement/components/toBeEvaluated';
-import { getUserType } from '@/store/SaveToken';
+import { getRealName, getUserIdCard, getUserType } from '@/store/SaveToken';
 function IncidentManagement() {
   const role = getUserType() === 'gridMember' ? 2 : 1; // 1表示民警，2表示网格员
   const params = useParams();
@@ -49,23 +49,21 @@ function IncidentManagement() {
       children: <Finished role={role} level={level} />,
     },
   ];
+  // 添加水印
+  const nowusername = getRealName();
+  const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <div style={{ width: '100%', height: '100%' }}>
-        <Watermark
-          content={'漠河市基层社会治理智管平台'}
-          // rotate={-20}
-          // gap={[50, 120]}
-          // className="WaterMarkBox"
-        >
+      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+        <div style={{ width: '100%', height: '100%' }}>
           <Tabs
             defaultActiveKey={'1'}
             items={items}
             onChange={onChange}
             activeKey={level?.toString()}
           />
-        </Watermark>
-      </div>
+        </div>
+      </Watermark>
     </Layout>
   );
 }

@@ -1,7 +1,7 @@
 import Watermark from 'antd/es/watermark';
 import type { ReactElement } from 'react';
 
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 
 import styles from './style.module.less';
 import LeftTimeLine from './TimeLine/LeftTimeLine';
@@ -40,7 +40,7 @@ const AnchorHome: React.FC<Props> = ({ itemData }) => {
       };
     });
   };
-  const name = getUserName();
+  const name = getRealName();
   const id_card = getUserIdCard();
 
   return (

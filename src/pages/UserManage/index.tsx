@@ -34,7 +34,7 @@ import {
   // GetUserInfo,
   UpdatePerson,
 } from '@/apis';
-import { getUserName, getUserType } from '@/store/SaveToken';
+import { getRealName, getUserIdCard, getUserName, getUserType } from '@/store/SaveToken';
 
 import type { Area, DataType, Grid, Police, SelectObject } from './types';
 export default function PersonManage() {
@@ -889,15 +889,15 @@ export default function PersonManage() {
   const selectGridInput = (value: number) => {
     setGridIdInput(value);
   };
+  // 添加水印
+  const nowusername = getRealName();
+  const nowuserid_card = getUserIdCard();
+  console.log(nowusername);
+
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <Watermark
-        content={'漠河市基层社会治理智管平台'}
-        // rotate={-20}
-        // gap={[50, 120]}
-        // className="WaterMarkBox"
-      >
-        <div className="UserManage">
+      <div className="UserManage">
+        <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
           {/* 添加按钮 */}
           <div>
             <Row>
@@ -1647,8 +1647,8 @@ export default function PersonManage() {
             onChange={handleTableChange}
             // scroll={{ y: 200 }}
           ></Table>
-        </div>
-      </Watermark>
+        </Watermark>
+      </div>
     </Layout>
   );
 }

@@ -2,6 +2,8 @@ import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
 import Watermark from 'antd/es/watermark';
 
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
+
 import Complete from './Complete';
 import Pending from './Pending';
 const onChange = (key: string) => {
@@ -20,15 +22,13 @@ const items: TabsProps['items'] = [
     children: <Complete />,
   },
 ];
+// 添加水印
+const nowusername = getRealName();
+const nowuserid_card = getUserIdCard();
 function ReviewPage() {
   return (
     <>
-      <Watermark
-        content={'漠河市基层社会治理智管平台'}
-        // rotate={-20}
-        // gap={[50, 120]}
-        // className="WaterMarkBox"
-      >
+      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
         <Tabs
           defaultActiveKey="1"
           items={items}

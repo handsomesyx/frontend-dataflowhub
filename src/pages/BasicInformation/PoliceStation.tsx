@@ -36,6 +36,7 @@ import {
   GetPoliceInfo,
   UpdatePolicestation,
 } from '@/apis';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 
 import shanchu from '../../assets/delete.svg';
 import xiugai from '../../assets/xiugai.svg';
@@ -602,16 +603,12 @@ export default function PoliceStation() {
       </>
     );
   });
-
+  // 添加水印
+  const nowusername = getRealName();
+  const nowuserid_card = getUserIdCard();
   return (
-    <Watermark
-      content={'漠河市基层社会治理智管平台'}
-      style={{ height: '100%' }}
-      // rotate={-20}
-      // gap={[50, 120]}
-      // className="WaterMarkBox"
-    >
-      <div>
+    <div>
+      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
         <div
           style={{
             marginLeft: '1vw',
@@ -1104,7 +1101,7 @@ export default function PoliceStation() {
         >
           <p>该操作会从警局中删除该警员信息，您确认要删除该警员吗？</p>
         </Modal>
-      </div>
-    </Watermark>
+      </Watermark>
+    </div>
   );
 }

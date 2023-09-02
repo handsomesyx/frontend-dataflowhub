@@ -1093,6 +1093,7 @@ export const login = gql`
         id_card
         username
         id
+        real_name
       }
     }
   }
