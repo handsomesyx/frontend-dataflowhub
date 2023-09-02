@@ -19,6 +19,7 @@ import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
 import { GetAllUserOperateLogs } from '@/apis';
+// import { getRealName, getUserIdCard } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
 export function OperateLog() {
   type TableData = {
@@ -38,6 +39,11 @@ export function OperateLog() {
     updater_id: number;
     is_delete: boolean;
   };
+  const [searchValue, setSearchValue] = useState('');
+  const handleChange = (e: any) => {
+    setSearchValue(e.target.value);
+  };
+
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   // 记录导出Excel弹窗状态
@@ -158,6 +164,7 @@ export function OperateLog() {
     if (pagination) {
       success();
     }
+    console.log('输入框的值:', searchValue);
   };
   const onModalClose = () => {
     setModalOpen(false);
@@ -262,6 +269,17 @@ export function OperateLog() {
       title: '用户名',
       width: 70,
       dataIndex: 'creator_name',
+      render: (text: any) => {
+        if (searchValue && text) {
+          const regex = new RegExp(searchValue, 'gi');
+          const highlightedText = text.replace(
+            regex,
+            (match: any) => `<span style="background-color: yellow">${match}</span>`,
+          );
+          return <div dangerouslySetInnerHTML={{ __html: highlightedText }} />;
+        }
+        return text;
+      },
       align: 'center' as 'center',
     },
     {
@@ -270,24 +288,36 @@ export function OperateLog() {
       width: 70,
       dataIndex: 'operation',
       align: 'center' as 'center',
-      render: (text: number) => {
-        return text === 1
-          ? '增加人口'
-          : text === 2
-          ? '修改人口'
-          : text === 3
-          ? '查找人口'
-          : text === 4
-          ? '删除人口'
-          : text === 5
-          ? '用户登录'
-          : text === 6
-          ? '用户退出'
-          : text === 7
-          ? '增加事件'
-          : text === 8
-          ? '处理事件'
-          : '';
+      render: (text: any) => {
+        let finalText = text;
+        if (text === 1) {
+          finalText = '增加人口';
+        } else if (text === 2) {
+          finalText = '修改人口';
+        } else if (text === 3) {
+          finalText = '查找人口';
+        } else if (text === 4) {
+          finalText = '删除人口';
+        } else if (text === 5) {
+          finalText = '用户登录';
+        } else if (text === 6) {
+          finalText = '用户退出';
+        } else if (text === 7) {
+          finalText = '增加事件';
+        } else if (text === 8) {
+          finalText = '增加事件';
+        }
+        if (searchValue && finalText) {
+          const regex = new RegExp(searchValue, 'gi');
+          const highlightedText = finalText
+            .toString()
+            .replace(
+              regex,
+              (match: any) => `<span style="background-color: yellow">${match}</span>`,
+            );
+          return <div dangerouslySetInnerHTML={{ __html: highlightedText }} />;
+        }
+        return finalText;
       },
     },
     {
@@ -298,6 +328,14 @@ export function OperateLog() {
       align: 'center' as 'center',
       render: (_text: any, record: any) => {
         let temp = record.request_query;
+        if (searchValue && temp) {
+          const regex = new RegExp(searchValue, 'gi');
+          const highlightedText = temp.replace(
+            regex,
+            (match: any) => `<span style="background-color: yellow">${match}</span>`,
+          );
+          return <div dangerouslySetInnerHTML={{ __html: highlightedText }} />;
+        }
         return (
           <Popover placement="top" title="请求URL" content={temp}>
             <p>{temp.substring(0, 35)}</p>
@@ -310,6 +348,17 @@ export function OperateLog() {
       title: '请求方式',
       width: 70,
       dataIndex: 'request_type',
+      render: (text: any) => {
+        if (searchValue && text) {
+          const regex = new RegExp(searchValue, 'gi');
+          const highlightedText = text.replace(
+            regex,
+            (match: any) => `<span style="background-color: yellow">${match}</span>`,
+          );
+          return <div dangerouslySetInnerHTML={{ __html: highlightedText }} />;
+        }
+        return text;
+      },
       align: 'center' as 'center',
     },
     {
@@ -320,6 +369,11 @@ export function OperateLog() {
       align: 'center' as 'center',
       render: (_text: any, record: any) => {
         let temp = record.request_params;
+        // if (searchValue && temp) {
+        //   const regex = new RegExp(searchValue, 'gi');
+        //   const highlightedText = temp.replace(regex, (match: any) => `<span style="background-color: yellow">${match}</span>`);
+        // return <div dangerouslySetInnerHTML={{ __html: highlightedText }} />;
+        // }
         return (
           <Popover placement="top" title="请求参数" content={temp}>
             <p>{temp.substring(0, 35)}</p>
@@ -342,6 +396,14 @@ export function OperateLog() {
       align: 'center' as 'center',
       render: (_text: any, record: any) => {
         let temp = record.ip;
+        if (searchValue && temp) {
+          const regex = new RegExp(searchValue, 'gi');
+          const highlightedText = temp.replace(
+            regex,
+            (match: any) => `<span style="background-color: yellow">${match}</span>`,
+          );
+          return <div dangerouslySetInnerHTML={{ __html: highlightedText }} />;
+        }
         return (
           <Popover placement="top" title="操作IP" content={temp}>
             <p>{temp.substring(0, 35)}</p>
@@ -387,7 +449,9 @@ export function OperateLog() {
       ),
     },
   ];
-
+  // 添加水印
+  // const nowusername = getRealName();
+  // const nowuserid_card = getUserIdCard();
   return (
     <>
       <div style={{ height: '100%', overflow: 'auto' }}>
@@ -410,6 +474,8 @@ export function OperateLog() {
                       placeholder="全局模糊查找"
                       style={{ width: '15vw' }}
                       allowClear
+                      value={searchValue}
+                      onChange={handleChange}
                     />
                   </Form.Item>
                 </Col>

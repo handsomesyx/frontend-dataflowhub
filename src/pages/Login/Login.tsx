@@ -5,6 +5,7 @@ import { Button, Form, Input, message, Spin } from 'antd';
 import { login } from '@/apis';
 import {
   onLogin,
+  saveRealName,
   saveUserId,
   saveUserIdCard,
   saveUserName,
@@ -44,12 +45,14 @@ const Login = () => {
           // 存储用户信息
           saveUserType(data.login?.user?.role);
           saveUserName(data.login?.user?.username);
+          saveRealName(data.login?.user?.real_name);
           const url = window.location;
           const newUrl = url.origin + '/home';
           message.open({
             type: 'success',
             content: '登入成功',
           });
+
           setTimeout(() => {
             window.location.href = newUrl;
           }, 300);

@@ -19,7 +19,7 @@ import React, { useEffect, useState } from 'react';
 
 // import { getUserType } from '@/store/SaveToken';
 import { GET_AUDIT_CHANGE, UPDATE_AUDIT } from '@/apis';
-import { getUserType } from '@/store/SaveToken';
+import { getUserId, getUserType } from '@/store/SaveToken';
 
 const { Title } = Typography;
 const client = new ApolloClient({
@@ -114,6 +114,11 @@ const Detail = React.memo(
     const [idcardnow, setIdcardnow] = useState('未设置'); // 身份证编辑中
     const [comment, setComment] = useState('未填写'); // 拒绝原因
 
+    const user = {
+      id: Number(getUserId()),
+      role: getUserType(),
+    };
+
     const onsubChange = (list: CheckboxValueType[]) => {
       setCheckedList(list);
     };
@@ -160,7 +165,7 @@ const Detail = React.memo(
           value: item?.change_item,
           key: item?.id,
         }));
-
+        console.log('changewhat', changewhat);
         setChangedata(changewhat);
         if (rightnowAuditrecordsId !== 0) {
           message.destroy();
@@ -314,6 +319,7 @@ const Detail = React.memo(
           class_data: classData,
           new_data: newData,
           rightnow_auditrecords_id: rightnowAuditrecordsId,
+          user: user,
         },
       });
     };
@@ -327,6 +333,7 @@ const Detail = React.memo(
         variables: {
           new_data: newData,
           rightnow_auditrecords_id: rightnowAuditrecordsId,
+          user: user,
         },
       });
       setRefuseOpen(false);
@@ -376,6 +383,10 @@ const Detail = React.memo(
                 ? `删除姓名为 ${currentEventData?.auditrecords.person_info?.name} 的群众信息`
                 : currentEventData?.auditrecords.action_type === '3'
                 ? `修改姓名为 ${currentEventData?.auditrecords.person_info?.name} 的群众信息`
+                : currentEventData?.auditrecords?.action_type === '4'
+                ? `变更家庭成员 ${currentEventData?.auditrecords.person_info?.name} 的群众信息`
+                : currentEventData?.auditrecords?.action_type === '5'
+                ? `变更家庭成员 ${currentEventData?.auditrecords.person_info?.name} 的群众信息`
                 : ''
             }
             bordered
