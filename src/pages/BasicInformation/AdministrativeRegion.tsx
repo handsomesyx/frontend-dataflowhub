@@ -38,7 +38,7 @@ import {
   UpdateArea,
   UpdateGrid,
 } from '@/apis';
-// import { getRealName, getUserIdCard } from '@/store/SaveToken';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 // import wanggeyuan from '../../assets/wanggeyuan_bianji.svg';
 
 interface DataType {
@@ -677,12 +677,12 @@ const AdministrativeRegion: React.FC = () => {
     formUpdate.resetFields();
   };
   // 添加水印
-  // const nowusername = getRealName();
-  // const nowuserid_card = getUserIdCard();
+  const nowusername = getRealName();
+  const nowuserid_card = getUserIdCard();
   return (
     <>
       <Watermark
-        content={'漠河市基层社会治理智管平台'}
+        content={`${nowusername},${nowuserid_card}`}
         // rotate={-20}
         // gap={[50, 120]}
         // className="WaterMarkBox"

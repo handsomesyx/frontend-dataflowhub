@@ -35,7 +35,7 @@ import {
   UpdatePerson,
 } from '@/apis';
 // import { getRealName, getUserName, getUserType } from '@/store/SaveToken';
-import { getRealName, getUserName, getUserType } from '@/store/SaveToken';
+import { getRealName, getUserIdCard, getUserName, getUserType } from '@/store/SaveToken';
 
 import type { Area, DataType, Grid, Police, SelectObject } from './types';
 export default function PersonManage() {
@@ -892,13 +892,13 @@ export default function PersonManage() {
   };
   // 添加水印
   const nowusername = getRealName();
-  // const nowuserid_card = getUserIdCard();
+  const nowuserid_card = getUserIdCard();
   console.log(nowusername);
 
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
       <Watermark
-        content={'漠河市基层社会治理智管平台'}
+        content={`${nowusername},${nowuserid_card}`}
         // rotate={-20}
         // gap={[50, 120]}
         // className="WaterMarkBox"
