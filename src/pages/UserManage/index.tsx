@@ -34,6 +34,7 @@ import {
   // GetUserInfo,
   UpdatePerson,
 } from '@/apis';
+// import { getRealName, getUserName, getUserType } from '@/store/SaveToken';
 import { getRealName, getUserIdCard, getUserName, getUserType } from '@/store/SaveToken';
 
 import type { Area, DataType, Grid, Police, SelectObject } from './types';
@@ -896,8 +897,13 @@ export default function PersonManage() {
 
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <div className="UserManage">
-        <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark
+        content={`${nowusername},${nowuserid_card}`}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+      >
+        <div className="UserManage">
           {/* 添加按钮 */}
           <div>
             <Row>
@@ -1647,8 +1653,8 @@ export default function PersonManage() {
             onChange={handleTableChange}
             // scroll={{ y: 200 }}
           ></Table>
-        </Watermark>
-      </div>
+        </div>
+      </Watermark>
     </Layout>
   );
 }

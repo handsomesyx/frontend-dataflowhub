@@ -499,7 +499,13 @@ const CheckPerformance: React.FC = () => {
   const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark
+        content={`${nowusername},${nowuserid_card}`}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+        style={{ height: '100%' }}
+      >
         {/* 网格员 警员 菜单 */}
         <Menu
           onClick={onMenuClick}

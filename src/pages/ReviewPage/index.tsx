@@ -28,7 +28,12 @@ const nowuserid_card = getUserIdCard();
 function ReviewPage() {
   return (
     <>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark
+        content={`${nowusername},${nowuserid_card}`}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+      >
         <Tabs
           defaultActiveKey="1"
           items={items}

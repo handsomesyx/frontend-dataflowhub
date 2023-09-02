@@ -607,8 +607,14 @@ export default function PoliceStation() {
   const nowusername = getRealName();
   const nowuserid_card = getUserIdCard();
   return (
-    <div>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+    <Watermark
+      content={`${nowusername},${nowuserid_card}`}
+      style={{ height: '100%' }}
+      // rotate={-20}
+      // gap={[50, 120]}
+      // className="WaterMarkBox"
+    >
+      <div>
         <div
           style={{
             marginLeft: '1vw',
@@ -1101,7 +1107,7 @@ export default function PoliceStation() {
         >
           <p>该操作会从警局中删除该警员信息，您确认要删除该警员吗？</p>
         </Modal>
-      </Watermark>
-    </div>
+      </div>
+    </Watermark>
   );
 }

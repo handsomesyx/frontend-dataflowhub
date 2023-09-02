@@ -23,6 +23,7 @@ const LogOut = () => {
     showConfirm();
     console.log('测试');
   }, []);
+
   return (
     <Modal
       title="确认退出登录"

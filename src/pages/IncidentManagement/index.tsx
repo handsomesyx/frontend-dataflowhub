@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client';
 import type { TabsProps } from 'antd';
-import { Layout, Tabs } from 'antd';
+import { Tabs } from 'antd';
+import Layout from 'antd/es/layout/layout';
 import Watermark from 'antd/es/watermark';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -54,16 +55,21 @@ function IncidentManagement() {
   const nowuserid_card = getUserIdCard();
   return (
     <Layout className="CpLayout" style={{ height: '100%', overflow: 'auto' }}>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
-        <div style={{ width: '100%', height: '100%' }}>
+      <div style={{ width: '100%', height: '100%' }}>
+        <Watermark
+          content={`${nowusername},${nowuserid_card}`}
+          // rotate={-20}
+          // gap={[50, 120]}
+          // className="WaterMarkBox"
+        >
           <Tabs
             defaultActiveKey={'1'}
             items={items}
             onChange={onChange}
             activeKey={level?.toString()}
           />
-        </div>
-      </Watermark>
+        </Watermark>
+      </div>
     </Layout>
   );
 }

@@ -455,7 +455,12 @@ export function OperateLog() {
   return (
     <>
       <div style={{ height: '100%', overflow: 'auto' }}>
-        <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+        <Watermark
+          content={`${nowusername},${nowuserid_card}`}
+          // rotate={-20}
+          // gap={[50, 120]}
+          // className="WaterMarkBox"
+        >
           <div
             style={{
               margin: '10px  22px 22px 22px ',
