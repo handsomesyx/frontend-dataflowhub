@@ -51,16 +51,19 @@ function Visualization() {
       name: '网格总数',
       url: 'wanggezongshu.png',
       count: countData.basicInformationAboutTheWarranty.totalNumberOfMeshes,
+      route: '/basic-information/administrativeRegion',
     },
     {
       name: '民警数',
       url: 'minjingshu.png',
       count: countData.basicInformationAboutTheWarranty.totalNumberOfCivilianPolice,
+      route: '/user-manager/police',
     },
     {
       name: '网格员数',
       url: 'renshu.png',
       count: countData.basicInformationAboutTheWarranty.totalNumberOfGridMen,
+      route: '/user-manager/grid',
     },
   ];
   const partyBuildingLeads: MapData[] = [
@@ -68,11 +71,13 @@ function Visualization() {
       name: '基层党员数',
       url: 'renshu.png',
       count: countData.partyBuildingLeads.party,
+      route: '/population-manager/person-search/partyMember',
     },
     {
       name: '基层党组织数',
       url: 'jicengdangzuzhishu.png',
       count: countData.partyBuildingLeads.grassrootsPartyOrganizations,
+      route: '/population-manager/person-search/partyMember',
     },
   ];
   const combinationOfSpecializedGroupsData: RightMapData[] = [
@@ -81,11 +86,13 @@ function Visualization() {
         name: 'A类人数',
         url: 'renshu.png',
         count: countData.combinationOfSpecializedGroups.A,
+        route: '/population-manager/person-search/A',
       },
       right: {
         name: 'B类人数',
         url: 'renshu.png',
         count: countData.combinationOfSpecializedGroups.B,
+        route: '/population-manager/person-search/B',
       },
     },
     {
@@ -93,11 +100,13 @@ function Visualization() {
         name: 'C类人数',
         url: 'renshu.png',
         count: countData.combinationOfSpecializedGroups.C,
+        route: '/population-manager/person-search/C',
       },
       right: {
         name: 'D类人数',
         url: 'renshu.png',
         count: countData.combinationOfSpecializedGroups.D,
+        route: '/population-manager/person-search/D',
       },
     },
   ];
@@ -107,11 +116,13 @@ function Visualization() {
         name: '总户数',
         url: 'zonghushu.png',
         count: countData.basicInformation.totalNumberOfHouseholds,
+        route: '/population-manager/person-search',
       },
       right: {
         name: '总人口',
         url: 'zongrenkou.png',
         count: countData.basicInformation.population,
+        route: '/population-manager/person-search',
       },
     },
     {
@@ -119,11 +130,13 @@ function Visualization() {
         name: '暂住人员',
         url: 'renshu.png',
         count: countData.basicInformation.temporaryResidents,
+        route: '/population-manager/person-search/temporary',
       },
       right: {
         name: '出租房屋',
         url: 'chuzufangwu.png',
         count: countData.basicInformation.rentalHousing,
+        route: '/population-manager/person-search/rent',
       },
     },
   ];
@@ -133,11 +146,13 @@ function Visualization() {
         name: '排查数',
         url: 'paichashu.png',
         count: countData.contradictoryDisputeSituations.numberOfTroubleshoots,
+        route: '/event-management',
       },
       right: {
         name: '解决数',
         url: 'jiejueshu.png',
         count: countData.contradictoryDisputeSituations.numberOfSolutions,
+        route: '/event-management/solved',
       },
     },
   ];

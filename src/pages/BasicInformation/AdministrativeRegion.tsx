@@ -38,7 +38,7 @@ import {
   UpdateArea,
   UpdateGrid,
 } from '@/apis';
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 // import wanggeyuan from '../../assets/wanggeyuan_bianji.svg';
 
 interface DataType {
@@ -677,11 +677,17 @@ const AdministrativeRegion: React.FC = () => {
     formUpdate.resetFields();
   };
   // 添加水印
-  const nowusername = getUserName();
+  const nowusername = getRealName();
   const nowuserid_card = getUserIdCard();
   return (
     <>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark
+        content={`${nowusername},${nowuserid_card}`}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+        style={{ height: '100%' }}
+      >
         <Row gutter={16} style={{ height: '100%' }}>
           <Col span={5} style={{ height: '100%' }}>
             <Card

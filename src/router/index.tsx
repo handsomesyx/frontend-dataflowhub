@@ -145,6 +145,17 @@ const routeConfig: routerConfigType[] = [
             ),
           },
           {
+            path: 'person-search/:content',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <div>
+                  <SearchBasic />
+                </div>
+              </Suspense>
+            ),
+          },
+          {
             path: 'person-show-history',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
@@ -293,6 +304,22 @@ const routeConfig: routerConfigType[] = [
           </Suspense>
         ),
       },
+      // 用于可视化页面跳转
+      {
+        path: 'event-management/:state',
+        auth: [1, 9, 8, 7, 'user1'],
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <div
+              style={{
+                overflowY: 'scroll',
+              }}
+            >
+              <IncidentManagement />
+            </div>
+          </Suspense>
+        ),
+      },
       // 日志记录
       {
         path: 'log-record/*',
@@ -371,6 +398,22 @@ const routeConfig: routerConfigType[] = [
       },
       {
         path: 'user-manager',
+        auth: [1, 9, 8, 7, 'user1'],
+        element: (
+          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+            <div>
+              {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
+                <PersonManage />
+              ) : (
+                '无权访问'
+              )}
+            </div>
+          </Suspense>
+        ),
+      },
+      // 用于可视化页面跳转
+      {
+        path: 'user-manager/:role',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>

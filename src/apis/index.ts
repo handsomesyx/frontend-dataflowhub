@@ -176,11 +176,13 @@ export const UPDATE_AUDIT = gql`
     $class_data: personClassInput
     $new_data: auditCreateInput!
     $rightnow_auditrecords_id: Int!
+    $user: userInput!
   ) {
     updateAudit(
       class_data: $class_data
       new_data: $new_data
       rightnow_auditrecords_id: $rightnow_auditrecords_id
+      user: $user
     )
   }
 `;
@@ -1091,6 +1093,7 @@ export const login = gql`
         id_card
         username
         id
+        real_name
       }
     }
   }

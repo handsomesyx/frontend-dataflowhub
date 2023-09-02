@@ -2,7 +2,7 @@ import type { TabsProps } from 'antd';
 import { Tabs } from 'antd';
 import Watermark from 'antd/es/watermark';
 
-import { getUserIdCard, getUserName } from '@/store/SaveToken';
+import { getRealName, getUserIdCard } from '@/store/SaveToken';
 
 import Complete from './Complete';
 import Pending from './Pending';
@@ -23,12 +23,17 @@ const items: TabsProps['items'] = [
   },
 ];
 // 添加水印
-const nowusername = getUserName();
+const nowusername = getRealName();
 const nowuserid_card = getUserIdCard();
 function ReviewPage() {
   return (
     <>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark
+        content={`${nowusername},${nowuserid_card}`}
+        // rotate={-20}
+        // gap={[50, 120]}
+        // className="WaterMarkBox"
+      >
         <Tabs
           defaultActiveKey="1"
           items={items}
