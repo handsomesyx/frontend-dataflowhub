@@ -681,7 +681,7 @@ const AdministrativeRegion: React.FC = () => {
   const nowuserid_card = getUserIdCard();
   return (
     <>
-      <Watermark content={`${nowusername},${nowuserid_card}`} className="WaterMarkBox">
+      <Watermark content={`${nowusername},${nowuserid_card}`} style={{ height: '100%' }}>
         <Row gutter={16} style={{ height: '100%' }}>
           <Col span={5} style={{ height: '100%' }}>
             <Card
