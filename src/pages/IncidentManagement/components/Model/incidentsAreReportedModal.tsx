@@ -29,6 +29,10 @@ function IncidentsAreReportedModal(Props: {
   // 如果是网格员，就只能进行查看，不能进行修改，除非是添加的时候才能看到
   const [form] = Form.useForm();
   const { id, visible, disable, role, setReloading, updata, reloading } = Props;
+
+  // 事件管理的props打印
+  console.log(Props);
+
   const [visableResult, setVisableResult] = useState(false);
   const [visableHandlingOpinions, setVisableHandlingOpinions] = useState(false);
   const [fileList, setFileList] = useState<UploadFile[]>([]);

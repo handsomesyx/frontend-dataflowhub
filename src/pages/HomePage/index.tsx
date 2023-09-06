@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 // Card,  Row
 import { BellOutlined, CalendarOutlined, ProfileOutlined } from '@ant-design/icons';
-import { useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Badge, Card, Layout, Popover, Radio, Row } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import type { Socket } from 'socket.io-client';
 import { io } from 'socket.io-client';
 
-import { GetAllHandledEvents, GetAllUnhandledEvents } from '@/apis';
+import { modifyTheEventInformation } from '@/apis';
 import {
   getRefreshToken,
   getUserId,
@@ -19,6 +19,10 @@ import {
 } from '@/store/SaveToken';
 
 import TopIcon from '../../assets/top.svg';
+import IncidentsAreReportedModal from '../IncidentManagement/components/Model/incidentsAreReportedModal';
+import ProcessingModal from '../IncidentManagement/components/Model/ProcessingModal';
+import TobeEvaluatedViewModal from '../IncidentManagement/components/Model/tobeEvaluatedViewModal';
+import type { eventData } from '../IncidentManagement/type';
 import Detail from '../ReviewPage/Detail';
 import styles from './HomePage.module.less';
 import Time from './Time';
@@ -38,7 +42,34 @@ type EventData = {
   updater_id: number;
   audit_records_id: number;
   auditrecords: AuditRecords;
+  reportinfo_id: number;
+  reportinfo: eventData;
 };
+
+// type Reportinfo = {
+//   classification_basis: string | null;
+//   create_time: date;
+//   creator_id: number | null;
+//   id: number;
+//   image_url: string | null;
+//   is_delete: boolean | null;
+//   issue_level: string | null;
+//   police_id: number | null;
+//   police_opinion: string | null;
+//   priority: number | null | string;
+//   processing_status: string | null;
+//   processing_time: date | null;
+//   public_demand: string | null;
+//   public_opinion: string | null;
+//   report_address: string | null;
+//   report_time: date | null;
+//   report_user: user | null;
+//   reporter_evaluate: string | null;
+//   reporter_id: number | null;
+//   reporter_star_rating: number | null;
+//   update_time: date | null;
+//   updater_id: number | null;
+// };
 
 type AuditRecords = {
   action_type: string;
@@ -85,59 +116,81 @@ function HomePage() {
   // 这里用来记录ws对象
   const [socket, setSocket] = useState<Socket | null>(null);
   const [hintChoose, setHintChoose] = useState('1');
+  // 未处理事件的个数
   const [_unHandledNumber, setUnHandledNumber] = useState(0);
-  // _unHandledNumber
+  // 已处理事件的个数
   const [_HandledNumber, setHandledNumber] = useState(0);
-  // _HandledNumber,
+  // 未处理事件的数据信息
   const [unHandleSource, setUnhandleSource] = useState<EventData[]>([]);
+  // 已处理事件的数据信息
   const [handleSource, setHandleSource] = useState<EventData[]>([]);
 
-  // 点击card弹窗显示状态
+  // 变更人口弹窗显示状态
   const [visibleDetail, setVisibleDetail] = useState(false);
   // 设置当前点击的card的auditrecordsId
   const [rightnowAuditrecordsId, setRightnowAuditrecordsId] = useState(0);
-  // 设置当前点击的事件数据
+  // 设置当前点击的变更人口事件数据
   const [currentEventData, setCurrentEventData] = useState<EventData>();
-  // 获取未处理数据
-  const { data: unhandleData, refetch: unhandledDataRefetch } = useQuery(
-    GetAllUnhandledEvents,
-    {
-      variables: {
-        data: { ID: Number(getUserId()) },
-      },
-      onCompleted: () => {
-        // setUnhandleSource(data.getAllUnhandledEvents);
-        // setUnHandledNumber(
-        //   data.getAllUnhandledEvents === null
-        //     ? data.getAllUnhandledEvents.length
-        //     : 0,
-        // );
-        console.log(unhandleData);
-      },
-    },
-  );
-  // 获取已处理数据
-  const { data: handleData, refetch: handledDataRefetch } = useQuery(
-    GetAllHandledEvents,
-    {
-      variables: {
-        data: { ID: Number(getUserId()) },
-      },
-      onCompleted: () => {
-        // setHandleSource(data.getAllHandledEvents);
-        // setHandledNumber(
-        //   data.getAllHandledEvents === null
-        //     ? data.getAllHandledEvents.length
-        //     : 0,
-        // );
-        console.log(handleData);
-      },
-    },
-  );
 
+  // 设置当前点击的事件上报数据
+  const [currentReportData, setCurrentReportData] = useState<eventData>({} as eventData);
+  // 设置reportId
+  const [reportInfoId, setReportInfoId] = useState<number>(-1);
+
+  const [modifyReportInfo] = useMutation(modifyTheEventInformation); // 除了添加以为，包括删除在内的函数均为此函数触发
+  // 设置已上报组件状态显示
+  const [IncidentsAreReportedModalVisibel, setIncidentsAreReportedModalVisibel] =
+    useState(false);
+  // 设置处理中组件状态显示
+  const [ProcessingModalVisibel, setProcessingModalVisibel] = useState(false);
+  // 设置待评价组件状态显示
+  const [TobeEvaluatedViewModalVisibel, setTobeEvaluatedViewModalVisibel] =
+    useState(false);
+  // 事件上报组件的reloading
+  const [reloading, setReloading] = useState(false);
+
+  // 获取未处理数据
+  // const { data: unhandleData, refetch: unhandledDataRefetch } = useQuery(
+  //   GetAllUnhandledEvents,
+  //   {
+  //     variables: {
+  //       data: { ID: Number(getUserId()) },
+  //     },
+  //     onCompleted: () => {
+  //       // setUnhandleSource(data.getAllUnhandledEvents);
+  //       // setUnHandledNumber(
+  //       //   data.getAllUnhandledEvents === null
+  //       //     ? data.getAllUnhandledEvents.length
+  //       //     : 0,
+  //       // );
+  //       console.log(unhandleData);
+  //     },
+  //   },
+  // );
+  // 获取已处理数据
+  // const { data: handleData, refetch: handledDataRefetch } = useQuery(
+  //   GetAllHandledEvents,
+  //   {
+  //     variables: {
+  //       data: { ID: Number(getUserId()) },
+  //     },
+  //     onCompleted: () => {
+  //       // setHandleSource(data.getAllHandledEvents);
+  //       // setHandledNumber(
+  //       //   data.getAllHandledEvents === null
+  //       //     ? data.getAllHandledEvents.length
+  //       //     : 0,
+  //       // );
+  //       console.log(handleData);
+  //     },
+  //   },
+  // );
+
+  // 获取当前登录用户的信息
   const user = {
     id: Number(getUserId()),
     role: getUserType(),
+    numberRole: getUserType() === 'gridMember' ? 2 : 1,
   };
   // 连接websocket
   const connectWs = () => {
@@ -193,17 +246,17 @@ function HomePage() {
   //   }, 60000); // 每隔60秒发送一次查询
   // }, [unhandledDataRefetch, handledDataRefetch]);
 
-  useEffect(() => {
-    if (hintChoose === '1') {
-      unhandledDataRefetch({
-        data: { ID: Number(getUserId()) },
-      });
-    } else if (hintChoose === '2') {
-      handledDataRefetch({
-        data: { ID: Number(getUserId()) },
-      });
-    }
-  }, [hintChoose, handledDataRefetch, unhandledDataRefetch]);
+  // useEffect(() => {
+  //   if (hintChoose === '1') {
+  //     unhandledDataRefetch({
+  //       data: { ID: Number(getUserId()) },
+  //     });
+  //   } else if (hintChoose === '2') {
+  //     handledDataRefetch({
+  //       data: { ID: Number(getUserId()) },
+  //     });
+  //   }
+  // }, [hintChoose, handledDataRefetch, unhandledDataRefetch]);
 
   const IsHandled = (
     <>
@@ -221,8 +274,6 @@ function HomePage() {
               }
             };
             const eventPageRoute = getEventPageRoute(item.event_type);
-            // 将时间类型有String转换为Date
-            // const timeDATE = new Date(item.create_time);
             return (
               <Card key={index} hoverable style={{ margin: '1vh' }} size="small">
                 <Link
@@ -241,18 +292,15 @@ function HomePage() {
                       ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
                       : item.auditrecords?.action_type === '5'
                       ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
+                      : item.reportinfo
+                      ? `${item.reportinfo?.classification_basis}的事件处理`
                       : ''}
                   </Row>
                   <Row>事件类型:{item.event_type}</Row>
                   <Row>
                     发起时间:
                     {transferTime(item.create_time)}
-                    {/* {timeDATE
-                      .toISOString()
-                      .replace('T', ' ')
-                      .replace(/\.\d{3}Z/, '')} */}
                   </Row>
-                  {/* <Row justify="end">{item.sender_id}</Row> */}
                 </Link>
               </Card>
             );
@@ -272,15 +320,24 @@ function HomePage() {
                 style={{ margin: '1vh' }}
                 size="small"
                 onClick={() => {
-                  setVisibleDetail(true);
-                  setRightnowAuditrecordsId(item.audit_records_id);
-                  setCurrentEventData(item);
+                  if (item.audit_records_id) {
+                    setVisibleDetail(true);
+                    setCurrentEventData(item);
+                    setRightnowAuditrecordsId(item.audit_records_id);
+                  }
+                  if (item.reportinfo_id) {
+                    setReportInfoId(item.reportinfo_id);
+                    setCurrentReportData(item.reportinfo);
+                    if (item.reportinfo.processing_status === '已上报') {
+                      setIncidentsAreReportedModalVisibel(true);
+                    } else if (item.reportinfo.processing_status === '处理中') {
+                      setProcessingModalVisibel(true);
+                    } else if (item.reportinfo.processing_status === '待评价') {
+                      setTobeEvaluatedViewModalVisibel(true);
+                    }
+                  }
                 }}
               >
-                {/* <Link
-                  to={eventPageRoute}
-                  style={{ textDecoration: 'none', color: 'inherit' }}
-                > */}
                 <Row>
                   消息描述:
                   {item.auditrecords?.action_type === '1'
@@ -293,20 +350,15 @@ function HomePage() {
                     ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
                     : item.auditrecords?.action_type === '5'
                     ? `变更家庭成员 ${item.auditrecords.person_info?.name} 的群众信息`
+                    : item.reportinfo
+                    ? `${item.reportinfo?.classification_basis}的事件处理`
                     : ''}
                 </Row>
                 <Row>事件类型:{item?.event_type}</Row>
                 <Row>
                   发起时间:
-                  {/* {timeDATE
-                    .toISOString()
-                    .replace('T', ' ')
-                    .replace(/\.\d{3}Z/, '')} */}
                   {transferTime(item.create_time)}
                 </Row>
-
-                {/* <Row justify="end">{item.sender_id}</Row> */}
-                {/* </Link> */}
               </Card>
             );
           })
@@ -420,6 +472,55 @@ function HomePage() {
         setRightnowAuditrecordsId={setRightnowAuditrecordsId}
         currentEventData={currentEventData}
       />
+      {/* 已上报组件 */}
+      <IncidentsAreReportedModal
+        role={user.numberRole}
+        id={reportInfoId}
+        disable={true}
+        visible={IncidentsAreReportedModalVisibel}
+        setVisible={setIncidentsAreReportedModalVisibel}
+        level={1}
+        data={currentReportData}
+        reloading={reloading}
+        setReloading={setReloading}
+        updata={modifyReportInfo}
+      />
+      {/* 处理中组件 */}
+      <ProcessingModal
+        role={user.numberRole}
+        id={reportInfoId}
+        disable={true}
+        visible={ProcessingModalVisibel}
+        reloading={reloading}
+        setVisible={setProcessingModalVisibel}
+        setReloading={setReloading}
+        level={2}
+        data={currentReportData}
+        updata={modifyReportInfo}
+      />
+      {/* 待评价组件 */}
+      <TobeEvaluatedViewModal
+        reloading={reloading}
+        setReloading={setReloading}
+        data={currentReportData}
+        updata={modifyReportInfo}
+        role={user.numberRole}
+        level={3}
+        visible={TobeEvaluatedViewModalVisibel}
+        id={reportInfoId}
+        disable={true}
+        setVisible={setTobeEvaluatedViewModalVisibel}
+      />
+      {/* 已完结组件 */}
+      {/* <FinishModal
+        role={user.numberRole}
+        level={4}
+        visible={visible}
+        id={reportInfoId}
+        disable={true}
+        setVisible={setVisible}
+        data={currentReportData}
+      /> */}
     </>
   );
 }
