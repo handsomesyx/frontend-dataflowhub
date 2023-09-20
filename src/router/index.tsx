@@ -1,47 +1,47 @@
+import './index.css';
+
 import { Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
-import React from 'react';
+// import React from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 // import AdministrativeRegion from "../pages/BasicInformation/AdministrativeRegion";
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
-// const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
-const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
-const PersonManage = React.lazy(() => import('@/pages/UserManage'));
-const Login = React.lazy(() => import('@/pages/Login/Login'));
-import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
-const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
-const Visualization = React.lazy(() => import('@/pages/visualization'));
-import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
+// // const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
+// const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
+// const PersonManage = React.lazy(() => import('@/pages/UserManage'));
+// const Login = React.lazy(() => import('@/pages/Login/Login'));
+// import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
+// const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
+// const Visualization = React.lazy(() => import('@/pages/visualization'));
+// import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
-import IncidentManagement from '@/pages/IncidentManagement';
+// import IncidentManagement from '@/pages/IncidentManagement';
 // import Community from "@/pages/BasicInformation/Community";
-import { LoginLog } from '@/pages/LoginLog';
+// import { LoginLog } from '@/pages/LoginLog';
 import { OperateLog } from '@/pages/OperateLog';
 import { userType } from '@/store';
-import { getUserType } from '@/store/SaveToken';
 
+// import { getUserType } from '@/store/SaveToken';
 import LogOut from './LogOut';
 // import AdministrativeRegion from "../pages/BasicInformation/AdministrativeRegion";
-const AdministrativeRegion = React.lazy(
-  () => import('@/pages/BasicInformation/AdministrativeRegion'),
-);
-const HomePage = React.lazy(() => import('@/pages/HomePage'));
-const InformationShow = React.lazy(() => import('@/pages/PerpleInformation/Show'));
-const HistoryInfoBasic = React.lazy(() => import('@/pages/HistoryLook/Search'));
-const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'));
+// const AdministrativeRegion = React.lazy(
+//   () => import('@/pages/BasicInformation/AdministrativeRegion'),
+// );
+// const HomePage = React.lazy(() => import('@/pages/HomePage'));
+// const InformationShow = React.lazy(() => import('@/pages/PerpleInformation/Show'));
+// const HistoryInfoBasic = React.lazy(() => import('@/pages/HistoryLook/Search'));
+// const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'));
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 // const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
-const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
-const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
-const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
-const InformationShowHistory = React.lazy(
-  () => import('@/pages/HistoryLook/Show/InformationShowHistory'),
-);
-import './index.css';
-
+// const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
+// const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
+// const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
+// const InformationShowHistory = React.lazy(
+//   () => import('@/pages/HistoryLook/Show/InformationShowHistory'),
+// );
 import type { routerConfigType } from './routerConfigType';
 
 // ———————— 说明 （1、2级路由正常）————————————
@@ -55,11 +55,7 @@ import type { routerConfigType } from './routerConfigType';
 const routeConfig: routerConfigType[] = [
   {
     path: '/*',
-    element: (
-      <Suspense fallback={<Spin size="large" />}>
-        <HomePage />
-      </Suspense>
-    ),
+    element: <Suspense fallback={<Spin size="large" />}></Suspense>,
     auth: [1, 9, 8, 7, 'user1'],
     children: [
       {
@@ -81,9 +77,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <HomeSearch></HomeSearch>
-                </div>
+                <div className="NotContentFFF"></div>
               </Suspense>
             ),
           },
@@ -92,9 +86,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <Visualization></Visualization>
-                </div>
+                <div className="NotContentFFF"></div>
               </Suspense>
             ),
           },
@@ -127,9 +119,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div>
-                  <SearchBasic />
-                </div>
+                <div></div>
               </Suspense>
             ),
           },
@@ -138,9 +128,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <InformationShow />
-                </div>
+                <div className="NotContentFFF"></div>
               </Suspense>
             ),
           },
@@ -149,9 +137,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div>
-                  <SearchBasic />
-                </div>
+                <div></div>
               </Suspense>
             ),
           },
@@ -160,9 +146,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <InformationShowHistory />
-                </div>
+                <div className="NotContentFFF"></div>
               </Suspense>
             ),
           },
@@ -170,9 +154,9 @@ const routeConfig: routerConfigType[] = [
             path: 'history-lookOver',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <HistoryInfoBasic />
-              </Suspense>
+              <Suspense
+                fallback={<Spin className="SetLazySpinCent" size="large" />}
+              ></Suspense>
             ),
           },
           {
@@ -180,9 +164,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div style={{ overflow: 'scroll', overflowX: 'hidden' }}>
-                  <ReviewPage />
-                </div>
+                <div style={{ overflow: 'scroll', overflowX: 'hidden' }}></div>
               </Suspense>
             ),
           },
@@ -192,9 +174,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <InformationAdd></InformationAdd>
-                </div>
+                <div className="NotContentFFF"></div>
               </Suspense>
             ),
           },
@@ -204,9 +184,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF">
-                  <InformationUpdate></InformationUpdate>
-                </div>
+                <div className="NotContentFFF"></div>
               </Suspense>
             ),
           },
@@ -237,7 +215,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <>
+                {/* <>
                   {getUserType() === 'superAdmin' ? (
                     <div className="NotContentFFF">
                       <AdministrativeRegion />
@@ -245,7 +223,7 @@ const routeConfig: routerConfigType[] = [
                   ) : (
                     <div>无权访问,只有超级管理员可对行政区域进行管理</div>
                   )}
-                </>
+                </> */}
               </Suspense>
             ),
           },
@@ -265,13 +243,13 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div style={{ overflowY: 'auto' }}>
+                {/* <div style={{ overflowY: 'auto' }}>
                   {getUserType() === 'superAdmin' ? (
                     <PoliceStation />
                   ) : (
                     '无权访问,只有超级管理员可对警局进行管理'
                   )}
-                </div>
+                </div> */}
               </Suspense>
             ),
           },
@@ -293,15 +271,9 @@ const routeConfig: routerConfigType[] = [
         path: 'event-management',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div
-              style={{
-                overflowY: 'scroll',
-              }}
-            >
-              <IncidentManagement />
-            </div>
-          </Suspense>
+          <Suspense
+            fallback={<Spin className="SetLazySpinCent" size="large" />}
+          ></Suspense>
         ),
       },
       // 用于可视化页面跳转
@@ -309,15 +281,9 @@ const routeConfig: routerConfigType[] = [
         path: 'event-management/:state',
         auth: [1, 9, 8, 7, 'user1'],
         element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div
-              style={{
-                overflowY: 'scroll',
-              }}
-            >
-              <IncidentManagement />
-            </div>
-          </Suspense>
+          <Suspense
+            fallback={<Spin className="SetLazySpinCent" size="large" />}
+          ></Suspense>
         ),
       },
       // 日志记录
@@ -334,11 +300,9 @@ const routeConfig: routerConfigType[] = [
             path: 'login-log',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div>
-                  <LoginLog />
-                </div>
-              </Suspense>
+              <Suspense
+                fallback={<Spin className="SetLazySpinCent" size="large" />}
+              ></Suspense>
             ),
           },
           {
@@ -368,9 +332,7 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>
-              <CheckPerformance />
-            </div>
+            <div></div>
           </Suspense>
         ),
       },
@@ -379,9 +341,7 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>
-              <SearchInfo></SearchInfo>
-            </div>
+            <div></div>
           </Suspense>
         ),
       },
@@ -390,9 +350,7 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>
-              <SearchInfo></SearchInfo>
-            </div>
+            <div></div>
           </Suspense>
         ),
       },
@@ -401,13 +359,13 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>
+            {/* <div>
               {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
                 <PersonManage />
               ) : (
                 '无权访问'
               )}
-            </div>
+            </div> */}
           </Suspense>
         ),
       },
@@ -417,13 +375,13 @@ const routeConfig: routerConfigType[] = [
         auth: [1, 9, 8, 7, 'user1'],
         element: (
           <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div>
+            {/* <div>
               {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
                 <PersonManage />
               ) : (
                 '无权访问'
               )}
-            </div>
+            </div> */}
           </Suspense>
         ),
       },
@@ -452,11 +410,7 @@ const routeConfig: routerConfigType[] = [
   },
   {
     path: 'login',
-    element: (
-      <>
-        <Login></Login>
-      </>
-    ),
+    element: <>{/* <Login></Login> */}</>,
   },
 ];
 

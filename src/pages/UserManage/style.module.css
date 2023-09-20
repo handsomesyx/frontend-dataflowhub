@@ -1,9 +1,0 @@
-.UserManage {
-  display: flex;
-  flex-direction: column;
-}
-
-.UserManage .Header {
-  display: flex;
-  position: relative;
-}

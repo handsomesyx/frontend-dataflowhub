@@ -1,6 +1,6 @@
-import type { eventData } from '@/pages/IncidentManagement/type';
+// import type { eventData } from '@/pages/IncidentManagement/type';
 
-export function dealEventData(data: eventData) {
+export function dealEventData(data: any) {
   let tempData = { ...data };
   switch (tempData.issue_level) {
     case 'A':

@@ -18,9 +18,11 @@ import Watermark from 'antd/es/watermark';
 import * as ExcelJs from 'exceljs';
 import { useEffect, useState } from 'react';
 
-import { GetAllUserOperateLogs } from '@/apis';
+// import { GetAllUserOperateLogs } from '@/apis';
+import { login } from '@/apis';
 import { getRealName, getUserIdCard } from '@/store/SaveToken';
 import { saveWorkbook } from '@/utils/ExportExcel';
+
 export function OperateLog() {
   type TableData = {
     id: number;
@@ -92,7 +94,8 @@ export function OperateLog() {
     }, 500);
   };
   // 获取导出的登录日志数据
-  const [getExceldata] = useLazyQuery(GetAllUserOperateLogs, {
+  const [getExceldata] = useLazyQuery(login, {
+    // 这个login之后需要修改
     fetchPolicy: 'network-only',
     notifyOnNetworkStatusChange: true,
     variables: {
@@ -102,7 +105,8 @@ export function OperateLog() {
     },
   });
   // 获取用户登录日志数据
-  const { data: userOperateLogsData, loading } = useQuery(GetAllUserOperateLogs, {
+  const { data: userOperateLogsData, loading } = useQuery(login, {
+    // 这个login之后需要修改
     variables: {
       data: { data: searchContent || '' },
       skip: skip,
