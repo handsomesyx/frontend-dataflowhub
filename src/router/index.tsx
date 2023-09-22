@@ -7,6 +7,8 @@ import type { RouteObject } from 'react-router-dom';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
+import HomeLayout from '@/Layout/home-Layout';
+import HomeLeftLayout from '@/Layout/home-Left-Layout';
 // import AdministrativeRegion from "../pages/BasicInformation/AdministrativeRegion";
 // const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
 // // const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
@@ -22,6 +24,7 @@ import { useRecoilValue } from 'recoil';
 // import Community from "@/pages/BasicInformation/Community";
 // import { LoginLog } from '@/pages/LoginLog';
 import { OperateLog } from '@/pages/OperateLog';
+import TestContent from '@/pages/testContent';
 import { userType } from '@/store';
 
 // import { getUserType } from '@/store/SaveToken';
@@ -55,7 +58,11 @@ import type { routerConfigType } from './routerConfigType';
 const routeConfig: routerConfigType[] = [
   {
     path: '/*',
-    element: <Suspense fallback={<Spin size="large" />}></Suspense>,
+    element: (
+      <Suspense fallback={<Spin size="large" />}>
+        <HomeLayout />
+      </Suspense>
+    ),
     auth: [1, 9, 8, 7, 'user1'],
     children: [
       {
@@ -66,6 +73,11 @@ const routeConfig: routerConfigType[] = [
       {
         path: 'home',
         auth: [1, 9, 8, 7, 'user1'],
+        element: (
+          <Suspense fallback={<Spin size="large" />}>
+            <HomeLeftLayout />
+          </Suspense>
+        ),
         children: [
           {
             path: '',
@@ -77,7 +89,7 @@ const routeConfig: routerConfigType[] = [
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF"></div>
+                <TestContent />
               </Suspense>
             ),
           },
