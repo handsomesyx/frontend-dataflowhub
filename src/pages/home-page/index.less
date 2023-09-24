@@ -1,63 +1,93 @@
+@common-background: linear-gradient(357deg, #e0eaff 0%, #fff 100%),
+  linear-gradient(180deg, #fff 0%, #fff0 100%),
+  linear-gradient(180deg, #dbfffb 0%, #fff0 100%);
+
 .index-container {
   height: 85vh;
+  display: flex;
+  gap: 20px;
 }
 
-.left-div {
+.index-left-div {
   width: 68%;
   height: 100%;
-  float: left;
 }
 
-.right-div {
+.index-right-div {
   width: 31%;
   height: 100%;
-  float: right;
 }
 
-.left-top {
+.index-left-top {
   display: flex;
+  gap: 20px;
+  padding-bottom: 20px;
+  height: 70%;
 }
 
-.left-down {
-  background-color: bisque;
+.index-left-down {
+  background-color: white;
+  height: 30%;
+  border-radius: 4px;
 }
 
-.left-top-left {
+.index-left-top-left {
   display: flex;
   flex-direction: column;
   flex: 1;
+  gap: 20px;
 }
 
-.left-top-right {
+.index-left-top-right {
   flex: 1;
-  background-color: chocolate;
+  background-color: white;
+  border-radius: 4px;
 }
 
-.left-top-left-top {
+.index-left-top-left-top {
   flex: 1;
-  background-color: aquamarine;
+  background: @common-background;
+  border-radius: 4px;
 }
 
-.left-top-left-bottom {
+.index-left-top-left-bottom {
   flex: 1;
-  background-color: cadetblue;
+  background-color: white;
+  border-radius: 4px;
 }
 
-.right-top {
+.index-right-top {
   display: flex;
-  background-color: aquamarine;
+  gap: 20px;
+  padding-bottom: 20px;
+  height: 45%;
 }
 
-.right-top-left {
+.index-right-top-left {
+  display: flex;
   flex: 1;
-  background-color: antiquewhite;
+  gap: 20px;
+  flex-direction: column;
 }
 
-.right-top-right {
+.index-right-top-right-top,
+.index-right-top-left-top,
+.index-right-top-left-bottom,
+.index-right-top-right-bottom {
+  height: 50%;
+  background: @common-background;
+  border-radius: 4px;
+}
+
+.index-right-top-right {
+  display: flex;
   flex: 1;
-  background-color: aqua;
+  gap: 20px;
+  flex-direction: column;
 }
 
-.right-bottom {
-  background-color: skyblue;
+.index-right-bottom {
+  background-color: white;
+  height: 55%;
+  border-radius: 4px;
 }

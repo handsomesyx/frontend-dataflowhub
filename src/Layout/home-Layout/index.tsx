@@ -5,10 +5,9 @@ import { Input, Layout, Radio } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import { Outlet } from 'react-router-dom';
 
-import top_search from '../../../public/top_search.png';
-import top_wo from '../../../public/top_wo.png';
+import top_search from '/top_search.png';
+import top_wo from '/top_wo.png';
 
-// const { Search } = Input;
 export default function HomeLayout() {
   return (
     <div className="top-home-layout">
