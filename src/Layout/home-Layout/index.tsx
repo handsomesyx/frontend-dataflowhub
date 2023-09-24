@@ -21,22 +21,20 @@ export default function HomeLayout() {
             alignItems: 'center',
           }}
         >
-          <div style={{ display: 'flex', width: '100%' }}>
+          <div style={{ display: 'flex', width: '98%' }}>
             <div style={{ display: 'flex', width: '50%' }}>
               {/* 最左侧logo放置区域 */}
-              <div className="top-home-logo">LOGO</div>
+              <div className="top-home-logo">
+                <div className="top-logo-content">LOGO</div>
+              </div>
               {/* 标题：‘数据要素流通平台’ */}
               <div className="top-home-title">
                 <span style={{ fontWeight: 'bold' }}>数据要素流通平台</span>
               </div>
             </div>
-            <div style={{ display: 'flex', width: '50%' }}>
+            <div style={{ display: 'flex', width: '50%', justifyContent: 'flex-end' }}>
               {/* 顶部搜索框 */}
               <div className="top-home-search">
-                {/* <Search
-                  placeholder="Search Items, Collections, and Accounts"
-                  className="custom-search"
-                /> */}
                 <Input
                   placeholder="Search Items, Collections, and Accounts"
                   prefix={<img className="top_search" src={top_search} />}

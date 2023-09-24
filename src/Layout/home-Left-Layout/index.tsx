@@ -3,14 +3,15 @@ import { Layout, Menu, type MenuProps } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
 import { Link, Outlet } from 'react-router-dom';
+// 首页左侧导航（一级导航、二级导航）：注意Link标签与Router路由之间的对应关系
 const items: MenuProps['items'] = [
   {
     label: (
-      <Link to={'home-page'}>
+      <Link to={'index'}>
         <span>首页</span>
       </Link>
     ),
-    key: 'home-page',
+    key: 'index',
     icon: <HomeOutlined />,
   },
   {
@@ -56,11 +57,11 @@ export default function HomeLeftLayout() {
   return (
     <>
       <div className="home-left-container">
-        <Layout className="home-secretary">
-          <Sider className="secretary-sider">
-            <Menu className="secretary-sider-menu" mode="inline" items={items}></Menu>
+        <Layout className="home-left" style={{ width: '95%' }}>
+          <Sider className="left-sider">
+            <Menu className="left-sider-menu" mode="inline" items={items}></Menu>
           </Sider>
-          <Content className="secretary-content">
+          <Content className="left-content">
             <Outlet />
           </Content>
         </Layout>

@@ -2,7 +2,7 @@ import './index.less';
 
 function HomePage() {
   return (
-    <div className="container">
+    <div className="index-container">
       <div className="left-div">
         <div className="left-top">
           <div className="left-top-left">
