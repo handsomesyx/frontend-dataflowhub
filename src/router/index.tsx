@@ -2,49 +2,20 @@ import './index.css';
 
 import { Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
-// import React from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 
 import HomeLayout from '@/Layout/home-Layout';
 import HomeLeftLayout from '@/Layout/home-Left-Layout';
-// import AdministrativeRegion from "../pages/BasicInformation/AdministrativeRegion";
-// const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
-// // const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
-// const InformationUpdate = React.lazy(() => import('@/pages/PerpleInformation/Update'));
-// const PersonManage = React.lazy(() => import('@/pages/UserManage'));
-// const Login = React.lazy(() => import('@/pages/Login/Login'));
-// import CheckPerformance from '@/pages/CheckPerformance/CheckPerformance';
-// const ReviewPage = React.lazy(() => import('@/pages/ReviewPage'));
-// const Visualization = React.lazy(() => import('@/pages/visualization'));
-// import SearchInfo from '@/pages/HomeSearch/SearchInfo/SearchInfo';
-// const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
-// import IncidentManagement from '@/pages/IncidentManagement';
-// import Community from "@/pages/BasicInformation/Community";
-// import { LoginLog } from '@/pages/LoginLog';
-import { OperateLog } from '@/pages/OperateLog';
-import TestContent from '@/pages/testContent';
+import HomePage from '@/pages/home-page';
+import CreateNFT from '@/pages/nft/create-nft';
+import NFTList from '@/pages/nft/nft-list';
+import { OperateLog } from '@/pages/operatelog';
+import OrrderList from '@/pages/order-list';
 import { userType } from '@/store';
 
-// import { getUserType } from '@/store/SaveToken';
 import LogOut from './LogOut';
-// import AdministrativeRegion from "../pages/BasicInformation/AdministrativeRegion";
-// const AdministrativeRegion = React.lazy(
-//   () => import('@/pages/BasicInformation/AdministrativeRegion'),
-// );
-// const HomePage = React.lazy(() => import('@/pages/HomePage'));
-// const InformationShow = React.lazy(() => import('@/pages/PerpleInformation/Show'));
-// const HistoryInfoBasic = React.lazy(() => import('@/pages/HistoryLook/Search'));
-// const InformationAdd = React.lazy(() => import('@/pages/PerpleInformation/Add'));
-// const Aside = React.lazy(() => import("@/pages/HomePage/Aside"));
-// const Community = React.lazy(() => import('@/pages/BasicInformation/Community'));
-// const PoliceStation = React.lazy(() => import('@/pages/BasicInformation/PoliceStation'));
-// const SearchBasic = React.lazy(() => import('@/pages/PerpleInformation/Search'));
-// const HomeSearch = React.lazy(() => import('@/pages/HomeSearch'));
-// const InformationShowHistory = React.lazy(
-//   () => import('@/pages/HistoryLook/Show/InformationShowHistory'),
-// );
 import type { routerConfigType } from './routerConfigType';
 
 // ———————— 说明 （1、2级路由正常）————————————
@@ -85,218 +56,42 @@ const routeConfig: routerConfigType[] = [
             element: <Navigate to="index" replace></Navigate>,
           },
           {
-            path: 'index',
+            path: 'home-page',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <TestContent />
+                <HomePage />
               </Suspense>
             ),
           },
           {
-            path: 'te',
+            path: 'nft-list',
             auth: [1, 9, 8, 7, 'user1'],
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF"></div>
+                <NFTList />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'create-nft',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <CreateNFT />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'orders-list',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <OrrderList />
               </Suspense>
             ),
           },
         ],
-      },
-
-      // getUserType() !== 'superAdmin' ? {
-      //   path: 'user-manager',
-      //   auth: [1, 9, 8, 7, 'user1'],
-      //   element: (
-      //     <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-      //       <div>
-      //         <PersonManage />
-      //       </div>
-      //     </Suspense>
-      //   ),
-      // } : {},
-      // 人口管理
-      {
-        path: 'population-manager/*',
-        auth: [1, 9, 8, 7, 'user1'],
-        children: [
-          {
-            path: '',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: <Navigate to="person-search" replace></Navigate>,
-          },
-          {
-            path: 'person-search',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div></div>
-              </Suspense>
-            ),
-          },
-          {
-            path: 'person-show',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF"></div>
-              </Suspense>
-            ),
-          },
-          {
-            path: 'person-search/:content',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div></div>
-              </Suspense>
-            ),
-          },
-          {
-            path: 'person-show-history',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF"></div>
-              </Suspense>
-            ),
-          },
-          {
-            path: 'history-lookOver',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense
-                fallback={<Spin className="SetLazySpinCent" size="large" />}
-              ></Suspense>
-            ),
-          },
-          {
-            path: 'pending',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div style={{ overflow: 'scroll', overflowX: 'hidden' }}></div>
-              </Suspense>
-            ),
-          },
-          // 新增加人员基础信息
-          {
-            path: 'person-management-add',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF"></div>
-              </Suspense>
-            ),
-          },
-          // 修改人员基础信息
-          {
-            path: 'person-management-update/:id',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                <div className="NotContentFFF"></div>
-              </Suspense>
-            ),
-          },
-          // {
-          //   path: 'information-push',
-          //   auth: [1, 9, 8, 7, 'user1'],
-          //   element: (
-          //     <Suspense
-          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
-          //     >
-          //       <div>人员信息推送</div>
-          //     </Suspense>
-          //   ),
-          // },
-        ],
-      },
-      {
-        path: 'basic-information/*',
-        auth: [1, 9, 8, 7, 'user1'],
-        children: [
-          {
-            path: '',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: <Navigate to="basic" replace></Navigate>,
-          },
-          {
-            path: 'administrativeRegion',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                {/* <>
-                  {getUserType() === 'superAdmin' ? (
-                    <div className="NotContentFFF">
-                      <AdministrativeRegion />
-                    </div>
-                  ) : (
-                    <div>无权访问,只有超级管理员可对行政区域进行管理</div>
-                  )}
-                </> */}
-              </Suspense>
-            ),
-          },
-          // {
-          //   path: 'gridArea',
-          //   auth: [1, 9, 8, 7, 'user1'],
-          //   element: (
-          //     <Suspense
-          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
-          //     >
-          //       <div >网格区域管理</div>
-          //     </Suspense>
-          //   ),
-          // },
-          {
-            path: 'policeStation',
-            auth: [1, 9, 8, 7, 'user1'],
-            element: (
-              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-                {/* <div style={{ overflowY: 'auto' }}>
-                  {getUserType() === 'superAdmin' ? (
-                    <PoliceStation />
-                  ) : (
-                    '无权访问,只有超级管理员可对警局进行管理'
-                  )}
-                </div> */}
-              </Suspense>
-            ),
-          },
-          // {
-          //   path: 'community',
-          //   auth: [1, 9, 8, 7, 'user1'],
-          //   element: (
-          //     <Suspense
-          //       fallback={<Spin className="SetLazySpinCent" size="large" />}
-          //     >
-          //       {/* <div>社区管理</div> */}
-          //       <Community />
-          //     </Suspense>
-          //   ),
-          // },
-        ],
-      },
-      {
-        path: 'event-management',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense
-            fallback={<Spin className="SetLazySpinCent" size="large" />}
-          ></Suspense>
-        ),
-      },
-      // 用于可视化页面跳转
-      {
-        path: 'event-management/:state',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense
-            fallback={<Spin className="SetLazySpinCent" size="large" />}
-          ></Suspense>
-        ),
       },
       // 日志记录
       {
@@ -329,73 +124,6 @@ const routeConfig: routerConfigType[] = [
             ),
           },
         ],
-        // element: (
-        //   <Suspense
-        //     fallback={<Spin className="SetLazySpinCent" size="large" />}
-        //   >
-        //     <div>
-        //       <LogRecord />
-        //     </div>
-        //   </Suspense>
-        // ),
-      },
-      {
-        path: 'check-performance',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div></div>
-          </Suspense>
-        ),
-      },
-      {
-        path: 'search-info',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div></div>
-          </Suspense>
-        ),
-      },
-      {
-        path: 'search-info',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            <div></div>
-          </Suspense>
-        ),
-      },
-      {
-        path: 'user-manager',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            {/* <div>
-              {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
-                <PersonManage />
-              ) : (
-                '无权访问'
-              )}
-            </div> */}
-          </Suspense>
-        ),
-      },
-      // 用于可视化页面跳转
-      {
-        path: 'user-manager/:role',
-        auth: [1, 9, 8, 7, 'user1'],
-        element: (
-          <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
-            {/* <div>
-              {getUserType() !== 'gridMember' && getUserType() !== 'filmPolice' ? (
-                <PersonManage />
-              ) : (
-                '无权访问'
-              )}
-            </div> */}
-          </Suspense>
-        ),
       },
       {
         path: 'system-setting',

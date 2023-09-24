@@ -1,4 +1,4 @@
-export default function TestContent() {
+export default function OrrderList() {
   return (
     <>
       <div
@@ -6,7 +6,7 @@ export default function TestContent() {
           width: 'auto',
         }}
       >
-        1
+        OrrderList
       </div>
     </>
   );

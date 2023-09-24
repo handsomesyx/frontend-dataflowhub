@@ -6,11 +6,11 @@ import { Link, Outlet } from 'react-router-dom';
 const items: MenuProps['items'] = [
   {
     label: (
-      <Link to={'management'}>
+      <Link to={'home-page'}>
         <span>首页</span>
       </Link>
     ),
-    key: 'management',
+    key: 'home-page',
     icon: <HomeOutlined />,
   },
   {
@@ -20,19 +20,19 @@ const items: MenuProps['items'] = [
     children: [
       {
         label: (
-          <Link to={'signal-question'}>
+          <Link to={'nft-list'}>
             <span>NFT列表</span>
           </Link>
         ),
-        key: 'signal-question',
+        key: 'nft-list',
       },
       {
         label: (
-          <Link to={'multiple-question'}>
+          <Link to={'create-nft'}>
             <span>创建NFT</span>
           </Link>
         ),
-        key: 'multiple-question',
+        key: 'create-nft',
       },
     ],
   },
@@ -43,11 +43,11 @@ const items: MenuProps['items'] = [
     children: [
       {
         label: (
-          <Link to={'multiple-question'}>
+          <Link to={'orders-list'}>
             <span>订单列表</span>
           </Link>
         ),
-        key: 'multiple-question',
+        key: 'orders-list',
       },
     ],
   },

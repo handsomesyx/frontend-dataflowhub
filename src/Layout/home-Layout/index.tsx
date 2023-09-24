@@ -1,9 +1,14 @@
 import '../index.less';
 
+import { WalletOutlined } from '@ant-design/icons';
 import { Input, Layout, Radio } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import { Outlet } from 'react-router-dom';
-const { Search } = Input;
+
+import top_search from '../../../public/top_search.png';
+import top_wo from '../../../public/top_wo.png';
+
+// const { Search } = Input;
 export default function HomeLayout() {
   return (
     <div className="top-home-layout">
@@ -17,28 +22,42 @@ export default function HomeLayout() {
           }}
         >
           <div style={{ display: 'flex', width: '100%' }}>
-            <div style={{ display: 'flex', background: 'black', width: '50%' }}>
+            <div style={{ display: 'flex', width: '50%' }}>
               {/* 最左侧logo放置区域 */}
               <div className="top-home-logo">LOGO</div>
               {/* 标题：‘数据要素流通平台’ */}
               <div className="top-home-title">
-                <b>数据要素流通平台</b>
+                <span style={{ fontWeight: 'bold' }}>数据要素流通平台</span>
               </div>
             </div>
-            <div style={{ display: 'flex', background: 'black', width: '50%' }}>
+            <div style={{ display: 'flex', width: '50%' }}>
               {/* 顶部搜索框 */}
               <div className="top-home-search">
-                <Search
-                  placeholder="input search text"
-                  enterButton
+                {/* <Search
+                  placeholder="Search Items, Collections, and Accounts"
                   className="custom-search"
+                /> */}
+                <Input
+                  placeholder="Search Items, Collections, and Accounts"
+                  prefix={<img className="top_search" src={top_search} />}
+                  style={{ backgroundColor: '#f1f3f6', color: 'red' }}
+                  // colorBgContainer="#f1f3f6"
                 />
               </div>
               {/* 连接钱包区域 */}
               <div className="top-home-button">
                 <Radio.Group>
-                  <Radio.Button value="large">连接钱包</Radio.Button>
-                  <Radio.Button value="default">口</Radio.Button>
+                  <Radio.Button value="large">
+                    <WalletOutlined style={{ position: 'relative', right: '3px' }} />
+                    连接钱包
+                  </Radio.Button>
+                  <Radio.Button value="default">
+                    <img
+                      className="top_wo"
+                      src={top_wo}
+                      style={{ position: 'relative', top: '3px' }}
+                    />
+                  </Radio.Button>
                 </Radio.Group>
               </div>
             </div>
