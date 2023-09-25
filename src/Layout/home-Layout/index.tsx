@@ -1,13 +1,33 @@
 import '../index.less';
 
-import { WalletOutlined } from '@ant-design/icons';
-import { Input, Layout, Radio } from 'antd';
+import { UserOutlined, UserSwitchOutlined, WalletOutlined } from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import { Dropdown, Input, Layout, message } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import { Outlet } from 'react-router-dom';
 
 import top_search from '/top_search.png';
-import top_wo from '/top_wo.png';
-
+// 顶部按钮相关内容
+// 点击连接钱包
+const handleWalletConnect = () => {
+  message.info('模拟连接钱包.');
+};
+// 点击切换钱包账号
+const handleWalletChange: MenuProps['onClick'] = () => {
+  message.info('模拟切换钱包账号.');
+};
+// 顶部切换账号的下拉菜单
+const items: MenuProps['items'] = [
+  {
+    label: 'Profile',
+    key: '1',
+    icon: <UserSwitchOutlined />,
+  },
+];
+const menuProps = {
+  items,
+  onClick: handleWalletChange,
+};
 export default function HomeLayout() {
   return (
     <div className="top-home-layout">
@@ -43,19 +63,16 @@ export default function HomeLayout() {
               </div>
               {/* 连接钱包区域 */}
               <div className="top-home-button">
-                <Radio.Group>
-                  <Radio.Button value="large">
-                    <WalletOutlined style={{ position: 'relative', right: '3px' }} />
-                    连接钱包
-                  </Radio.Button>
-                  <Radio.Button value="default">
-                    <img
-                      className="top_wo"
-                      src={top_wo}
-                      style={{ position: 'relative', top: '3px' }}
-                    />
-                  </Radio.Button>
-                </Radio.Group>
+                <Dropdown.Button
+                  placement="bottom"
+                  menu={menuProps}
+                  onClick={handleWalletConnect}
+                  icon={<UserOutlined />}
+                  style={{ display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  <WalletOutlined style={{ position: 'relative' }} />
+                  连接钱包
+                </Dropdown.Button>
               </div>
             </div>
           </div>
