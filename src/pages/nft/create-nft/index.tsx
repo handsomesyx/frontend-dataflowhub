@@ -12,10 +12,10 @@ import { useState } from 'react';
 
 const { Option } = Select;
 
-const formLayout = {
-  wrapperCol: { span: 24 },
-  labelCol: { span: 24 },
-};
+// const formLayout = {
+//   wrapperCol: { span: 24 },
+//   labelCol: { span: 24 },
+// };
 
 // 创建NFT
 function CreateNFT() {
@@ -70,23 +70,19 @@ function CreateNFT() {
       {/* 下半部分：NFT创建区 */}
       <div className="nft-create-bottom">
         <div className="nft-create-upload">
-          <div style={{ height: '13%', backgroundColor: 'antiquewhite' }}>
+          <div style={{ height: '22px' }}>
             <span>
               <span style={{ color: 'red' }}>*</span>
               Required fields 图像、视频、音频或三维模型
             </span>
           </div>
-          <div style={{ display: 'flex', height: '55%', backgroundColor: 'aqua' }}>
-            <div style={{ height: '100%' }}>
+          <div style={{ display: 'flex', height: '105px' }}>
+            <div>
               <Upload
                 name="avatar"
                 listType="picture-card"
                 className="avatar-uploader"
                 showUploadList={false}
-                style={{
-                  width: '80px',
-                  height: '80px',
-                }}
               >
                 {imageUrl ? (
                   <img src={imageUrl} alt="avatar" style={{ width: '7%' }} />
@@ -104,7 +100,7 @@ function CreateNFT() {
               <div style={{ paddingTop: '10px' }}>可拖拽图片到左侧区域上传</div>
             </div>
           </div>
-          <div style={{ height: '25%', color: 'gray', backgroundColor: 'yellow' }}>
+          <div style={{ height: '44px', color: 'gray' }}>
             <span>
               File types supported: JPG, PGN, GIF, SVG, MP4, WEBM, MP3, WAV, OGG, GLB,
               GLTF.
@@ -117,9 +113,14 @@ function CreateNFT() {
           <Form
             form={form}
             onFinish={onFinish}
-            style={{ maxWidth: 500 }}
+            style={{ width: 450 }}
             layout="vertical"
-            {...formLayout}
+            labelCol={{
+              span: 24,
+            }}
+            wrapperCol={{
+              span: 24,
+            }}
           >
             <Form.Item
               name="name"
@@ -168,7 +169,7 @@ function CreateNFT() {
               <Input placeholder="请输入" />
             </Form.Item>
             <Form.Item>
-              <Button type="primary" htmlType="submit" style={{ width: 450 }}>
+              <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
                 提交
               </Button>
             </Form.Item>
