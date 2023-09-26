@@ -50,7 +50,7 @@ function CreateNFT() {
 
   // 输入表单
   const [form] = Form.useForm();
-
+  // 提交表单调用的方法
   const onFinish = (values: any) => {
     console.log(values);
   };

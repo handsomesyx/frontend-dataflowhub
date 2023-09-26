@@ -11,7 +11,7 @@ import HomeLeftLayout from '@/Layout/home-Left-Layout';
 import HomePage from '@/pages/home-page';
 import CreateNFT from '@/pages/nft/create-nft';
 import NFTList from '@/pages/nft/nft-list';
-import { OperateLog } from '@/pages/Operatelog';
+import { OperateLog } from '@/pages/OperateLog';
 import OrrderList from '@/pages/order-list';
 import { userType } from '@/store';
 
