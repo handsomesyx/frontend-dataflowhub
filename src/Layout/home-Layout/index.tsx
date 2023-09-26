@@ -48,7 +48,9 @@ export default function HomeLayout() {
               </div>
               {/* 标题：‘数据要素流通平台’ */}
               <div className="top-home-title">
-                <span style={{ fontWeight: 'bold' }}>数据要素流通平台</span>
+                <span style={{ fontWeight: 'bolder', fontSize: 'medium' }}>
+                  数据要素流通平台
+                </span>
               </div>
             </div>
             <div style={{ display: 'flex', width: '50%', justifyContent: 'flex-end' }}>
