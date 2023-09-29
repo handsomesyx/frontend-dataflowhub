@@ -2,6 +2,7 @@ import './index.css';
 
 import { Spin } from 'antd';
 import { Suspense, useCallback } from 'react';
+import React from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Navigate, useRoutes } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
@@ -10,13 +11,16 @@ import HomeLayout from '@/Layout/home-Layout';
 import HomeLeftLayout from '@/Layout/home-Left-Layout';
 import HomePage from '@/pages/home-page';
 import CreateNFT from '@/pages/nft/create-nft';
-import NFTList from '@/pages/nft/nft-list';
 import { OperateLog } from '@/pages/OperateLog';
 import OrrderList from '@/pages/order-list';
 import { userType } from '@/store';
 
 import LogOut from './LogOut';
 import type { routerConfigType } from './routerConfigType';
+
+// import PropertyDetail from '@/pages/property-detail';
+const PropertyDetail = React.lazy(() => import('@/pages/property-detail'));
+const NFTList = React.lazy(() => import('@/pages/nft/nft-list'));
 
 // ———————— 说明 （1、2级路由正常）————————————
 // 需要全部白色背景的页面在suspend里面加上div即可  不需要全部白色背景的加类名NotContentFFF
@@ -88,6 +92,15 @@ const routeConfig: routerConfigType[] = [
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <OrrderList />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'property-detail',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <PropertyDetail />
               </Suspense>
             ),
           },
