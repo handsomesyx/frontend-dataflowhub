@@ -36,6 +36,14 @@ const items: MenuProps['items'] = [
         ),
         key: 'create-nft',
       },
+      {
+        label: (
+          <Link to={'nft-classify'}>
+            <span>NFT分类</span>
+          </Link>
+        ),
+        key: 'nft-classify',
+      },
     ],
   },
   {

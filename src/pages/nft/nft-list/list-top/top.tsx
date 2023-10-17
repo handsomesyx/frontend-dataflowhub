@@ -1,4 +1,7 @@
-import { Breadcrumb, Button, Form, Row, Select, Space } from 'antd';
+import './index.less';
+
+import { RightOutlined } from '@ant-design/icons';
+import { Button, Form, Select, Space } from 'antd';
 import { useState } from 'react';
 
 export default function Top() {
@@ -12,54 +15,65 @@ export default function Top() {
     setPropertyState('');
   };
   return (
-    <div>
-      <Breadcrumb separator=">">
+    <div className="nft-list-top">
+      {/* <Breadcrumb separator=">">
         <Breadcrumb.Item>卖家</Breadcrumb.Item>
         <Breadcrumb.Item>NFT列表</Breadcrumb.Item>
-      </Breadcrumb>
-      <div>
-        <Form form={form}>
-          <Row justify="start" gutter={8} align="middle">
-            <Form.Item>
-              <div style={{ fontSize: '20px', marginLeft: '10px' }}>NFT列表</div>
-            </Form.Item>
+      </Breadcrumb> */}
+      {/* <div className="nft-create-nft-first">
+        <div style={{ color: 'gray' }}>
+          卖家 <RightOutlined />
+        </div>
+        <div style={{ paddingLeft: '6px' }}>NFT列表</div>
+      </div> */}
+      {/* <div className="nft-create-top-second">NFT列表</div> */}
 
-            <Space style={{ paddingLeft: '1000px' }}>
-              <Form.Item name="propertyState">
-                资产状态：
-                <Select
-                  defaultValue="created"
-                  // onChange={handleChange}
-                  style={{ width: '184px' }}
-                  options={[
-                    { value: 'created', label: '已创建' },
-                    { value: 'audited', label: '待审核' },
-                    { value: 'published', label: '已发布' },
-                    { value: 'saled', label: '已卖出' },
-                  ]}
-                />
-              </Form.Item>
-
-              <Form.Item>
-                <Button style={{ width: '66px' }} onClick={reset}>
-                  重置
-                </Button>
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  style={{ width: '66px' }}
-                  type="primary"
-                  htmlType="submit"
-                  onClick={handleSearch}
-                >
-                  查询
-                </Button>
-              </Form.Item>
-            </Space>
-          </Row>
-        </Form>
+      <div className="nft-create-nft-first">
+        <div style={{ color: 'gray' }}>
+          NFT <RightOutlined />
+        </div>
+        <div style={{ paddingLeft: '6px' }}>创建NFT</div>
       </div>
+
+      <Form form={form} className="nft-create-top-second">
+        {/* <Row justify="start" gutter={8} align="middle"> */}
+        {/* <Form.Item> */}
+        <span>NFT列表</span>
+        {/* </Form.Item> */}
+        <Space style={{ marginLeft: '65%' }}>
+          <Form.Item style={{ width: '70px' }}> 资产状态：</Form.Item>
+          <Form.Item name="propertyState">
+            <Select
+              defaultValue="created"
+              // onChange={handleChange}
+              style={{ width: '184px' }}
+              options={[
+                { value: 'created', label: '已创建' },
+                { value: 'audited', label: '待审核' },
+                { value: 'published', label: '已发布' },
+                { value: 'saled', label: '已卖出' },
+              ]}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button style={{ width: '66px' }} onClick={reset}>
+              重置
+            </Button>
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              style={{ width: '66px' }}
+              type="primary"
+              htmlType="submit"
+              onClick={handleSearch}
+            >
+              查询
+            </Button>
+          </Form.Item>
+        </Space>
+      </Form>
     </div>
   );
 }

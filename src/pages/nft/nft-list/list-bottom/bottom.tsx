@@ -1,3 +1,5 @@
+import './index.less';
+
 import { Image, List } from 'antd';
 
 export default function Bottom() {
@@ -55,21 +57,36 @@ export default function Bottom() {
     {
       avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png ',
     },
+    {
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png ',
+    },
+    {
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png ',
+    },
+    {
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png ',
+    },
+    {
+      avatar: 'https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png ',
+    },
   ];
   return (
-    <div>
+    <div className="nft-list-bottom">
       <List
+        style={{ height: '100%' }}
         grid={{ gutter: 16, column: 4 }}
         dataSource={data}
         renderItem={() => (
           <List.Item>
+            {/* style={{ width: '80%', height: '80%' }} */}
             <Image
-              style={{ width: '350px', height: '240px' }}
+              style={{ height: '20em', width: '20em' }}
+              //  style={{ maxWidth: '100%', maxHeight: '50%', minHeight: '30%' }}
               src="https://gw.alipayobjects.com/zos/rmsportal/WdGqmHpayyMjiEhcKoVE.png"
             ></Image>
           </List.Item>
         )}
-        // pagination={pagination}
+        pagination={{ pageSize: 8, position: 'bottom' }}
         // onChange={listPageChange}
       />
     </div>
