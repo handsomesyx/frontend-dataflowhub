@@ -72,7 +72,7 @@ function CreateNFT() {
         <div className="nft-create-upload">
           <div style={{ height: '22px' }}>
             <span>
-              <span style={{ color: 'red' }}>*</span>
+              <span style={{ color: 'red' }}>* </span>
               Required fields 图像、视频、音频或三维模型
             </span>
           </div>

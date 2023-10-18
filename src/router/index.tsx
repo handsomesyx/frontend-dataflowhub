@@ -11,6 +11,7 @@ import HomeLeftLayout from '@/Layout/home-Left-Layout';
 import HomePage from '@/pages/home-page';
 import CreateNFT from '@/pages/nft/create-nft';
 import NFTList from '@/pages/nft/nft-list';
+import ReleaseNFT from '@/pages/nft/release-nft';
 import { OperateLog } from '@/pages/Operatelog';
 import OrrderList from '@/pages/order-list';
 import { userType } from '@/store';
@@ -88,6 +89,15 @@ const routeConfig: routerConfigType[] = [
             element: (
               <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
                 <OrrderList />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'release-nft',
+            auth: [1, 9, 8, 7, 'user1'],
+            element: (
+              <Suspense fallback={<Spin className="SetLazySpinCent" size="large" />}>
+                <ReleaseNFT />
               </Suspense>
             ),
           },
