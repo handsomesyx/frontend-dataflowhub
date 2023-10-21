@@ -3,6 +3,7 @@ import { Layout, Menu, type MenuProps } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import Sider from 'antd/es/layout/Sider';
 import { Link, Outlet } from 'react-router-dom';
+
 // 首页左侧导航（一级导航、二级导航）：注意Link标签与Router路由之间的对应关系
 const items: MenuProps['items'] = [
   {
@@ -35,6 +36,14 @@ const items: MenuProps['items'] = [
         ),
         key: 'create-nft',
       },
+      {
+        label: (
+          <Link to={'nft-classify'}>
+            <span>NFT分类</span>
+          </Link>
+        ),
+        key: 'nft-classify',
+      },
     ],
   },
   {
@@ -49,6 +58,14 @@ const items: MenuProps['items'] = [
           </Link>
         ),
         key: 'orders-list',
+      },
+      {
+        label: (
+          <Link to={'property-detail'}>
+            <span>资产详情</span>
+          </Link>
+        ),
+        key: 'property-detail',
       },
     ],
   },
